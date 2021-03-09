@@ -6,7 +6,6 @@
 #include <GL/gl.h>
 
 const GLint WINDOW_WIDTH = 500;
-const GLint WINDOW_HEIGHT = 500;
-const uint8_t MAX_STAGE = 5;
+const GLint WINDOW_HEIGHT = 800;
 
 #endif
