@@ -15,13 +15,13 @@ Rectangle::Rectangle (const GLfloat _x, const GLfloat _y, const GLfloat _width, 
 
 }
 
-Point Rectangle::getLeftTop () {
+Point Rectangle::getLeftTop () const {
     GLfloat halfWidth = width / 2;
     GLfloat halfHeight = height / 2;
     return Point(x - halfWidth, y + halfHeight);
 }
 
-Point Rectangle::getRightBottom () {
+Point Rectangle::getRightBottom () const {
     GLfloat halfWidth = width / 2;
     GLfloat halfHeight = height / 2;
     return Point(x + halfWidth, y - halfHeight);
@@ -32,7 +32,7 @@ void Rectangle::setPosition (const GLfloat _x, const GLfloat _y) {
     y = _y;
 }
 
-void Rectangle::display (const GLfloat R, const GLfloat G, const GLfloat B) {
+void Rectangle::display (const GLfloat R, const GLfloat G, const GLfloat B) const {
     glColor3f(R, G, B);
     GLfloat w = width / 2;
     GLfloat h = height / 2;
@@ -42,4 +42,8 @@ void Rectangle::display (const GLfloat R, const GLfloat G, const GLfloat B) {
         glVertex2f(x + w, y + h);
         glVertex2f(x + w, y - h);
     glEnd();
+}
+
+void Rectangle::display (const Rgb color) const {
+    display(color.R, color.G, color.B);
 }

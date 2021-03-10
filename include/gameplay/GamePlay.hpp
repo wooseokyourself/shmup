@@ -2,6 +2,7 @@
 #define __GAMEPLAY__
 
 #include <queue>
+#include "gameplay/Ai.hpp"
 #include "dynamics/Airplane.hpp"
 
 class GamePlay {
@@ -17,13 +18,18 @@ public:
 private:
     void win ();
     void lose ();
-    void allPass ();
-    void allFail ();
 
 private:
-    void spotEnemy ();
-    void checkHit (Airplane* attacker, Airplane* target);
-    void handleMovement (const bool* keyBuffer);
+    void checkHitNormal (Airplane* attacker, Airplane* target);
+    void checkHitInstantKill (Airplane* attacker, Airplane* target);
+    void checkHitDodge (Airplane* attacker, Airplane* target);
+
+private:
+    void handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf);
+    void handleAsyncKeyInput (const bool* asyncKeyBuf);
+
+private:
+    Ai enemyAi;
 
 private: // Objects
     Airplane* player;
@@ -32,7 +38,9 @@ private: // Objects
 private:
     uint8_t MAX_STAGE;
     uint8_t stage;
+    int enemyRegenIntervalSecs;
+    bool allPassMode;
+    bool allFailMode;
 };
-
 
 #endif

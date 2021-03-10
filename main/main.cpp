@@ -3,6 +3,10 @@
 
 using namespace std;
 
+const int FPS = 60;
+const int TIME_PER_FRAME = 1000 / FPS;
+int LAST_RENDER_TIME = 0;
+
 static GamePlay handler;
 bool asyncKeyBuf[256];
 std::queue<unsigned char> discreteKeyBuf;
@@ -47,8 +51,12 @@ void specialKeyboardUp (int key, int x, int y) {
 }
 
 void updateFrame () {
+    const int NOW_TIME = glutGet(GLUT_ELAPSED_TIME);
+    if (NOW_TIME - LAST_RENDER_TIME < TIME_PER_FRAME)
+        return;
     handler.update(discreteKeyBuf, asyncKeyBuf);
     glutPostRedisplay();
+    LAST_RENDER_TIME = NOW_TIME;
 }
 
 int main(int argc, char** argv) {

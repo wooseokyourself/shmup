@@ -1,11 +1,13 @@
 #include "gameplay/GamePlay.hpp"
 
 GamePlay::GamePlay () {
-    player = new Airplane (0.0f, -0.5f, 0.3f, 0.1f, 0.05f);
-    enemy = new Airplane (0.0f, 0.5f, 0.3f, 0.1f, 0.05f);
-
+    player = new Airplane (0.0f, -0.5f, 0.3f, 0.1f, AirplaneSpeed::NORMAL, BulletSpeed::FAST);
+    enemy = new Airplane (0.0f, 0.5f, 0.3f, 0.1f, AirplaneSpeed::SLOW, BulletSpeed::SLOW);
     MAX_STAGE = 5;
     stage = 1;
+    enemyRegenIntervalSecs = 3;
+    allPassMode = false;
+    allFailMode = false;
 }
 
 GamePlay::~GamePlay () {
@@ -14,8 +16,11 @@ GamePlay::~GamePlay () {
 }
 
 void GamePlay::startGame () {
+    player->setColor(1.0f, 0.0f, 0.0f);
+    enemy->setColor(0.0f, 0.0f, 0.0f);
     player->init(3);
     enemy->init(stage);
+    enemyAi.start(enemy, DOWN);
 }
 
 void GamePlay::render () {
@@ -24,30 +29,45 @@ void GamePlay::render () {
 }
 
 void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* asyncKeyBuf) {
-    handleMovement(asyncKeyBuf);
-    while (!discreteKeyBuf.empty()) {
-        unsigned char key = discreteKeyBuf.front();
-        discreteKeyBuf.pop();
-        switch (key) {
-            case ' ':
-                player->fire();
-                break;
-            case 'c':
-                allPass();
-                break;
-            case 'f':
-                allFail();
-                break;
-        }
-    }
+    handleAsyncKeyInput(asyncKeyBuf);
+    handleDiscreteKeyInput(discreteKeyBuf);
     player->update(UP);
     enemy->update(DOWN);
-    checkHit(player, enemy);
-    checkHit(enemy, player);
+
+    if (!allPassMode && !allFailMode) {
+        checkHitNormal(player, enemy);
+        checkHitNormal(enemy, player);
+    }
+    else if (allPassMode && !allFailMode) {
+        checkHitInstantKill(player, enemy);
+        checkHitDodge(enemy, player);
+    }
+    else if (!allPassMode && allFailMode) {
+        checkHitInstantKill(enemy, player);
+    }
+
     if (stage > MAX_STAGE)
         win ();
-    if (!enemy->isActivated())
-        spotEnemy();
+    if (!enemy->isAlive() &&
+        (glutGet(GLUT_ELAPSED_TIME) - enemy->getLastDeactivatedTime() >= enemyRegenIntervalSecs * 1000)) {
+        enemy->setPosition(0.0f, 0.5f);
+        enemy->init(++stage);
+        switch (stage) {
+            case (2):
+                enemy->setColor(0.0f, 0.0f, 1.0f);
+                break;
+            case (3):
+                enemy->setColor(0.0f, 1.0f, 0.0f);
+                break;
+            case (4):
+                enemy->setColor(0.0f, 1.0f, 1.0f);
+                break;
+            case (5):
+                enemy->setColor(1.0f, 0.0f, 0.0f);
+                break;
+        }
+        enemyAi.start(enemy, DOWN);
+    }
 }
 
 void GamePlay::win () {
@@ -58,31 +78,68 @@ void GamePlay::lose () {
     std::cout << "Lose.." << std::endl;
 }
 
-void GamePlay::allPass () {
-    std::cout << "Activate All Pass" << std::endl;
-}
-
-void GamePlay::allFail () {
-    std::cout << "Activate All Fail" << std::endl;
-}
-
-void GamePlay::spotEnemy () {
-    if (enemy->isActivated())
-        return;
-    enemy->init(++stage);
-}
-
-void GamePlay::checkHit (Airplane* attacker, Airplane* target) {
-    if (!target->isActivated())
+void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
+    if (!target->isAlive())
         return;
     if (attacker->bulletManager.deactivateBulletIfItsIn(target->getLeftTop(), target->getRightBottom())) {
-        std::cout << "Hit!" << std::endl;
         target->loseLife();
+        if (!target->isAlive()) {
+            target->destruct();
+            if (target == enemy)
+                enemyAi.stop();
+        }
     }
 }
 
-void GamePlay::handleMovement (const bool* keyBuffer) {
-    const bool* buf = keyBuffer;
+void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
+    if (!target->isAlive())
+        return;
+    if (attacker->bulletManager.deactivateBulletIfItsIn(target->getLeftTop(), target->getRightBottom())) {
+        target->destruct();
+        if (target == enemy)
+            enemyAi.stop();
+    }
+}
+
+void GamePlay::checkHitDodge (Airplane* attacker, Airplane* target) {
+    if (!target->isAlive())
+        return;
+    if (attacker->bulletManager.deactivateBulletIfItsIn(target->getLeftTop(), target->getRightBottom())) {
+
+    }
+}
+
+void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf) {
+    while (!discreteKeyBuf.empty()) {
+        unsigned char key = discreteKeyBuf.front();
+        discreteKeyBuf.pop();
+        switch (key) {
+            case ' ':
+                if (!allFailMode)
+                    player->fire();
+                break;
+            case 'c':
+                if (!allPassMode) {
+                    allPassMode = true;
+                    allFailMode = false;
+                }
+                else
+                    allPassMode = false;
+                break;
+            case 'f':
+                if (!allFailMode) {
+                    allFailMode = true;
+                    allPassMode = false;
+                }
+                else
+                    allFailMode = false;
+                break;
+        }
+    }
+}
+
+void GamePlay::handleAsyncKeyInput (const bool* asyncKeyBuf) {
+    const bool* buf = asyncKeyBuf;
     if (buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
         player->move(LEFT);
     else if (!buf[GLUT_KEY_LEFT] && buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])

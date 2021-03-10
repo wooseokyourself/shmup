@@ -18,6 +18,7 @@
 				"src/dynamics/Bullet.cpp",
 				"src/dynamics/Airplane.cpp",
 				"src/gameplay/GamePlay.cpp",
+				"src/gameplay/Ai.cpp",
 				"main/main.cpp",
 				"-o",
 				"app"

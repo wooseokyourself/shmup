@@ -11,6 +11,18 @@
 
 class GamePlay;
 
+namespace AirplaneSpeed {
+    const GLfloat FAST = 0.05;
+    const GLfloat NORMAL = 0.03;
+    const GLfloat SLOW = 0.01;
+}
+
+namespace BulletSpeed {
+    const GLfloat FAST = 0.05;
+    const GLfloat NORMAL = 0.03;
+    const GLfloat SLOW = 0.01;
+};
+
 class Airplane : public DynamicObject {
 private:
     class BulletManager {
@@ -18,7 +30,7 @@ private:
         BulletManager (const GLfloat bulletWidth, const GLfloat bulletHeight, const GLfloat bulletSpeed);
         ~BulletManager ();
         void activateBullet (const GLfloat x, const GLfloat y);
-        void display ();
+        void display (const GLfloat R, const GLfloat G, const GLfloat B) const;
         void update (const int bulletDirection);
         size_t activatedBulletsNumber ();
         bool deactivateBulletIfItsIn (const Point leftTop, const Point rightBottom);
@@ -31,20 +43,35 @@ private:
     friend class GamePlay;
 
 public:
-    Airplane (const Point p, const GLfloat _width, const GLfloat _height, const GLfloat _speed);
-    Airplane (const GLfloat _x, const GLfloat _y, const GLfloat _width, const GLfloat _height, const GLfloat _speed);
+    Airplane (const Point p, 
+              const GLfloat _width, 
+              const GLfloat _height, 
+              const GLfloat _speed, 
+              const GLfloat bulletSpeed);
+    Airplane (const GLfloat _x, 
+              const GLfloat _y, 
+              const GLfloat _width, 
+              const GLfloat _height, 
+              const GLfloat _speed, 
+              const GLfloat bulletSpeed);
     void update (const int bulletDirection);
     void init (const uint8_t _lives);
-    bool isActivated ();
     void destruct ();
     void loseLife ();
+    bool isAlive () const;
     void fire ();
-    void display ();
+    void setColor (const GLfloat _R, const GLfloat _G, const GLfloat _B);
+    void setColor (const Rgb _color);
+    void display () const ;
+    int getLastActivatedTime () const;
+    int getLastDeactivatedTime () const;
 
 private:
     BulletManager bulletManager;
     uint8_t lives;
-    bool activated;
+    int lastActivatedTime;
+    int lastDeactivatedTime;
+    Rgb color;
 };
 
 #endif

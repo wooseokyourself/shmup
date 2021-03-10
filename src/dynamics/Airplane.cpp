@@ -27,9 +27,9 @@ void Airplane::BulletManager::activateBullet (const GLfloat x, const GLfloat y) 
     activeBullets.push_back(bullet);
 }
 
-void Airplane::BulletManager::display () {
+void Airplane::BulletManager::display (const GLfloat R, const GLfloat G, const GLfloat B) const {
     for (Bullet* bullet : activeBullets)
-        bullet->display(0.0f, 0.0f, 1.0f);
+        bullet->display(R, G, B);
 }
 
 void Airplane::BulletManager::update (const int bulletDirection) {
@@ -67,49 +67,81 @@ bool Airplane::BulletManager::deactivateBulletIfItsIn (const Point leftTop, cons
     return false;
 }
 
-Airplane::Airplane (const Point p, const GLfloat _width, const GLfloat _height, const GLfloat _speed)
-: DynamicObject(p, _width, _height, _speed), bulletManager(0.1f, 0.1f, 0.05f), lives(0), activated(false) {
+Airplane::Airplane (const Point p,
+                    const GLfloat _width, 
+                    const GLfloat _height, 
+                    const GLfloat _speed, 
+                    const GLfloat bulletSpeed) 
+: DynamicObject(p, _width, _height, _speed), 
+  bulletManager(0.1f, 0.1f, bulletSpeed), 
+  lives(0), 
+  lastActivatedTime(0), 
+  lastDeactivatedTime(0), 
+  color(1.0f, 1.0f, 1.0f) { }
 
-}
-
-Airplane::Airplane (const GLfloat _x, const GLfloat _y, const GLfloat _width, const GLfloat _height, const GLfloat _speed) 
-: DynamicObject(_x, _y, _width, _height, _speed), bulletManager(0.05f, 0.05f, 0.05f), lives(0), activated(false) {
-
-}
+Airplane::Airplane (const GLfloat _x, 
+                    const GLfloat _y, 
+                    const GLfloat _width, 
+                    const GLfloat _height, 
+                    const GLfloat _speed, 
+                    const GLfloat bulletSpeed) 
+: DynamicObject(_x, _y, _width, _height, _speed), 
+  bulletManager(0.05f, 0.05f, bulletSpeed), 
+  lives(0), 
+  lastActivatedTime(0), 
+  lastDeactivatedTime(0), 
+  color(1.0f, 1.0f, 1.0f) { }
 
 void Airplane::update (const int bulletDirection) {
     bulletManager.update(bulletDirection);
 }
 
 void Airplane::init (const uint8_t _lives) {
-    if (activated)
+    if (isAlive())
         return;
-    activated = true;
     lives = _lives;
-}
-
-bool Airplane::isActivated () {
-    return activated;
+    lastActivatedTime = glutGet(GLUT_ELAPSED_TIME);
 }
 
 void Airplane::destruct () {
     std::cout << "Airplane Destructed!" << std::endl;
-    activated = false;
+    lives = 0;
+    lastDeactivatedTime = glutGet(GLUT_ELAPSED_TIME);
 }
 
 void Airplane::loseLife () {
     --lives;
-    if (lives == 0)
-        destruct();
+}
+
+bool Airplane::isAlive () const {
+    return lives > 0;
 }
 
 void Airplane::fire () {
     bulletManager.activateBullet(x, y);
 }
 
-void Airplane::display () {
-    if (!activated)
+void Airplane::setColor (const GLfloat _R, const GLfloat _G, const GLfloat _B) {
+    color.R = _R;
+    color.G = _G;
+    color.B = _B;
+}
+
+void Airplane::setColor (const Rgb _color) {
+    color = _color;
+}
+
+void Airplane::display () const {
+    if (!isAlive())
         return;
-    bulletManager.display();
-    DynamicObject::display(1.0f, 0.0f, 0.0f);
+    bulletManager.display(color.R + 0.25f, color.G + 0.25f, color.B + 0.25f);
+    Rectangle::display(color);
+}
+
+int Airplane::getLastActivatedTime () const {
+    return lastActivatedTime;
+}
+
+int Airplane::getLastDeactivatedTime () const {
+    return lastDeactivatedTime;
 }
