@@ -7,7 +7,8 @@ void Ai::start (Airplane* _airplane, const int _bulletDirection) {
 }
 
 void Ai::stop () {
-    t.join();
+    if (t.joinable())
+        t.detach();
 }
 
 void Ai::action () {

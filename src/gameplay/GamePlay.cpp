@@ -72,10 +72,14 @@ void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* as
 
 void GamePlay::win () {
     std::cout << "Win!" << std::endl;
+    enemyAi.stop();
+    glutLeaveMainLoop();
 }
 
 void GamePlay::lose () {
     std::cout << "Lose.." << std::endl;
+    enemyAi.stop();
+    glutLeaveMainLoop();
 }
 
 void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
@@ -85,8 +89,13 @@ void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
         target->loseLife();
         if (!target->isAlive()) {
             target->destruct();
-            if (target == enemy)
+            if (target == player)
+                lose();
+            if (target == enemy) {
                 enemyAi.stop();
+                if (stage == MAX_STAGE)
+                    win();
+            }
         }
     }
 }
@@ -96,8 +105,13 @@ void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
         return;
     if (attacker->bulletManager.deactivateBulletIfItsIn(target->getLeftTop(), target->getRightBottom())) {
         target->destruct();
-        if (target == enemy)
+        if (target == player)
+            lose();
+        if (target == enemy) {
             enemyAi.stop();
+            if (stage == MAX_STAGE)
+                win();
+        }
     }
 }
 
