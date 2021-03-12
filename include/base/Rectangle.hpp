@@ -3,6 +3,7 @@
 
 #include "base/Point.hpp"
 #include "base/Rgb.hpp"
+#include <cstdlib>
 #include <GL/glut.h>
 #include <GL/gl.h>
 
@@ -16,12 +17,16 @@ public:
     void setPosition (const GLfloat _x, const GLfloat _y);
     void display (const GLfloat R, const GLfloat G, const GLfloat B) const;
     void display (const Rgb color) const;
+    void setColor (const GLfloat _R, const GLfloat _G, const GLfloat _B);
+    void setColor (const Rgb _color);
+    void setRandomColor ();
     
 protected:
     GLfloat x; // center
     GLfloat y; // center
     GLfloat width;
     GLfloat height;
+    Rgb color;
 };
 
 #endif
