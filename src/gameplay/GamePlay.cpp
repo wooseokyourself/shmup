@@ -16,8 +16,8 @@ GamePlay::~GamePlay () {
 }
 
 void GamePlay::startGame () {
-    player->setColor(1.0f, 0.0f, 0.0f);
-    enemy->setColor(0.0f, 0.0f, 0.0f);
+    player->setRandomColor();
+    enemy->setRandomColor();
     player->init(3);
     enemy->init(stage);
     enemyAi.start(enemy, DOWN);
@@ -51,21 +51,8 @@ void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* as
     if (!enemy->isAlive() &&
         (glutGet(GLUT_ELAPSED_TIME) - enemy->getLastDeactivatedTime() >= enemyRegenIntervalSecs * 1000)) {
         enemy->setPosition(0.0f, 0.5f);
+        enemy->setRandomColor();
         enemy->init(++stage);
-        switch (stage) {
-            case (2):
-                enemy->setColor(0.0f, 0.0f, 1.0f);
-                break;
-            case (3):
-                enemy->setColor(0.0f, 1.0f, 0.0f);
-                break;
-            case (4):
-                enemy->setColor(0.0f, 1.0f, 1.0f);
-                break;
-            case (5):
-                enemy->setColor(1.0f, 0.0f, 0.0f);
-                break;
-        }
         enemyAi.start(enemy, DOWN);
     }
 }
@@ -88,7 +75,6 @@ void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
     if (attacker->bulletManager.deactivateBulletIfItsIn(target->getLeftTop(), target->getRightBottom())) {
         target->loseLife();
         if (!target->isAlive()) {
-            target->destruct();
             if (target == player)
                 lose();
             if (target == enemy) {
@@ -97,6 +83,8 @@ void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
                     win();
             }
         }
+        if (target == player)
+            player->setRandomColor();
     }
 }
 
@@ -104,7 +92,6 @@ void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
     if (attacker->bulletManager.deactivateBulletIfItsIn(target->getLeftTop(), target->getRightBottom())) {
-        target->destruct();
         if (target == player)
             lose();
         if (target == enemy) {
