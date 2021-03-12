@@ -1,6 +1,7 @@
 #ifndef __AIRPLANE__
 #define __AIRPLANE__
 
+#include <cstdlib>
 #include <iostream>
 #include <list>
 #include <stack>
@@ -60,8 +61,6 @@ public:
     void loseLife ();
     bool isAlive () const;
     void fire ();
-    void setColor (const GLfloat _R, const GLfloat _G, const GLfloat _B);
-    void setColor (const Rgb _color);
     void display () const ;
     int getLastActivatedTime () const;
     int getLastDeactivatedTime () const;
@@ -71,7 +70,6 @@ private:
     uint8_t lives;
     int lastActivatedTime;
     int lastDeactivatedTime;
-    Rgb color;
 };
 
 #endif

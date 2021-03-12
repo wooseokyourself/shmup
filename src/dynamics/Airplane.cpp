@@ -76,8 +76,7 @@ Airplane::Airplane (const Point p,
   bulletManager(0.1f, 0.1f, bulletSpeed), 
   lives(0), 
   lastActivatedTime(0), 
-  lastDeactivatedTime(0), 
-  color(1.0f, 1.0f, 1.0f) { }
+  lastDeactivatedTime(0) { }
 
 Airplane::Airplane (const GLfloat _x, 
                     const GLfloat _y, 
@@ -89,8 +88,7 @@ Airplane::Airplane (const GLfloat _x,
   bulletManager(0.05f, 0.05f, bulletSpeed), 
   lives(0), 
   lastActivatedTime(0), 
-  lastDeactivatedTime(0), 
-  color(1.0f, 1.0f, 1.0f) { }
+  lastDeactivatedTime(0) { }
 
 void Airplane::update (const int bulletDirection) {
     bulletManager.update(bulletDirection);
@@ -110,7 +108,8 @@ void Airplane::destruct () {
 }
 
 void Airplane::loseLife () {
-    --lives;
+    if (--lives <= 0)
+        destruct();
 }
 
 bool Airplane::isAlive () const {
@@ -121,21 +120,10 @@ void Airplane::fire () {
     bulletManager.activateBullet(x, y);
 }
 
-void Airplane::setColor (const GLfloat _R, const GLfloat _G, const GLfloat _B) {
-    color.R = _R;
-    color.G = _G;
-    color.B = _B;
-}
-
-void Airplane::setColor (const Rgb _color) {
-    color = _color;
-}
-
 void Airplane::display () const {
-    if (!isAlive())
-        return;
     bulletManager.display(color.R + 0.25f, color.G + 0.25f, color.B + 0.25f);
-    Rectangle::display(color);
+    if (isAlive())
+        Rectangle::display(color);
 }
 
 int Airplane::getLastActivatedTime () const {
