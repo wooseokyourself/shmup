@@ -139,9 +139,7 @@ void GamePlay::checkHitDodge (Airplane* attacker, Airplane* target) {
     }
 }
 
-/**
- * @brief It deals with keystrokes that don't be allowed continuous input by keyboard push.
- */
+/** @brief It deals with keystrokes that don't be allowed continuous input by keyboard push. */
 void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf) {
     while (!discreteKeyBuf.empty()) {
         unsigned char key = discreteKeyBuf.front();
@@ -171,9 +169,7 @@ void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf
     }
 }
 
-/**
- * @brief It deals with keystrokes that be allowed continuous input by keyboard push.
- */
+/** @brief It deals with keystrokes that be allowed continuous input by keyboard push. */
 void GamePlay::handleAsyncKeyInput (const bool* asyncKeyBuf) {
     const bool* buf = asyncKeyBuf;
     if (buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])

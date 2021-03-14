@@ -30,6 +30,7 @@ private:
         std::list<Bullet*> activeBullets;
         std::stack<Bullet*> pool;
     };
+    
 private:
     friend class GamePlay;
 

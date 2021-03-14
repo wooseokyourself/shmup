@@ -2,7 +2,7 @@
 #define __GAMEPLAY__
 
 #include <queue>
-#include "gameplay/WorldDefinitions.hpp"
+#include "gameplay/Constants.hpp"
 #include "gameplay/Ai.hpp"
 #include "dynamics/Airplane.hpp"
 

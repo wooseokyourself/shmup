@@ -1,28 +1,21 @@
-#include "gameplay/WorldDefinitions.hpp"
 #include "gameplay/GamePlay.hpp"
 
 using namespace std;
 
-const int FPS = 60;
-const int TIME_PER_FRAME = 1000 / FPS;
-int LAST_RENDER_TIME = 0;
+int lastRenderTime = 0;
 
-static GamePlay handler;
+static GamePlay gameplay;
 bool asyncKeyBuf[256];
 std::queue<unsigned char> discreteKeyBuf;
 
-/**
- * @brief GLUT callback
- */
+/** @brief GLUT callback. */
 void display () {
     glClear(GL_COLOR_BUFFER_BIT);
-    handler.render();
+    gameplay.render();
     glutSwapBuffers();
 }
 
-/**
- * @brief GLUT callback
- */
+/** @brief GLUT callback. */
 void reshape (int width, int height) {
     glViewport(0, 0, (GLsizei)width, (GLsizei)height);
     glMatrixMode(GL_PROJECTION);
@@ -32,40 +25,37 @@ void reshape (int width, int height) {
     glLoadIdentity();
 }
 
-/**
- * @brief GLUT callback
- */
+/** @brief GLUT callback. Detect “c”, “f”, and “spaces” keys down. */
 void keyboardDown (unsigned char key, int x, int y) {
     discreteKeyBuf.push(key);
 }
 
-/**
- * @brief GLUT callback
- */
+/** @brief GLUT callback. Detect arrow keys down. */
 void specialKeyboardDown (int key, int x, int y) {
     asyncKeyBuf[key] = true;
 }
 
+/** @brief GLUT callback. Detect arrow keys up. */
 void specialKeyboardUp (int key, int x, int y) {
     asyncKeyBuf[key] = false;
 }
 
 void updateFrame () {
     const int NOW_TIME = glutGet(GLUT_ELAPSED_TIME);
-    if (NOW_TIME - LAST_RENDER_TIME < TIME_PER_FRAME)
+    if (NOW_TIME - lastRenderTime < TIME_PER_FRAME)
         return;
-    handler.update(discreteKeyBuf, asyncKeyBuf);
+    gameplay.update(discreteKeyBuf, asyncKeyBuf);
     glutPostRedisplay();
-    LAST_RENDER_TIME = NOW_TIME;
+    lastRenderTime = NOW_TIME;
 }
 
 int main(int argc, char** argv) {
-    handler.startGame();
+    gameplay.startGame();
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (WINDOW_WIDTH / 2),
-                            (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (WINDOW_HEIGHT / 2));
+    glutInitWindowSize(Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT);
+    glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (Window::WINDOW_WIDTH / 2),
+                            (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (Window::WINDOW_HEIGHT / 2));
     glutCreateWindow("Assn1");
 
     glClearColor(1.0, 1.0, 1.0, 0.0);

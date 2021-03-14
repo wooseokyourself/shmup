@@ -1,6 +1,18 @@
 #ifndef __CONSTANTS__
 #define __CONSTANTS__
 
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+#include <GL/gl.h>
+
+const int FPS = 60;
+const int TIME_PER_FRAME = 1000 / FPS;
+
+namespace Window {
+    const GLint WINDOW_WIDTH = 500;
+    const GLint WINDOW_HEIGHT = 800;
+};
+
 enum Direction {
     NONE        = 0,
     LEFT        = 0x0064,
@@ -24,6 +36,5 @@ namespace BulletSpeed {
     const GLfloat NORMAL = 0.03;
     const GLfloat SLOW = 0.01;
 };
-
 
 #endif
