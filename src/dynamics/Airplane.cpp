@@ -18,6 +18,9 @@ Airplane::BulletManager::~BulletManager () {
     }
 }
 
+/**
+ * @brief Construct a bullet in (x,y) position.
+ */
 void Airplane::BulletManager::activateBullet (const GLfloat x, const GLfloat y) {
     if (pool.empty())
         return;
@@ -27,11 +30,22 @@ void Airplane::BulletManager::activateBullet (const GLfloat x, const GLfloat y) 
     activeBullets.push_back(bullet);
 }
 
+/**
+ * @brief Draw all bullets in OpenGL world.
+ * @param R The R value of the bullet's color. (0.0 to 1.0)
+ * @param G The G value of the bullet's color. (0.0 to 1.0)
+ * @param B The B value of the bullet's color. (0.0 to 1.0)
+ */
 void Airplane::BulletManager::display (const GLfloat R, const GLfloat G, const GLfloat B) const {
     for (Bullet* bullet : activeBullets)
         bullet->display(R, G, B);
 }
 
+/**
+ * @brief Manage all bullets; movement of all bullets, deactivating bullets which is out of bound.
+ * This method must be called in all frame.
+ * @param bulletDirection The direction of all bullets; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
+ */
 void Airplane::BulletManager::update (const int bulletDirection) {
     std::stack<Bullet*> deactivating;
     for (Bullet* bullet : activeBullets) {
@@ -49,10 +63,19 @@ void Airplane::BulletManager::update (const int bulletDirection) {
     }
 }
 
+/**
+ * @return The number of existing bullets.
+ */
 size_t Airplane::BulletManager::activatedBulletsNumber () {
     return activeBullets.size();
 }
 
+/**
+ * @brief Remove bullets which are in the rectangle constructed by left-top and right-bottom points.
+ * @param leftTop The left-top point of the target range.
+ * @param rightBottom The right-bottom point of the target range.
+ * @return false if no bullet removed.
+ */
 bool Airplane::BulletManager::deactivateBulletIfItsIn (const Point leftTop, const Point rightBottom) {
     for (Bullet* bullet : activeBullets) {
         Point bLeftTop = bullet->getLeftTop();
@@ -67,6 +90,13 @@ bool Airplane::BulletManager::deactivateBulletIfItsIn (const Point leftTop, cons
     return false;
 }
 
+/**
+ * @param p The center point axis of the airplane. (each are -1.0 to 1.0)
+ * @param _width (-1.0 to 1.0)
+ * @param _height (-1.0 to 1.0)
+ * @param _speed (-1.0 to 1.0)
+ * @param bulletSpeed (-1.0 to 1.0)
+ */
 Airplane::Airplane (const Point p,
                     const GLfloat _width, 
                     const GLfloat _height, 
@@ -78,6 +108,14 @@ Airplane::Airplane (const Point p,
   lastActivatedTime(0), 
   lastDeactivatedTime(0) { }
 
+/**
+ * @param _x The x value of the center point of the airplane. (-1.0 to 1.0)
+ * @param _y The y value of the center point of the airplane. (-1.0 to 1.0)
+ * @param _width (-1.0 to 1.0)
+ * @param _height (-1.0 to 1.0)
+ * @param _speed (-1.0 to 1.0)
+ * @param bulletSpeed (-1.0 to 1.0)
+ */
 Airplane::Airplane (const GLfloat _x, 
                     const GLfloat _y, 
                     const GLfloat _width, 
@@ -90,10 +128,19 @@ Airplane::Airplane (const GLfloat _x,
   lastActivatedTime(0), 
   lastDeactivatedTime(0) { }
 
+/**
+ * @brief Manage all bullets; movement of all bullets, deactivating bullets which is out of bound.
+ * This method must be called in all frame.
+ * @param bulletDirection The direction of all bullets; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
+ */
 void Airplane::update (const int bulletDirection) {
     bulletManager.update(bulletDirection);
 }
 
+/**
+ * @brief Construct the airplane.
+ * @param _lives The number of lives of the airplane.
+ */
 void Airplane::init (const uint8_t _lives) {
     if (isAlive())
         return;
@@ -101,35 +148,59 @@ void Airplane::init (const uint8_t _lives) {
     lastActivatedTime = glutGet(GLUT_ELAPSED_TIME);
 }
 
+/**
+ * @brief Destruct the airplane.
+ */
 void Airplane::destruct () {
     std::cout << "Airplane Destructed!" << std::endl;
     lives = 0;
     lastDeactivatedTime = glutGet(GLUT_ELAPSED_TIME);
 }
 
+/**
+ * @brief Subtract a life of the airplane. If the airplane's life is 0, the airplane will be destructed.
+ */
 void Airplane::loseLife () {
     if (--lives <= 0)
         destruct();
 }
 
+/**
+ * @return true if the airplane was not destructed.
+ */
 bool Airplane::isAlive () const {
     return lives > 0;
 }
 
+/**
+ * @brief Fire a bullet.
+ */
 void Airplane::fire () {
-    bulletManager.activateBullet(x, y);
+    if (isAlive())
+        bulletManager.activateBullet(x, y);
 }
 
+/**
+ * @brief Draw the airplane and its bullets in OpenGL world.
+ */
 void Airplane::display () const {
     bulletManager.display(color.R + 0.25f, color.G + 0.25f, color.B + 0.25f);
     if (isAlive())
         Rectangle::display(color);
 }
 
+/**
+ * @return The last constructed time of the airplane.
+ * The time is the elapsed time from the process executed.
+ */
 int Airplane::getLastActivatedTime () const {
     return lastActivatedTime;
 }
 
+/**
+ * @return The last destructed time of the airplane.
+ * The time is the elapsed time from the process executed.
+ */
 int Airplane::getLastDeactivatedTime () const {
     return lastDeactivatedTime;
 }

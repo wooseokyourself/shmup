@@ -10,6 +10,10 @@ Bullet::Bullet (const GLfloat _width, const GLfloat _height, const GLfloat _spee
     
 }
 
+/**
+ * @return true if the bullet is out of bound.
+ * @param bound The target bound; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
+ */
 bool Bullet::isOutOfBound (const int bound) {
     switch (bound) {
         case LEFT:

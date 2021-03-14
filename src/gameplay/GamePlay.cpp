@@ -23,11 +23,19 @@ void GamePlay::startGame () {
     enemyAi.start(enemy, DOWN);
 }
 
+/**
+ * @brief Draw all objects in OpenGL world.
+ */
 void GamePlay::render () {
     player->display();
     enemy->display();
 }
 
+/**
+ * @brief Handle game frame. It must be called in every frame.
+ * @param discreteKeyBuf Discrete keyboard input queue to handle.
+ * @param asyncKeyBuf Async keyboard input array to handle. The indices are ASCII code of each key.
+ */
 void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* asyncKeyBuf) {
     handleAsyncKeyInput(asyncKeyBuf);
     handleDiscreteKeyInput(discreteKeyBuf);
@@ -57,18 +65,29 @@ void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* as
     }
 }
 
+/**
+ * @brief Terminate the process.
+ */
 void GamePlay::win () {
     std::cout << "Win!" << std::endl;
     enemyAi.stop();
     glutLeaveMainLoop();
 }
 
+/**
+ * @brief Terminate the process.
+ */
 void GamePlay::lose () {
     std::cout << "Lose.." << std::endl;
     enemyAi.stop();
     glutLeaveMainLoop();
 }
 
+/**
+ * @brief Handle whether the attacker's bullet hit the target; if hit then subtract a life of the target.
+ * @param attacker The object attacking.
+ * @param target The object to attack.
+ */
 void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
@@ -88,6 +107,11 @@ void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
     }
 }
 
+/**
+ * @brief Handle whether the attacker's bullet hit the target; if hit then make target's lives to 0.
+ * @param attacker The object attacking.
+ * @param target The object to attack.
+ */
 void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
@@ -102,6 +126,11 @@ void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
     }
 }
 
+/**
+ * @brief Handle whether the attacker's bullet hit the target; if hit then do nothing.
+ * @param attacker The object attacking.
+ * @param target The object to attack.
+ */
 void GamePlay::checkHitDodge (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
@@ -110,6 +139,9 @@ void GamePlay::checkHitDodge (Airplane* attacker, Airplane* target) {
     }
 }
 
+/**
+ * @brief It deals with keystrokes that don't be allowed continuous input by keyboard push.
+ */
 void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf) {
     while (!discreteKeyBuf.empty()) {
         unsigned char key = discreteKeyBuf.front();
@@ -139,6 +171,9 @@ void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf
     }
 }
 
+/**
+ * @brief It deals with keystrokes that be allowed continuous input by keyboard push.
+ */
 void GamePlay::handleAsyncKeyInput (const bool* asyncKeyBuf) {
     const bool* buf = asyncKeyBuf;
     if (buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
