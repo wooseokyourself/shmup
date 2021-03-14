@@ -1,0 +1,76 @@
+\hypertarget{class_game_play}{}\doxysection{Game\+Play Class Reference}
+\label{class_game_play}\index{GamePlay@{GamePlay}}
+
+
+{\ttfamily \#include $<$Game\+Play.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_game_play_a3e82b490b9780b0df24a88a9efc6709f}{Game\+Play}} ()
+\item 
+\mbox{\hyperlink{class_game_play_ae68e44e5fe70b45d7dfe1a3f1c1577d0}{$\sim$\+Game\+Play}} ()
+\item 
+void \mbox{\hyperlink{class_game_play_a386afa7a118ea7d599c1141254dd8f68}{start\+Game}} ()
+\item 
+void \mbox{\hyperlink{class_game_play_a3e7e21088085d3bf95ead2dfe9589963}{render}} ()
+\begin{DoxyCompactList}\small\item\em Draw all objects in Open\+GL world. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_game_play_a6d9f0b0b2dacfd1c359260d1e2ecd45e}{update}} (std\+::queue$<$ unsigned char $>$ \&\mbox{\hyperlink{main_8cpp_a6c8683e46cebbfeea321bd9366025635}{discrete\+Key\+Buf}}, const bool $\ast$\mbox{\hyperlink{main_8cpp_a4475cd4994e64ceefe8b35b11fa535b3}{async\+Key\+Buf}})
+\begin{DoxyCompactList}\small\item\em Handle game frame. It must be called in every frame. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_game_play_a3e82b490b9780b0df24a88a9efc6709f}\label{class_game_play_a3e82b490b9780b0df24a88a9efc6709f}} 
+\index{GamePlay@{GamePlay}!GamePlay@{GamePlay}}
+\index{GamePlay@{GamePlay}!GamePlay@{GamePlay}}
+\doxysubsubsection{\texorpdfstring{GamePlay()}{GamePlay()}}
+{\footnotesize\ttfamily Game\+Play\+::\+Game\+Play (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_game_play_ae68e44e5fe70b45d7dfe1a3f1c1577d0}\label{class_game_play_ae68e44e5fe70b45d7dfe1a3f1c1577d0}} 
+\index{GamePlay@{GamePlay}!````~GamePlay@{$\sim$GamePlay}}
+\index{````~GamePlay@{$\sim$GamePlay}!GamePlay@{GamePlay}}
+\doxysubsubsection{\texorpdfstring{$\sim$GamePlay()}{~GamePlay()}}
+{\footnotesize\ttfamily Game\+Play\+::$\sim$\+Game\+Play (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_game_play_a3e7e21088085d3bf95ead2dfe9589963}\label{class_game_play_a3e7e21088085d3bf95ead2dfe9589963}} 
+\index{GamePlay@{GamePlay}!render@{render}}
+\index{render@{render}!GamePlay@{GamePlay}}
+\doxysubsubsection{\texorpdfstring{render()}{render()}}
+{\footnotesize\ttfamily void Game\+Play\+::render (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Draw all objects in Open\+GL world. 
+
+\mbox{\Hypertarget{class_game_play_a386afa7a118ea7d599c1141254dd8f68}\label{class_game_play_a386afa7a118ea7d599c1141254dd8f68}} 
+\index{GamePlay@{GamePlay}!startGame@{startGame}}
+\index{startGame@{startGame}!GamePlay@{GamePlay}}
+\doxysubsubsection{\texorpdfstring{startGame()}{startGame()}}
+{\footnotesize\ttfamily void Game\+Play\+::start\+Game (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_game_play_a6d9f0b0b2dacfd1c359260d1e2ecd45e}\label{class_game_play_a6d9f0b0b2dacfd1c359260d1e2ecd45e}} 
+\index{GamePlay@{GamePlay}!update@{update}}
+\index{update@{update}!GamePlay@{GamePlay}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily void Game\+Play\+::update (\begin{DoxyParamCaption}\item[{std\+::queue$<$ unsigned char $>$ \&}]{discrete\+Key\+Buf,  }\item[{const bool $\ast$}]{async\+Key\+Buf }\end{DoxyParamCaption})}
+
+
+
+Handle game frame. It must be called in every frame. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em discrete\+Key\+Buf} & Discrete keyboard input queue to handle. \\
+\hline
+{\em async\+Key\+Buf} & Async keyboard input array to handle. The indices are ASCII code of each key. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/choiwooseok/\+Google\+Drive/\+Github Local Repo/shmup/include/gameplay/\mbox{\hyperlink{_game_play_8hpp}{Game\+Play.\+hpp}}\item 
+/\+Users/choiwooseok/\+Google\+Drive/\+Github Local Repo/shmup/src/gameplay/\mbox{\hyperlink{_game_play_8cpp}{Game\+Play.\+cpp}}\end{DoxyCompactItemize}

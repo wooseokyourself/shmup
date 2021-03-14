@@ -12,7 +12,7 @@ Rectangle::Rectangle (const GLfloat _width, const GLfloat _height)
  * @param _width (-1.0 to 1.0)
  * @param _height (-1.0 to 1.0)
  */
-Rectangle::Rectangle (const Point p, const GLfloat _width, const GLfloat _height)
+Rectangle::Rectangle (const Point2D p, const GLfloat _width, const GLfloat _height)
 : x(p.x), y(p.y), width(_width), height(_height), color(1.0f, 1.0f, 1.0f) { }
 
 /**
@@ -27,19 +27,19 @@ Rectangle::Rectangle (const GLfloat _x, const GLfloat _y, const GLfloat _width, 
 /**
  * @return The point of the left-top of the rectangle.
  */
-Point Rectangle::getLeftTop () const {
+Point2D Rectangle::getLeftTop () const {
     GLfloat halfWidth = width / 2;
     GLfloat halfHeight = height / 2;
-    return Point(x - halfWidth, y + halfHeight);
+    return Point2D(x - halfWidth, y + halfHeight);
 }
 
 /**
  * @return The point of the right-bottom of the rectangle.
  */
-Point Rectangle::getRightBottom () const {
+Point2D Rectangle::getRightBottom () const {
     GLfloat halfWidth = width / 2;
     GLfloat halfHeight = height / 2;
-    return Point(x + halfWidth, y - halfHeight);
+    return Point2D(x + halfWidth, y - halfHeight);
 }
 
 /**
@@ -54,12 +54,9 @@ void Rectangle::setPosition (const GLfloat _x, const GLfloat _y) {
 
 /**
  * @brief Draw the rectangle in OpenGL world.
- * @param R The R value of the rectangle's color. (0.0 to 1.0)
- * @param G The G value of the rectangle's color. (0.0 to 1.0)
- * @param B The B value of the rectangle's color. (0.0 to 1.0)
  */
-void Rectangle::display (const GLfloat R, const GLfloat G, const GLfloat B) const {
-    glColor3f(R, G, B);
+void Rectangle::display () const {
+    glColor3f(color.R, color.G, color.B);
     GLfloat w = width / 2;
     GLfloat h = height / 2;
     glBegin(GL_LINE_LOOP);
@@ -68,14 +65,6 @@ void Rectangle::display (const GLfloat R, const GLfloat G, const GLfloat B) cons
         glVertex2f(x + w, y + h);
         glVertex2f(x + w, y - h);
     glEnd();
-}
-
-/**
- * @brief Draw the rectangle in OpenGL world.
- * @param color The 3-tuple of RGB value of the rectangle's color. (each value is 0.0 to 1.0)
- */
-void Rectangle::display (const Rgb color) const {
-    display(color.R, color.G, color.B);
 }
 
 /**

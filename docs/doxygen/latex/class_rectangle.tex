@@ -1,0 +1,253 @@
+\hypertarget{class_rectangle}{}\doxysection{Rectangle Class Reference}
+\label{class_rectangle}\index{Rectangle@{Rectangle}}
+
+
+{\ttfamily \#include $<$Rectangle.\+hpp$>$}
+
+Inheritance diagram for Rectangle\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_rectangle}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_rectangle_a400ec8be755040a2f806f93b183d82b9}{Rectangle}} (const GLfloat \+\_\+width, const GLfloat \+\_\+height)
+\item 
+\mbox{\hyperlink{class_rectangle_abb2a21b55d181badcb913d7c61d65911}{Rectangle}} (const \mbox{\hyperlink{struct_point}{Point2D}} p, const GLfloat \+\_\+width, const GLfloat \+\_\+height)
+\item 
+\mbox{\hyperlink{class_rectangle_accac4c63e06d6a8ea5411783046a284d}{Rectangle}} (const GLfloat \+\_\+x, const GLfloat \+\_\+y, const GLfloat \+\_\+width, const GLfloat \+\_\+height)
+\item 
+\mbox{\hyperlink{struct_point}{Point2D}} \mbox{\hyperlink{class_rectangle_ac3f0efbfdf55eabed1f0d89981dc44a1}{get\+Left\+Top}} () const
+\item 
+\mbox{\hyperlink{struct_point}{Point2D}} \mbox{\hyperlink{class_rectangle_a2d090fbde0358555bcc665479392041f}{get\+Right\+Bottom}} () const
+\item 
+void \mbox{\hyperlink{class_rectangle_ad6b0731d2ce51bc985d42994a7e5f03b}{set\+Position}} (const GLfloat \+\_\+x, const GLfloat \+\_\+y)
+\begin{DoxyCompactList}\small\item\em Set the x and y of the rectangle. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_rectangle_a4015898d58cc80a0fab5a8bb15b44c02}{display}} (const GLfloat R, const GLfloat G, const GLfloat B) const
+\begin{DoxyCompactList}\small\item\em Draw the rectangle in Open\+GL world. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_rectangle_a21f591b9ef405ff98d30131b0740bc56}{display}} (const \mbox{\hyperlink{struct_rgb}{Rgb}} \mbox{\hyperlink{class_rectangle_a11a8b29acb496c5a36d658a022d224a3}{color}}) const
+\begin{DoxyCompactList}\small\item\em Draw the rectangle in Open\+GL world. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_rectangle_a8b3761a0a51f0116c0069b48e05718e0}{set\+Color}} (const GLfloat \+\_\+R, const GLfloat \+\_\+G, const GLfloat \+\_\+B)
+\begin{DoxyCompactList}\small\item\em Set color of the rectangle. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_rectangle_a7e70f880092a258f73811deb95b4c1e2}{set\+Color}} (const \mbox{\hyperlink{struct_rgb}{Rgb}} \+\_\+color)
+\begin{DoxyCompactList}\small\item\em Set color of the rectangle. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_rectangle_a28d3553e5e40bb8ee15d0bb6f7acdeca}{set\+Random\+Color}} ()
+\begin{DoxyCompactList}\small\item\em Set random color of the rectangle. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+GLfloat \mbox{\hyperlink{class_rectangle_a9b89bac9ec8b8d582c52e53da3cdb313}{x}}
+\item 
+GLfloat \mbox{\hyperlink{class_rectangle_a554f791e45452fd4993d69e89bdca1a4}{y}}
+\item 
+GLfloat \mbox{\hyperlink{class_rectangle_a8454cbe477d9525b4088d374a22748a6}{width}}
+\item 
+GLfloat \mbox{\hyperlink{class_rectangle_ae09fe47e6b426dadd5de4aed0bfde392}{height}}
+\item 
+\mbox{\hyperlink{struct_rgb}{Rgb}} \mbox{\hyperlink{class_rectangle_a11a8b29acb496c5a36d658a022d224a3}{color}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_rectangle_a400ec8be755040a2f806f93b183d82b9}\label{class_rectangle_a400ec8be755040a2f806f93b183d82b9}} 
+\index{Rectangle@{Rectangle}!Rectangle@{Rectangle}}
+\index{Rectangle@{Rectangle}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{Rectangle()}{Rectangle()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Rectangle\+::\+Rectangle (\begin{DoxyParamCaption}\item[{const GLfloat}]{\+\_\+width,  }\item[{const GLfloat}]{\+\_\+height }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+width} & (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+height} & (-\/1.\+0 to 1.\+0) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_rectangle_abb2a21b55d181badcb913d7c61d65911}\label{class_rectangle_abb2a21b55d181badcb913d7c61d65911}} 
+\index{Rectangle@{Rectangle}!Rectangle@{Rectangle}}
+\index{Rectangle@{Rectangle}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{Rectangle()}{Rectangle()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Rectangle\+::\+Rectangle (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_point}{Point2D}}}]{p,  }\item[{const GLfloat}]{\+\_\+width,  }\item[{const GLfloat}]{\+\_\+height }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The center point axis of the rectangle. (each are -\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+width} & (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+height} & (-\/1.\+0 to 1.\+0) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_rectangle_accac4c63e06d6a8ea5411783046a284d}\label{class_rectangle_accac4c63e06d6a8ea5411783046a284d}} 
+\index{Rectangle@{Rectangle}!Rectangle@{Rectangle}}
+\index{Rectangle@{Rectangle}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{Rectangle()}{Rectangle()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Rectangle\+::\+Rectangle (\begin{DoxyParamCaption}\item[{const GLfloat}]{\+\_\+x,  }\item[{const GLfloat}]{\+\_\+y,  }\item[{const GLfloat}]{\+\_\+width,  }\item[{const GLfloat}]{\+\_\+height }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+x} & The x value of the center point of the rectangle. (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+y} & The y value of the center point of the rectangle. (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+width} & (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+height} & (-\/1.\+0 to 1.\+0) \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_rectangle_a4015898d58cc80a0fab5a8bb15b44c02}\label{class_rectangle_a4015898d58cc80a0fab5a8bb15b44c02}} 
+\index{Rectangle@{Rectangle}!display@{display}}
+\index{display@{display}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{display()}{display()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Rectangle\+::display (\begin{DoxyParamCaption}\item[{const GLfloat}]{R,  }\item[{const GLfloat}]{G,  }\item[{const GLfloat}]{B }\end{DoxyParamCaption}) const}
+
+
+
+Draw the rectangle in Open\+GL world. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em R} & The R value of the rectangle\textquotesingle{}s color. (0.\+0 to 1.\+0) \\
+\hline
+{\em G} & The G value of the rectangle\textquotesingle{}s color. (0.\+0 to 1.\+0) \\
+\hline
+{\em B} & The B value of the rectangle\textquotesingle{}s color. (0.\+0 to 1.\+0) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_rectangle_a21f591b9ef405ff98d30131b0740bc56}\label{class_rectangle_a21f591b9ef405ff98d30131b0740bc56}} 
+\index{Rectangle@{Rectangle}!display@{display}}
+\index{display@{display}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{display()}{display()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Rectangle\+::display (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_rgb}{Rgb}}}]{color }\end{DoxyParamCaption}) const}
+
+
+
+Draw the rectangle in Open\+GL world. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em color} & The 3-\/tuple of RGB value of the rectangle\textquotesingle{}s color. (each value is 0.\+0 to 1.\+0) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_rectangle_ac3f0efbfdf55eabed1f0d89981dc44a1}\label{class_rectangle_ac3f0efbfdf55eabed1f0d89981dc44a1}} 
+\index{Rectangle@{Rectangle}!getLeftTop@{getLeftTop}}
+\index{getLeftTop@{getLeftTop}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{getLeftTop()}{getLeftTop()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_point}{Point2D}} Rectangle\+::get\+Left\+Top (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\begin{DoxyReturn}{Returns}
+The point of the left-\/top of the rectangle. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_rectangle_a2d090fbde0358555bcc665479392041f}\label{class_rectangle_a2d090fbde0358555bcc665479392041f}} 
+\index{Rectangle@{Rectangle}!getRightBottom@{getRightBottom}}
+\index{getRightBottom@{getRightBottom}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{getRightBottom()}{getRightBottom()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_point}{Point2D}} Rectangle\+::get\+Right\+Bottom (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\begin{DoxyReturn}{Returns}
+The point of the right-\/bottom of the rectangle. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_rectangle_a8b3761a0a51f0116c0069b48e05718e0}\label{class_rectangle_a8b3761a0a51f0116c0069b48e05718e0}} 
+\index{Rectangle@{Rectangle}!setColor@{setColor}}
+\index{setColor@{setColor}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{setColor()}{setColor()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Rectangle\+::set\+Color (\begin{DoxyParamCaption}\item[{const GLfloat}]{\+\_\+R,  }\item[{const GLfloat}]{\+\_\+G,  }\item[{const GLfloat}]{\+\_\+B }\end{DoxyParamCaption})}
+
+
+
+Set color of the rectangle. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em R} & The R value of the rectangle\textquotesingle{}s color. (0.\+0 to 1.\+0) \\
+\hline
+{\em G} & The G value of the rectangle\textquotesingle{}s color. (0.\+0 to 1.\+0) \\
+\hline
+{\em B} & The B value of the rectangle\textquotesingle{}s color. (0.\+0 to 1.\+0) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_rectangle_a7e70f880092a258f73811deb95b4c1e2}\label{class_rectangle_a7e70f880092a258f73811deb95b4c1e2}} 
+\index{Rectangle@{Rectangle}!setColor@{setColor}}
+\index{setColor@{setColor}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{setColor()}{setColor()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Rectangle\+::set\+Color (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_rgb}{Rgb}}}]{\+\_\+color }\end{DoxyParamCaption})}
+
+
+
+Set color of the rectangle. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em color} & The 3-\/tuple of RGB value of the rectangle\textquotesingle{}s color. (each value is 0.\+0 to 1.\+0) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_rectangle_ad6b0731d2ce51bc985d42994a7e5f03b}\label{class_rectangle_ad6b0731d2ce51bc985d42994a7e5f03b}} 
+\index{Rectangle@{Rectangle}!setPosition@{setPosition}}
+\index{setPosition@{setPosition}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{setPosition()}{setPosition()}}
+{\footnotesize\ttfamily void Rectangle\+::set\+Position (\begin{DoxyParamCaption}\item[{const GLfloat}]{\+\_\+x,  }\item[{const GLfloat}]{\+\_\+y }\end{DoxyParamCaption})}
+
+
+
+Set the x and y of the rectangle. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+x} & New x value of the center point of the rectangle. \\
+\hline
+{\em \+\_\+y} & New y value of the center point of the rectangle. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_rectangle_a28d3553e5e40bb8ee15d0bb6f7acdeca}\label{class_rectangle_a28d3553e5e40bb8ee15d0bb6f7acdeca}} 
+\index{Rectangle@{Rectangle}!setRandomColor@{setRandomColor}}
+\index{setRandomColor@{setRandomColor}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{setRandomColor()}{setRandomColor()}}
+{\footnotesize\ttfamily void Rectangle\+::set\+Random\+Color (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Set random color of the rectangle. 
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_rectangle_a11a8b29acb496c5a36d658a022d224a3}\label{class_rectangle_a11a8b29acb496c5a36d658a022d224a3}} 
+\index{Rectangle@{Rectangle}!color@{color}}
+\index{color@{color}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{color}{color}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_rgb}{Rgb}} Rectangle\+::color\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_rectangle_ae09fe47e6b426dadd5de4aed0bfde392}\label{class_rectangle_ae09fe47e6b426dadd5de4aed0bfde392}} 
+\index{Rectangle@{Rectangle}!height@{height}}
+\index{height@{height}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{height}{height}}
+{\footnotesize\ttfamily GLfloat Rectangle\+::height\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_rectangle_a8454cbe477d9525b4088d374a22748a6}\label{class_rectangle_a8454cbe477d9525b4088d374a22748a6}} 
+\index{Rectangle@{Rectangle}!width@{width}}
+\index{width@{width}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{width}{width}}
+{\footnotesize\ttfamily GLfloat Rectangle\+::width\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_rectangle_a9b89bac9ec8b8d582c52e53da3cdb313}\label{class_rectangle_a9b89bac9ec8b8d582c52e53da3cdb313}} 
+\index{Rectangle@{Rectangle}!x@{x}}
+\index{x@{x}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{x}{x}}
+{\footnotesize\ttfamily GLfloat Rectangle\+::x\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_rectangle_a554f791e45452fd4993d69e89bdca1a4}\label{class_rectangle_a554f791e45452fd4993d69e89bdca1a4}} 
+\index{Rectangle@{Rectangle}!y@{y}}
+\index{y@{y}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{y}{y}}
+{\footnotesize\ttfamily GLfloat Rectangle\+::y\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/choiwooseok/\+Google\+Drive/\+Github Local Repo/shmup/include/base/\mbox{\hyperlink{_rectangle_8hpp}{Rectangle.\+hpp}}\item 
+/\+Users/choiwooseok/\+Google\+Drive/\+Github Local Repo/shmup/src/base/\mbox{\hyperlink{_rectangle_8cpp}{Rectangle.\+cpp}}\end{DoxyCompactItemize}

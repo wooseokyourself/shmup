@@ -1,0 +1,72 @@
+\hypertarget{_dynamic_object_8hpp}{}\doxysection{/\+Users/choiwooseok/\+Google\+Drive/\+Github Local Repo/shmup/include/base/\+Dynamic\+Object.hpp File Reference}
+\label{_dynamic_object_8hpp}\index{/Users/choiwooseok/GoogleDrive/Github Local Repo/shmup/include/base/DynamicObject.hpp@{/Users/choiwooseok/GoogleDrive/Github Local Repo/shmup/include/base/DynamicObject.hpp}}
+{\ttfamily \#include \char`\"{}base/\+Rectangle.\+hpp\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_dynamic_object}{Dynamic\+Object}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aa}{Direction}} \{ \newline
+\mbox{\hyperlink{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaac157bdf0b85a40d2619cbc8bc1ae5fe2}{NONE}} = 0
+, \mbox{\hyperlink{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaadb45120aafd37a973140edee24708065}{LEFT}} = 0x0064
+, \mbox{\hyperlink{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaaba595d8bca8bc5e67c37c0a9d89becfa}{UP}} = 0x0065
+, \mbox{\hyperlink{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaaec8379af7490bb9eaaf579cf17876f38}{RIGHT}} = 0x0066
+, \newline
+\mbox{\hyperlink{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaa9b0b4a95b99523966e0e34ffdadac9da}{DOWN}} = 0x0067
+, \mbox{\hyperlink{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaa68d2cceb071f30c4b3ffbefdf0499137}{LEFT\+\_\+\+UP}} = 1
+, \mbox{\hyperlink{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaa91a530eb0387ac0d86947784a1946a14}{UP\+\_\+\+RIGHT}} = 2
+, \mbox{\hyperlink{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaaa5f8da60a088071fe87d5d31be4842ec}{RIGHT\+\_\+\+DOWN}} = 3
+, \newline
+\mbox{\hyperlink{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaa0ae724cef12b771121df5a7c083bf1b6}{DOWN\+\_\+\+LEFT}} = 4
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aa}\label{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aa}} 
+\index{DynamicObject.hpp@{DynamicObject.hpp}!Direction@{Direction}}
+\index{Direction@{Direction}!DynamicObject.hpp@{DynamicObject.hpp}}
+\doxysubsubsection{\texorpdfstring{Direction}{Direction}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aa}{Direction}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NONE@{NONE}!DynamicObject.hpp@{DynamicObject.hpp}}\index{DynamicObject.hpp@{DynamicObject.hpp}!NONE@{NONE}}}\mbox{\Hypertarget{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaac157bdf0b85a40d2619cbc8bc1ae5fe2}\label{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaac157bdf0b85a40d2619cbc8bc1ae5fe2}} 
+NONE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LEFT@{LEFT}!DynamicObject.hpp@{DynamicObject.hpp}}\index{DynamicObject.hpp@{DynamicObject.hpp}!LEFT@{LEFT}}}\mbox{\Hypertarget{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaadb45120aafd37a973140edee24708065}\label{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaadb45120aafd37a973140edee24708065}} 
+LEFT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UP@{UP}!DynamicObject.hpp@{DynamicObject.hpp}}\index{DynamicObject.hpp@{DynamicObject.hpp}!UP@{UP}}}\mbox{\Hypertarget{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaaba595d8bca8bc5e67c37c0a9d89becfa}\label{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaaba595d8bca8bc5e67c37c0a9d89becfa}} 
+UP&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RIGHT@{RIGHT}!DynamicObject.hpp@{DynamicObject.hpp}}\index{DynamicObject.hpp@{DynamicObject.hpp}!RIGHT@{RIGHT}}}\mbox{\Hypertarget{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaaec8379af7490bb9eaaf579cf17876f38}\label{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaaec8379af7490bb9eaaf579cf17876f38}} 
+RIGHT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DOWN@{DOWN}!DynamicObject.hpp@{DynamicObject.hpp}}\index{DynamicObject.hpp@{DynamicObject.hpp}!DOWN@{DOWN}}}\mbox{\Hypertarget{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaa9b0b4a95b99523966e0e34ffdadac9da}\label{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaa9b0b4a95b99523966e0e34ffdadac9da}} 
+DOWN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LEFT\_UP@{LEFT\_UP}!DynamicObject.hpp@{DynamicObject.hpp}}\index{DynamicObject.hpp@{DynamicObject.hpp}!LEFT\_UP@{LEFT\_UP}}}\mbox{\Hypertarget{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaa68d2cceb071f30c4b3ffbefdf0499137}\label{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaa68d2cceb071f30c4b3ffbefdf0499137}} 
+LEFT\+\_\+\+UP&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UP\_RIGHT@{UP\_RIGHT}!DynamicObject.hpp@{DynamicObject.hpp}}\index{DynamicObject.hpp@{DynamicObject.hpp}!UP\_RIGHT@{UP\_RIGHT}}}\mbox{\Hypertarget{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaa91a530eb0387ac0d86947784a1946a14}\label{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaa91a530eb0387ac0d86947784a1946a14}} 
+UP\+\_\+\+RIGHT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RIGHT\_DOWN@{RIGHT\_DOWN}!DynamicObject.hpp@{DynamicObject.hpp}}\index{DynamicObject.hpp@{DynamicObject.hpp}!RIGHT\_DOWN@{RIGHT\_DOWN}}}\mbox{\Hypertarget{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaaa5f8da60a088071fe87d5d31be4842ec}\label{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaaa5f8da60a088071fe87d5d31be4842ec}} 
+RIGHT\+\_\+\+DOWN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DOWN\_LEFT@{DOWN\_LEFT}!DynamicObject.hpp@{DynamicObject.hpp}}\index{DynamicObject.hpp@{DynamicObject.hpp}!DOWN\_LEFT@{DOWN\_LEFT}}}\mbox{\Hypertarget{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaa0ae724cef12b771121df5a7c083bf1b6}\label{_dynamic_object_8hpp_a224b9163917ac32fc95a60d8c1eec3aaa0ae724cef12b771121df5a7c083bf1b6}} 
+DOWN\+\_\+\+LEFT&\\
+\hline
+
+\end{DoxyEnumFields}

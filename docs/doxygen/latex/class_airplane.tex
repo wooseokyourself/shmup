@@ -1,0 +1,201 @@
+\hypertarget{class_airplane}{}\doxysection{Airplane Class Reference}
+\label{class_airplane}\index{Airplane@{Airplane}}
+
+
+{\ttfamily \#include $<$Airplane.\+hpp$>$}
+
+Inheritance diagram for Airplane\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_airplane}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_airplane_ac8e263c0f2a9dfeac3387841ec4aa8ad}{Airplane}} (const \mbox{\hyperlink{struct_point}{Point2D}} p, const GLfloat \+\_\+width, const GLfloat \+\_\+height, const GLfloat \+\_\+speed, const GLfloat bullet\+Speed)
+\item 
+\mbox{\hyperlink{class_airplane_aece0ccd2c65cc8cf78c183835df5405b}{Airplane}} (const GLfloat \+\_\+x, const GLfloat \+\_\+y, const GLfloat \+\_\+width, const GLfloat \+\_\+height, const GLfloat \+\_\+speed, const GLfloat bullet\+Speed)
+\item 
+void \mbox{\hyperlink{class_airplane_aeb1f0c4c6ead21b612a110e297741ad6}{update}} (const int bullet\+Direction)
+\begin{DoxyCompactList}\small\item\em Manage all bullets; movement of all bullets, deactivating bullets which is out of bound. This method must be called in all frame. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_airplane_aa1f1e6adeb4d8713b08fa38abb617f65}{init}} (const uint8\+\_\+t \+\_\+lives)
+\begin{DoxyCompactList}\small\item\em Construct the airplane. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_airplane_a12aeaa9bc7748e6c65c39eaca0f292f1}{destruct}} ()
+\begin{DoxyCompactList}\small\item\em Destruct the airplane. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_airplane_af9609862e3496f3fa0edb6cbdefe942a}{lose\+Life}} ()
+\begin{DoxyCompactList}\small\item\em Subtract a life of the airplane. If the airplane\textquotesingle{}s life is 0, the airplane will be destructed. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_airplane_aaae7dd3d33d6a463090d2a9ea36f6ffd}{is\+Alive}} () const
+\item 
+void \mbox{\hyperlink{class_airplane_a548fd3d8b70a470fe8444d190b1789d6}{fire}} ()
+\begin{DoxyCompactList}\small\item\em Fire a bullet. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_airplane_af3bb3c3fc4dae77bda82dd7501b28477}{display}} () const
+\begin{DoxyCompactList}\small\item\em Draw the airplane and its bullets in Open\+GL world. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_airplane_a7a7d10288ad3fb7c4926487b9bc2181a}{get\+Last\+Activated\+Time}} () const
+\item 
+int \mbox{\hyperlink{class_airplane_a93d9db5c5ccd1ec6ae91875bc6fc7333}{get\+Last\+Deactivated\+Time}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_airplane_a6000ed169e3cabcd0c520a313d8b7341}{Game\+Play}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_airplane_ac8e263c0f2a9dfeac3387841ec4aa8ad}\label{class_airplane_ac8e263c0f2a9dfeac3387841ec4aa8ad}} 
+\index{Airplane@{Airplane}!Airplane@{Airplane}}
+\index{Airplane@{Airplane}!Airplane@{Airplane}}
+\doxysubsubsection{\texorpdfstring{Airplane()}{Airplane()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Airplane\+::\+Airplane (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_point}{Point2D}}}]{p,  }\item[{const GLfloat}]{\+\_\+width,  }\item[{const GLfloat}]{\+\_\+height,  }\item[{const GLfloat}]{\+\_\+speed,  }\item[{const GLfloat}]{bullet\+Speed }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The center point axis of the airplane. (each are -\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+width} & (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+height} & (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+speed} & (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em bullet\+Speed} & (-\/1.\+0 to 1.\+0) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_airplane_aece0ccd2c65cc8cf78c183835df5405b}\label{class_airplane_aece0ccd2c65cc8cf78c183835df5405b}} 
+\index{Airplane@{Airplane}!Airplane@{Airplane}}
+\index{Airplane@{Airplane}!Airplane@{Airplane}}
+\doxysubsubsection{\texorpdfstring{Airplane()}{Airplane()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Airplane\+::\+Airplane (\begin{DoxyParamCaption}\item[{const GLfloat}]{\+\_\+x,  }\item[{const GLfloat}]{\+\_\+y,  }\item[{const GLfloat}]{\+\_\+width,  }\item[{const GLfloat}]{\+\_\+height,  }\item[{const GLfloat}]{\+\_\+speed,  }\item[{const GLfloat}]{bullet\+Speed }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+x} & The x value of the center point of the airplane. (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+y} & The y value of the center point of the airplane. (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+width} & (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+height} & (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em \+\_\+speed} & (-\/1.\+0 to 1.\+0) \\
+\hline
+{\em bullet\+Speed} & (-\/1.\+0 to 1.\+0) \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_airplane_a12aeaa9bc7748e6c65c39eaca0f292f1}\label{class_airplane_a12aeaa9bc7748e6c65c39eaca0f292f1}} 
+\index{Airplane@{Airplane}!destruct@{destruct}}
+\index{destruct@{destruct}!Airplane@{Airplane}}
+\doxysubsubsection{\texorpdfstring{destruct()}{destruct()}}
+{\footnotesize\ttfamily void Airplane\+::destruct (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destruct the airplane. 
+
+\mbox{\Hypertarget{class_airplane_af3bb3c3fc4dae77bda82dd7501b28477}\label{class_airplane_af3bb3c3fc4dae77bda82dd7501b28477}} 
+\index{Airplane@{Airplane}!display@{display}}
+\index{display@{display}!Airplane@{Airplane}}
+\doxysubsubsection{\texorpdfstring{display()}{display()}}
+{\footnotesize\ttfamily void Airplane\+::display (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Draw the airplane and its bullets in Open\+GL world. 
+
+\mbox{\Hypertarget{class_airplane_a548fd3d8b70a470fe8444d190b1789d6}\label{class_airplane_a548fd3d8b70a470fe8444d190b1789d6}} 
+\index{Airplane@{Airplane}!fire@{fire}}
+\index{fire@{fire}!Airplane@{Airplane}}
+\doxysubsubsection{\texorpdfstring{fire()}{fire()}}
+{\footnotesize\ttfamily void Airplane\+::fire (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Fire a bullet. 
+
+\mbox{\Hypertarget{class_airplane_a7a7d10288ad3fb7c4926487b9bc2181a}\label{class_airplane_a7a7d10288ad3fb7c4926487b9bc2181a}} 
+\index{Airplane@{Airplane}!getLastActivatedTime@{getLastActivatedTime}}
+\index{getLastActivatedTime@{getLastActivatedTime}!Airplane@{Airplane}}
+\doxysubsubsection{\texorpdfstring{getLastActivatedTime()}{getLastActivatedTime()}}
+{\footnotesize\ttfamily int Airplane\+::get\+Last\+Activated\+Time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\begin{DoxyReturn}{Returns}
+The last constructed time of the airplane. The time is the elapsed time from the process executed. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_airplane_a93d9db5c5ccd1ec6ae91875bc6fc7333}\label{class_airplane_a93d9db5c5ccd1ec6ae91875bc6fc7333}} 
+\index{Airplane@{Airplane}!getLastDeactivatedTime@{getLastDeactivatedTime}}
+\index{getLastDeactivatedTime@{getLastDeactivatedTime}!Airplane@{Airplane}}
+\doxysubsubsection{\texorpdfstring{getLastDeactivatedTime()}{getLastDeactivatedTime()}}
+{\footnotesize\ttfamily int Airplane\+::get\+Last\+Deactivated\+Time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\begin{DoxyReturn}{Returns}
+The last destructed time of the airplane. The time is the elapsed time from the process executed. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_airplane_aa1f1e6adeb4d8713b08fa38abb617f65}\label{class_airplane_aa1f1e6adeb4d8713b08fa38abb617f65}} 
+\index{Airplane@{Airplane}!init@{init}}
+\index{init@{init}!Airplane@{Airplane}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily void Airplane\+::init (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t}]{\+\_\+lives }\end{DoxyParamCaption})}
+
+
+
+Construct the airplane. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+lives} & The number of lives of the airplane. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_airplane_aaae7dd3d33d6a463090d2a9ea36f6ffd}\label{class_airplane_aaae7dd3d33d6a463090d2a9ea36f6ffd}} 
+\index{Airplane@{Airplane}!isAlive@{isAlive}}
+\index{isAlive@{isAlive}!Airplane@{Airplane}}
+\doxysubsubsection{\texorpdfstring{isAlive()}{isAlive()}}
+{\footnotesize\ttfamily bool Airplane\+::is\+Alive (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\begin{DoxyReturn}{Returns}
+true if the airplane was not destructed. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_airplane_af9609862e3496f3fa0edb6cbdefe942a}\label{class_airplane_af9609862e3496f3fa0edb6cbdefe942a}} 
+\index{Airplane@{Airplane}!loseLife@{loseLife}}
+\index{loseLife@{loseLife}!Airplane@{Airplane}}
+\doxysubsubsection{\texorpdfstring{loseLife()}{loseLife()}}
+{\footnotesize\ttfamily void Airplane\+::lose\+Life (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Subtract a life of the airplane. If the airplane\textquotesingle{}s life is 0, the airplane will be destructed. 
+
+\mbox{\Hypertarget{class_airplane_aeb1f0c4c6ead21b612a110e297741ad6}\label{class_airplane_aeb1f0c4c6ead21b612a110e297741ad6}} 
+\index{Airplane@{Airplane}!update@{update}}
+\index{update@{update}!Airplane@{Airplane}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily void Airplane\+::update (\begin{DoxyParamCaption}\item[{const int}]{bullet\+Direction }\end{DoxyParamCaption})}
+
+
+
+Manage all bullets; movement of all bullets, deactivating bullets which is out of bound. This method must be called in all frame. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bullet\+Direction} & The direction of all bullets; LEFT, RIGHT, UP, DOWN, LEFT\+\_\+\+UP, UP\+\_\+\+RIGHT, RIGHT\+\_\+\+DOWN, DOWN\+\_\+\+LEFT \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{class_airplane_a6000ed169e3cabcd0c520a313d8b7341}\label{class_airplane_a6000ed169e3cabcd0c520a313d8b7341}} 
+\index{Airplane@{Airplane}!GamePlay@{GamePlay}}
+\index{GamePlay@{GamePlay}!Airplane@{Airplane}}
+\doxysubsubsection{\texorpdfstring{GamePlay}{GamePlay}}
+{\footnotesize\ttfamily friend class \mbox{\hyperlink{class_game_play}{Game\+Play}}\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/choiwooseok/\+Google\+Drive/\+Github Local Repo/shmup/include/dynamics/\mbox{\hyperlink{_airplane_8hpp}{Airplane.\+hpp}}\item 
+/\+Users/choiwooseok/\+Google\+Drive/\+Github Local Repo/shmup/src/dynamics/\mbox{\hyperlink{_airplane_8cpp}{Airplane.\+cpp}}\end{DoxyCompactItemize}

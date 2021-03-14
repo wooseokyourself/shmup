@@ -1,7 +1,7 @@
 #ifndef __Rect__
 #define __Rect__
 
-#include "base/Point.hpp"
+#include "base/Point2D.hpp"
 #include "base/Rgb.hpp"
 #include <cstdlib>
 #include <GL/glut.h>
@@ -10,13 +10,12 @@
 class Rectangle {
 public:
     Rectangle (const GLfloat _width, const GLfloat _height);
-    Rectangle (const Point p, const GLfloat _width, const GLfloat _height);
+    Rectangle (const Point2D p, const GLfloat _width, const GLfloat _height);
     Rectangle (const GLfloat _x, const GLfloat _y, const GLfloat _width, const GLfloat _height);
-    Point getLeftTop () const;
-    Point getRightBottom () const;
+    Point2D getLeftTop () const;
+    Point2D getRightBottom () const;
     void setPosition (const GLfloat _x, const GLfloat _y);
-    void display (const GLfloat R, const GLfloat G, const GLfloat B) const;
-    void display (const Rgb color) const;
+    void display () const;
     void setColor (const GLfloat _R, const GLfloat _G, const GLfloat _B);
     void setColor (const Rgb _color);
     void setRandomColor ();

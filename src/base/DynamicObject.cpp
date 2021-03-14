@@ -6,7 +6,7 @@
  * @param _speed (-1.0 to 1.0)
  */
 DynamicObject::DynamicObject (const GLfloat _width, const GLfloat _height, const GLfloat _speed)
-: Rectangle(0.0f, 0.0f, _width, _height), speed(_speed), direction(NONE), nextForward(0.0f) { }
+: Rectangle(0.0f, 0.0f, _width, _height), speed(_speed), direction(NONE) { }
 
 /**
  * @param p The center point axis of the object. (each are -1.0 to 1.0)
@@ -14,8 +14,8 @@ DynamicObject::DynamicObject (const GLfloat _width, const GLfloat _height, const
  * @param _height (-1.0 to 1.0)
  * @param _speed (-1.0 to 1.0)
  */
-DynamicObject::DynamicObject (const Point p, const GLfloat _width, const GLfloat _height, const GLfloat _speed)
-: Rectangle(p, _width, _height), speed(_speed), direction(NONE), nextForward(0.0f) { }
+DynamicObject::DynamicObject (const Point2D p, const GLfloat _width, const GLfloat _height, const GLfloat _speed)
+: Rectangle(p, _width, _height), speed(_speed), direction(NONE) { }
 
 /**
  * @param _x The x value of the center point of the object. (-1.0 to 1.0)
@@ -25,7 +25,7 @@ DynamicObject::DynamicObject (const Point p, const GLfloat _width, const GLfloat
  * @param _speed (-1.0 to 1.0)
  */
 DynamicObject::DynamicObject (const GLfloat _x, const GLfloat _y, const GLfloat _width, const GLfloat _height, const GLfloat _speed)
-: Rectangle(_x, _y, _width, _height), speed(_speed), direction(NONE), nextForward(0.0f) { }
+: Rectangle(_x, _y, _width, _height), speed(_speed), direction(NONE) { }
 
 /**
  * @brief Change the position of the object by @speed attribute.

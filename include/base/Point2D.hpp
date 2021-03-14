@@ -3,8 +3,8 @@
 
 #include <GL/glew.h>
 
-struct Point {
-    Point(GLfloat _x, GLfloat _y) : x(_x), y(_y) { }
+struct Point2D {
+    Point2D(GLfloat _x, GLfloat _y) : x(_x), y(_y) { }
     GLfloat x;
     GLfloat y;
 };

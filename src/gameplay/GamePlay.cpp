@@ -91,7 +91,7 @@ void GamePlay::lose () {
 void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    if (attacker->bulletManager.deactivateBulletIfItsIn(target->getLeftTop(), target->getRightBottom())) {
+    if (attacker->bulletManager.deactivateBulletWhichIsIn(target->getLeftTop(), target->getRightBottom())) {
         target->loseLife();
         if (!target->isAlive()) {
             if (target == player)
@@ -115,7 +115,7 @@ void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
 void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    if (attacker->bulletManager.deactivateBulletIfItsIn(target->getLeftTop(), target->getRightBottom())) {
+    if (attacker->bulletManager.deactivateBulletWhichIsIn(target->getLeftTop(), target->getRightBottom())) {
         if (target == player)
             lose();
         if (target == enemy) {
@@ -134,7 +134,7 @@ void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
 void GamePlay::checkHitDodge (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    if (attacker->bulletManager.deactivateBulletIfItsIn(target->getLeftTop(), target->getRightBottom())) {
+    if (attacker->bulletManager.deactivateBulletWhichIsIn(target->getLeftTop(), target->getRightBottom())) {
 
     }
 }

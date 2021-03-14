@@ -12,29 +12,19 @@
 
 class GamePlay;
 
-namespace AirplaneSpeed {
-    const GLfloat FAST = 0.05;
-    const GLfloat NORMAL = 0.03;
-    const GLfloat SLOW = 0.01;
-}
-
-namespace BulletSpeed {
-    const GLfloat FAST = 0.05;
-    const GLfloat NORMAL = 0.03;
-    const GLfloat SLOW = 0.01;
-};
-
 class Airplane : public DynamicObject {
 private:
     class BulletManager {
     public:
-        BulletManager (const GLfloat bulletWidth, const GLfloat bulletHeight, const GLfloat bulletSpeed);
+        BulletManager (const GLfloat bulletWidth,
+                       const GLfloat bulletHeight, 
+                       const GLfloat bulletSpeed);
         ~BulletManager ();
-        void activateBullet (const GLfloat x, const GLfloat y);
-        void display (const GLfloat R, const GLfloat G, const GLfloat B) const;
+        void activateBullet (const GLfloat x, const GLfloat y, const Rgb& color);
+        void display () const;
         void update (const int bulletDirection);
-        size_t activatedBulletsNumber ();
-        bool deactivateBulletIfItsIn (const Point leftTop, const Point rightBottom);
+        size_t getActivatedBulletsNumber () const;
+        bool deactivateBulletWhichIsIn (const Point2D leftTop, const Point2D rightBottom);
 
     private:
         std::list<Bullet*> activeBullets;
@@ -44,7 +34,7 @@ private:
     friend class GamePlay;
 
 public:
-    Airplane (const Point p, 
+    Airplane (const Point2D p, 
               const GLfloat _width, 
               const GLfloat _height, 
               const GLfloat _speed, 

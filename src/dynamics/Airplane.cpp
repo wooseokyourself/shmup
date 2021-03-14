@@ -1,6 +1,8 @@
 #include "dynamics/Airplane.hpp"
 
-Airplane::BulletManager::BulletManager (const GLfloat bulletWidth, const GLfloat bulletHeight, const GLfloat bulletSpeed) {
+Airplane::BulletManager::BulletManager (const GLfloat bulletWidth, 
+                                        const GLfloat bulletHeight, 
+                                        const GLfloat bulletSpeed) {
     for (int i = 0 ; i < MAX_BULLETS ; i ++) {
         Bullet* b = new Bullet(bulletWidth, bulletHeight, bulletSpeed);
         pool.push(b);
@@ -21,24 +23,22 @@ Airplane::BulletManager::~BulletManager () {
 /**
  * @brief Construct a bullet in (x,y) position.
  */
-void Airplane::BulletManager::activateBullet (const GLfloat x, const GLfloat y) {
+void Airplane::BulletManager::activateBullet (const GLfloat x, const GLfloat y, const Rgb& color) {
     if (pool.empty())
         return;
     Bullet* bullet = pool.top();
     pool.pop();
     bullet->setPosition(x, y);
+    bullet->setColor(color);
     activeBullets.push_back(bullet);
 }
 
 /**
  * @brief Draw all bullets in OpenGL world.
- * @param R The R value of the bullet's color. (0.0 to 1.0)
- * @param G The G value of the bullet's color. (0.0 to 1.0)
- * @param B The B value of the bullet's color. (0.0 to 1.0)
  */
-void Airplane::BulletManager::display (const GLfloat R, const GLfloat G, const GLfloat B) const {
+void Airplane::BulletManager::display () const {
     for (Bullet* bullet : activeBullets)
-        bullet->display(R, G, B);
+        bullet->display();
 }
 
 /**
@@ -66,7 +66,7 @@ void Airplane::BulletManager::update (const int bulletDirection) {
 /**
  * @return The number of existing bullets.
  */
-size_t Airplane::BulletManager::activatedBulletsNumber () {
+size_t Airplane::BulletManager::getActivatedBulletsNumber () const {
     return activeBullets.size();
 }
 
@@ -76,10 +76,10 @@ size_t Airplane::BulletManager::activatedBulletsNumber () {
  * @param rightBottom The right-bottom point of the target range.
  * @return false if no bullet removed.
  */
-bool Airplane::BulletManager::deactivateBulletIfItsIn (const Point leftTop, const Point rightBottom) {
+bool Airplane::BulletManager::deactivateBulletWhichIsIn (const Point2D leftTop, const Point2D rightBottom) {
     for (Bullet* bullet : activeBullets) {
-        Point bLeftTop = bullet->getLeftTop();
-        Point bRightBottom = bullet->getRightBottom();
+        Point2D bLeftTop = bullet->getLeftTop();
+        Point2D bRightBottom = bullet->getRightBottom();
         if ( ((bLeftTop.x > rightBottom.x) || (bRightBottom.x < leftTop.x)
          || (bLeftTop.y < rightBottom.y) || (bRightBottom.y > leftTop.y)) == false ) {
             pool.push(bullet);
@@ -97,7 +97,7 @@ bool Airplane::BulletManager::deactivateBulletIfItsIn (const Point leftTop, cons
  * @param _speed (-1.0 to 1.0)
  * @param bulletSpeed (-1.0 to 1.0)
  */
-Airplane::Airplane (const Point p,
+Airplane::Airplane (const Point2D p,
                     const GLfloat _width, 
                     const GLfloat _height, 
                     const GLfloat _speed, 
@@ -177,16 +177,16 @@ bool Airplane::isAlive () const {
  */
 void Airplane::fire () {
     if (isAlive())
-        bulletManager.activateBullet(x, y);
+        bulletManager.activateBullet(x, y, Rgb(color.R + 0.15f, color.G + 0.15f, color.B + 0.15f));
 }
 
 /**
  * @brief Draw the airplane and its bullets in OpenGL world.
  */
 void Airplane::display () const {
-    bulletManager.display(color.R + 0.25f, color.G + 0.25f, color.B + 0.25f);
+    bulletManager.display();
     if (isAlive())
-        Rectangle::display(color);
+        DynamicObject::display();
 }
 
 /**

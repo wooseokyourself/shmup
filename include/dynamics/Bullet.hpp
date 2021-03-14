@@ -5,7 +5,7 @@
 
 class Bullet : public DynamicObject {
 public:
-    Bullet (const Point p, const GLfloat _width, const GLfloat _height, const GLfloat _speed);
+    Bullet (const Point2D p, const GLfloat _width, const GLfloat _height, const GLfloat _speed);
     Bullet (const GLfloat _width, const GLfloat _height, const GLfloat _speed);
     bool isOutOfBound (const int bound);
 };
