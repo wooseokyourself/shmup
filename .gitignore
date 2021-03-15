@@ -3,6 +3,12 @@
 
 # Above that, x64/, x86/, *.d, and [Bb]in/ were removed for OpenGL binaries.
 
+# macOS executables
+app
+
+# Windows executables
+x64/Debug/
+
 # Compiled Object files
 *.slo
 *.lo
