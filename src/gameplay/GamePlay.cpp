@@ -116,6 +116,8 @@ void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
     if (attacker->bulletManager.deactivateBulletWhichIsIn(target->getLeftTop(), target->getRightBottom())) {
+        while (target->isAlive())
+            target->loseLife();
         if (target == player)
             lose();
         if (target == enemy) {
@@ -151,19 +153,25 @@ void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf
                 break;
             case 'c':
                 if (!allPassMode) {
+                    std::cout << "All Pass On" << std::endl;
                     allPassMode = true;
                     allFailMode = false;
                 }
-                else
+                else {
+                    std::cout << "All Pass Off" << std::endl;
                     allPassMode = false;
+                }
                 break;
             case 'f':
                 if (!allFailMode) {
+                    std::cout << "All Fail On" << std::endl;
                     allFailMode = true;
                     allPassMode = false;
                 }
-                else
+                else {
+                    std::cout << "All Fail Off" << std::endl;
                     allFailMode = false;
+                }
                 break;
         }
     }
