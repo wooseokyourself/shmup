@@ -20,7 +20,7 @@ void reshape (int width, int height) {
     glViewport(0, 0, (GLsizei)width, (GLsizei)height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, 1, 0, 1, 1, 1);
+    glOrtho(0.0f, Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT, 0.0f, 0.0f, 0.0f); // 관측 사각형의 종횡비
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
     gameplay.startGame();
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT);
+    glutInitWindowSize(Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT); // 윈도우의 종횡비
     glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (Window::WINDOW_WIDTH / 2),
                             (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (Window::WINDOW_HEIGHT / 2));
     glutCreateWindow("Assn1");
