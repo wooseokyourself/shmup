@@ -40,6 +40,7 @@ void specialKeyboardUp (int key, int x, int y) {
     asyncKeyBuf[key] = false;
 }
 
+/** @brief GLUT callback. */
 void updateFrame () {
     const int NOW_TIME = glutGet(GLUT_ELAPSED_TIME);
     if (NOW_TIME - lastRenderTime < TIME_PER_FRAME)
