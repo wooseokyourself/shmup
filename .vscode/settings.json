@@ -84,6 +84,11 @@
         "ranges": "cpp",
         "stop_token": "cpp",
         "cfenv": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "codecvt": "cpp",
+        "csignal": "cpp",
+        "fstream": "cpp",
+        "future": "cpp",
+        "valarray": "cpp"
     }
 }
