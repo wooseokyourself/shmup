@@ -5,65 +5,70 @@
  * @param _height (-1.0 to 1.0)
  */
 Rectangle::Rectangle (const GLfloat _width, const GLfloat _height)
-: x(0), y(0), width(_width), height(_height), color(1.0f, 1.0f, 1.0f) { }
+: width(_width), height(_height), color(1.0f, 1.0f, 1.0f) { }
 
 /**
- * @param p The center point axis of the rectangle. (each are -1.0 to 1.0)
+ * @param p The center point axis of the rectangle in world space. (each are -1.0 to 1.0)
  * @param _width (-1.0 to 1.0)
  * @param _height (-1.0 to 1.0)
  */
 Rectangle::Rectangle (const Point2D p, const GLfloat _width, const GLfloat _height)
-: x(p.x), y(p.y), width(_width), height(_height), color(1.0f, 1.0f, 1.0f) { }
+: width(_width), height(_height), color(1.0f, 1.0f, 1.0f) {
+    mat.setTranslate(p.x, p.y);
+}
 
 /**
- * @param _x The x value of the center point of the rectangle. (-1.0 to 1.0)
- * @param _y The y value of the center point of the rectangle. (-1.0 to 1.0)
+ * @param x The x value of the center point of the rectangle in world space. (-1.0 to 1.0)
+ * @param y The y value of the center point of the rectangle in world space. (-1.0 to 1.0)
  * @param _width (-1.0 to 1.0)
  * @param _height (-1.0 to 1.0)
  */
-Rectangle::Rectangle (const GLfloat _x, const GLfloat _y, const GLfloat _width, const GLfloat _height)
-: x(_x), y(_y), width(_width), height(_height), color(1.0f, 1.0f, 1.0f) { }
+Rectangle::Rectangle (const GLfloat x, const GLfloat y, const GLfloat _width, const GLfloat _height)
+: width(_width), height(_height), color(1.0f, 1.0f, 1.0f) {
+    mat.setTranslate(x, y);
+}
 
 /**
- * @return The point of the left-top of the rectangle.
+ * @return The point of the left-top of the rectangle in world space.
  */
 Point2D Rectangle::getLeftTop () const {
     GLfloat halfWidth = width / 2;
     GLfloat halfHeight = height / 2;
-    return Point2D(x - halfWidth, y + halfHeight);
+    return Point2D(mat.tx - halfWidth, mat.ty + halfHeight);
 }
 
 /**
- * @return The point of the right-bottom of the rectangle.
+ * @return The point of the right-bottom of the rectangle in world space.
  */
 Point2D Rectangle::getRightBottom () const {
     GLfloat halfWidth = width / 2;
     GLfloat halfHeight = height / 2;
-    return Point2D(x + halfWidth, y - halfHeight);
+    return Point2D(mat.tx + halfWidth, mat.ty - halfHeight);
 }
 
 /**
  * @brief Set the x and y of the rectangle.
- * @param _x New x value of the center point of the rectangle.
- * @param _y New y value of the center point of the rectangle.
+ * @param x New x value of the center point of the rectangle in world space.
+ * @param y New y value of the center point of the rectangle in world space.
  */
-void Rectangle::setPosition (const GLfloat _x, const GLfloat _y) {
-    x = _x;
-    y = _y;
+void Rectangle::setPosition (const GLfloat x, const GLfloat y) {
+    mat.setTranslate(x, y);
 }
 
 /**
  * @brief Draw the rectangle in OpenGL world.
  */
 void Rectangle::display () const {
+    glLoadIdentity();
+    glTranslatef(mat.tx, mat.ty, 0.0f);
     glColor3f(color.R, color.G, color.B);
     GLfloat w = width / 2;
     GLfloat h = height / 2;
     glBegin(GL_LINE_LOOP);
-        glVertex2f(x - w, y - h); 
-        glVertex2f(x - w, y + h);
-        glVertex2f(x + w, y + h);
-        glVertex2f(x + w, y - h);
+        glVertex2f(-w, -h); 
+        glVertex2f(-w, h);
+        glVertex2f(w, h);
+        glVertex2f(w, -h);
     glEnd();
 }
 

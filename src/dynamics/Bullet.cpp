@@ -13,20 +13,20 @@ Bullet::Bullet (const GLfloat _width, const GLfloat _height, const GLfloat _spee
 bool Bullet::isOutOfBound (const int bound) {
     switch (bound) {
         case LEFT:
-            return x < -1.0f;
+            return mat.tx < -1.0f;
         case UP:
-            return y > 1.0f;
+            return mat.ty > 1.0f;
         case RIGHT:
-            return x > 1.0f;
+            return mat.tx > 1.0f;
         case DOWN:
-            return y < -1.0f;
+            return mat.ty < -1.0f;
         case LEFT_UP:
-            return x < -1.0f || y > 1.0f;
+            return mat.tx < -1.0f || mat.ty > 1.0f;
         case UP_RIGHT:
-            return y > 1.0f || x > 1.0f;
+            return mat.ty > 1.0f || mat.tx > 1.0f;
         case RIGHT_DOWN:
-            return x > 1.0f || y < -1.0f;
+            return mat.tx > 1.0f || mat.ty < -1.0f;
         case DOWN_LEFT:
-            return y < -1.0f || x < -1.0f;
+            return mat.ty < -1.0f || mat.tx < -1.0f;
     }
 }
