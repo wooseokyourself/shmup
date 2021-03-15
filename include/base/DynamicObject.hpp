@@ -1,6 +1,7 @@
 #ifndef __DYNAMICOBJECT__
 #define __DYNAMICOBJECT__
 
+#include <cstdint>
 #include "base/Rectangle.hpp"
 #include "gameplay/Constants.hpp"
 
