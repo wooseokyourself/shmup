@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/c++,visualstudio
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,visualstudio
 
+# Above that, x64/, x86/, *.d, and [Bb]in/ were removed for OpenGL binaries.
+
 # Compiled Object files
 *.slo
 *.lo
@@ -63,7 +65,6 @@ mono_crash.*
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-[Bb]in/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
@@ -259,7 +260,6 @@ _pkginfo.txt
 !?*.[Cc]ache/
 
 # Others
-ClientBin/
 ~$*
 *~
 *.dbmdl
