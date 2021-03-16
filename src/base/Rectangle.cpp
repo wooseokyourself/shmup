@@ -59,6 +59,7 @@ void Rectangle::setPosition (const GLfloat x, const GLfloat y) {
  * @brief Draw the rectangle in OpenGL world.
  */
 void Rectangle::display () const {
+    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(mat.tx, mat.ty, 0.0f);
     glColor3f(color.R, color.G, color.B);
