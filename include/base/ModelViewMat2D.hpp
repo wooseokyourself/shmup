@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <GL/glew.h>
+#include "gameplay/Constants.hpp"
 
 class ModelViewMat2D {
 public:

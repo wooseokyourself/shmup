@@ -36,43 +36,43 @@ void DynamicObject::move (const int direction) {
         case NONE:
             break;
         case LEFT:
-            if (mat.tx > -1)
+            if (mat.tx > WORLD_BOUND::LEFT)
                 mat.moveTranslate(-speed, 0.0f);
             break;
         case RIGHT:
-            if (mat.tx < 1)
+            if (mat.tx < WORLD_BOUND::RIGHT)
                 mat.moveTranslate(speed, 0.0f);
             break;
         case UP:
-            if (mat.ty < 1)
+            if (mat.ty < WORLD_BOUND::UP)
                 mat.moveTranslate(0.0f, speed);
             break;
         case DOWN:
-            if (mat.ty > -1)
+            if (mat.ty > WORLD_BOUND::DOWN)
                 mat.moveTranslate(0.0f, -speed);
             break;
         case LEFT_UP:
-            if (mat.tx > -1)
+            if (mat.tx > WORLD_BOUND::LEFT)
                 mat.moveTranslate(-(speed/(GLfloat)1.41421), 0.0f);
-            if (mat.ty < 1)
+            if (mat.ty < WORLD_BOUND::UP)
                 mat.moveTranslate(0.0f, (speed/(GLfloat)1.41421));
             break;
         case UP_RIGHT:
-            if (mat.ty < 1)
+            if (mat.ty < WORLD_BOUND::UP)
                 mat.moveTranslate(0.0f, (speed/(GLfloat)1.41421));
-            if (mat.tx < 1)
+            if (mat.tx < WORLD_BOUND::RIGHT)
                 mat.moveTranslate((speed/(GLfloat)1.41421), 0.0f);
             break;
         case RIGHT_DOWN:
-            if (mat.tx < 1)
+            if (mat.tx < WORLD_BOUND::RIGHT)
                 mat.moveTranslate((speed/(GLfloat)1.41421), 0.0f);
-            if (mat.ty > -1)
+            if (mat.ty > WORLD_BOUND::DOWN)
                 mat.moveTranslate(0.0f, -(speed/(GLfloat)1.41421));
             break;
         case DOWN_LEFT:
-            if (mat.ty > -1)
+            if (mat.ty > WORLD_BOUND::DOWN)
                 mat.moveTranslate(0.0f, -(speed/(GLfloat)1.41421));
-            if (mat.tx > -1)
+            if (mat.tx > WORLD_BOUND::LEFT)
                 mat.moveTranslate(-(speed/(GLfloat)1.41421), 0.0f);
             break;
     }

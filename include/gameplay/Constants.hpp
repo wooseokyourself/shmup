@@ -9,7 +9,7 @@ const int FPS = 60;
 const int TIME_PER_FRAME = 1000 / FPS;
 
 namespace Window {
-    const GLint WINDOW_WIDTH = 500;
+    const GLint WINDOW_WIDTH = 800;
     const GLint WINDOW_HEIGHT = 800;
 };
 
@@ -24,6 +24,13 @@ enum Direction {
     RIGHT_DOWN  = 3,
     DOWN_LEFT   = 4
 };
+
+namespace WORLD_BOUND {
+    const GLfloat LEFT  = -0.75f;
+    const GLfloat RIGHT = 0.75f;
+    const GLfloat UP    = 1.0f;
+    const GLfloat DOWN  = -1.0f;
+}
 
 namespace AirplaneSpeed {
     const GLfloat FAST = 0.05;
