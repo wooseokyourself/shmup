@@ -29,6 +29,8 @@ void GamePlay::startGame () {
 void GamePlay::render () {
     player->display();
     enemy->display();
+    displayStage();
+    displayPlayerLives();
 }
 
 /**
@@ -81,6 +83,26 @@ void GamePlay::lose () {
     std::cout << "Lose.." << std::endl;
     enemyAi.stop();
     glutLeaveMainLoop();
+}
+
+void GamePlay::displayStage () {
+    std::string str = "Stage " + std::to_string(stage);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef(0.0f, 0.0f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
+    glRasterPos2d(0.0f, 0.0f);
+    for (int i = 0 ; i < str.size() ; i ++)
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
+}
+
+void GamePlay::displayPlayerLives () {
+    for (int i = 0 ; i < player->getLives() ; i ++) {
+        Rectangle rect(0.05, 0.05);
+        rect.setColor(1.0f, 0.0f, 0.0f);
+        rect.setPosition(-0.9f + (i * 0.08), -0.9f);
+        rect.display();
+    }
 }
 
 /**

@@ -173,6 +173,10 @@ bool Airplane::isAlive () const {
     return lives > 0;
 }
 
+int Airplane::getLives () const {
+    return lives;
+}
+
 /**
  * @brief Fire a bullet.
  */

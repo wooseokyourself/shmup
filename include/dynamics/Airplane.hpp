@@ -51,6 +51,7 @@ public:
     void destruct ();
     void loseLife ();
     bool isAlive () const;
+    int getLives () const;
     void fire ();
     void display () const ;
     int getLastActivatedTime () const;

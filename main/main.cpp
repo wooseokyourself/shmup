@@ -20,7 +20,8 @@ void reshape (int width, int height) {
     glViewport(0, 0, (GLsizei)width, (GLsizei)height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.0f, Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT, 0.0f, 0.0f, 0.0f); // 관측 사각형의 종횡비
+    // glOrtho(0.0f, Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT, 0.0f, 0.0f, 0.0f); // 관측 사각형의 종횡비
+    glOrtho(Window::WINDOW_HEIGHT, Window::WINDOW_HEIGHT, Window::WINDOW_WIDTH, Window::WINDOW_WIDTH, 0.0f, 0.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
