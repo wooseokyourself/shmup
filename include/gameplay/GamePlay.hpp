@@ -2,6 +2,7 @@
 #define __GAMEPLAY__
 
 #include <queue>
+#include <string>
 #include "gameplay/Constants.hpp"
 #include "gameplay/Ai.hpp"
 #include "dynamics/Airplane.hpp"
@@ -19,6 +20,10 @@ public:
 private:
     void win ();
     void lose ();
+
+private:
+    void displayStage ();
+    void displayPlayerLives ();
 
 private:
     void checkHitNormal (Airplane* attacker, Airplane* target);
