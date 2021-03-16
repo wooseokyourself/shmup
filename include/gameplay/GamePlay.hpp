@@ -24,6 +24,7 @@ private:
 private:
     void displayStage ();
     void displayPlayerLives ();
+    void displayWall ();
 
 private:
     void checkHitNormal (Airplane* attacker, Airplane* target);

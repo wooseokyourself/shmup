@@ -29,6 +29,7 @@ void GamePlay::startGame () {
 void GamePlay::render () {
     player->display();
     enemy->display();
+    displayWall();
     displayStage();
     displayPlayerLives();
 }
@@ -89,8 +90,8 @@ void GamePlay::displayStage () {
     std::string str = "Stage " + std::to_string(stage);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, 0.0f);
-    glColor3f(0.0f, 0.0f, 0.0f);
+    glTranslatef(WORLD_BOUND::RIGHT + 0.05f, 0.9f, 0.0f);
+    glColor3f(0.0f, 1.0f, 0.0f);
     glRasterPos2d(0.0f, 0.0f);
     for (int i = 0 ; i < str.size() ; i ++)
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
@@ -103,6 +104,16 @@ void GamePlay::displayPlayerLives () {
         rect.setPosition(-0.9f + (i * 0.08), -0.9f);
         rect.display();
     }
+}
+
+void GamePlay::displayWall () {
+    Rectangle rect(1.0f - WORLD_BOUND::RIGHT, 2.0f);
+    GLfloat centerDiffX = (1.0f - WORLD_BOUND::RIGHT) / 2;
+    rect.setColor(0.0f, 0.0f, 0.0f);
+    rect.setPosition(WORLD_BOUND::LEFT - centerDiffX, 0.0f);
+    rect.display();
+    rect.setPosition(WORLD_BOUND::RIGHT + centerDiffX, 0.0f);
+    rect.display();
 }
 
 /**

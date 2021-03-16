@@ -20,10 +20,10 @@ void reshape (int width, int height) {
     glViewport(0, 0, (GLsizei)width, (GLsizei)height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    // glOrtho(0.0f, Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT, 0.0f, 0.0f, 0.0f); // 관측 사각형의 종횡비
-    glOrtho(Window::WINDOW_HEIGHT, Window::WINDOW_HEIGHT, Window::WINDOW_WIDTH, Window::WINDOW_WIDTH, 0.0f, 0.0f);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    GLfloat base = Window::WINDOW_HEIGHT < Window::WINDOW_WIDTH ? Window::WINDOW_HEIGHT : Window::WINDOW_WIDTH;
+    GLfloat widthset = Window::WINDOW_WIDTH / base;
+    GLfloat heightset = Window::WINDOW_HEIGHT / base;
+    glOrtho(-1.0f * widthset, 1.0f * widthset, -1.0f * heightset, 1.0f * heightset, 0.0f, 0.0f);
 }
 
 /** @brief GLUT callback. Detect “c”, “f”, and “spaces” keys down. */

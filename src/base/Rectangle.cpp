@@ -5,7 +5,10 @@
  * @param _height (-1.0 to 1.0)
  */
 Rectangle::Rectangle (const GLfloat _width, const GLfloat _height)
-: width(_width), height(_height), color(1.0f, 1.0f, 1.0f) { }
+: width(_width), height(_height), color(1.0f, 1.0f, 1.0f) {
+    // mat.setScale(1.0f, GLfloat(Window::WINDOW_WIDTH / Window::WINDOW_HEIGHT));
+    mat.setScale(1.0f, 1.0f);
+}
 
 /**
  * @param p The center point axis of the rectangle in world space. (each are -1.0 to 1.0)
@@ -15,6 +18,8 @@ Rectangle::Rectangle (const GLfloat _width, const GLfloat _height)
 Rectangle::Rectangle (const Point2D p, const GLfloat _width, const GLfloat _height)
 : width(_width), height(_height), color(1.0f, 1.0f, 1.0f) {
     mat.setTranslate(p.x, p.y);
+    // mat.setScale(1.0f, GLfloat(Window::WINDOW_WIDTH / Window::WINDOW_HEIGHT));
+    mat.setScale(1.0f, 1.0f);
 }
 
 /**
@@ -26,6 +31,8 @@ Rectangle::Rectangle (const Point2D p, const GLfloat _width, const GLfloat _heig
 Rectangle::Rectangle (const GLfloat x, const GLfloat y, const GLfloat _width, const GLfloat _height)
 : width(_width), height(_height), color(1.0f, 1.0f, 1.0f) {
     mat.setTranslate(x, y);
+    // mat.setScale(1.0f, GLfloat(Window::WINDOW_WIDTH / Window::WINDOW_HEIGHT));
+    mat.setScale(1.0f, 1.0f);
 }
 
 /**
@@ -62,9 +69,16 @@ void Rectangle::display () const {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(mat.tx, mat.ty, 0.0f);
+    glScalef(mat.sx, mat.sy, 1.0f);
     glColor3f(color.R, color.G, color.B);
     GLfloat w = width / 2;
     GLfloat h = height / 2;
+    glBegin(GL_POLYGON);
+        glVertex2f(-w, -h); 
+        glVertex2f(-w, h);
+        glVertex2f(w, h);
+        glVertex2f(w, -h);
+    glEnd();
     glBegin(GL_LINE_LOOP);
         glVertex2f(-w, -h); 
         glVertex2f(-w, h);

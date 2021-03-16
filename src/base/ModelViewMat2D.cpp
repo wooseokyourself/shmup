@@ -1,7 +1,7 @@
 #include "base/ModelViewMat2D.hpp"
 
 ModelViewMat2D::ModelViewMat2D ()
-: tx(0.0f), ty(0.0f), sx(0.0f), sy(0.0f), theta(0.0f) { }
+: tx(0.0f), ty(0.0f), sx(1.0f), sy(1.0f), theta(0.0f) { }
 
 void ModelViewMat2D::setTranslate (const GLfloat& _tx, const GLfloat& _ty) {
     tx = _tx;
