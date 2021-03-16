@@ -13,6 +13,7 @@
                 "`pkg-config", "--cflags", "--libs", "glut`",
                 "`pkg-config", "--cflags", "--libs", "glm`",
 				"-I./include",
+				"src/base/ModelViewMat2D.cpp",
 				"src/base/Rectangle.cpp",
 				"src/base/DynamicObject.cpp",
 				"src/dynamics/Bullet.cpp",

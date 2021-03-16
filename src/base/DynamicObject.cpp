@@ -36,44 +36,44 @@ void DynamicObject::move (const int direction) {
         case NONE:
             break;
         case LEFT:
-            if (x > -1)
-                x -= speed;
+            if (mat.tx > -1)
+                mat.moveTranslate(-speed, 0.0f);
             break;
         case RIGHT:
-            if (x < 1)
-                x += speed;
+            if (mat.tx < 1)
+                mat.moveTranslate(speed, 0.0f);
             break;
         case UP:
-            if (y < 1)
-                y += speed;
+            if (mat.tx < 1)
+                mat.moveTranslate(0.0f, speed);
             break;
         case DOWN:
-            if (y > -1)
-                y -= speed;
+            if (mat.tx > -1)
+                mat.moveTranslate(0.0f, -speed);
             break;
         case LEFT_UP:
-            if (x > -1)
-                x -= speed / (GLfloat)1.41421;;
-            if (y < 1)
-                y += speed / (GLfloat)1.41421;;
+            if (mat.tx > -1)
+                mat.moveTranslate(-(speed/(GLfloat)1.41421), 0.0f);
+            if (mat.tx < 1)
+                mat.moveTranslate(0.0f, (speed/(GLfloat)1.41421));
             break;
         case UP_RIGHT:
-            if (y < 1)
-                y += speed / (GLfloat)1.41421;;
-            if (x < 1)
-                x += speed / (GLfloat)1.41421;;
+            if (mat.tx < 1)
+                mat.moveTranslate(0.0f, (speed/(GLfloat)1.41421));
+            if (mat.tx < 1)
+                mat.moveTranslate((speed/(GLfloat)1.41421), 0.0f);
             break;
         case RIGHT_DOWN:
-            if (x < 1)
-                x += speed / (GLfloat)1.41421;;
-            if (y > -1)
-                y -= speed / (GLfloat)1.41421;;
+            if (mat.tx < 1)
+                mat.moveTranslate((speed/(GLfloat)1.41421), 0.0f);
+            if (mat.tx > -1)
+                mat.moveTranslate(0.0f, -(speed/(GLfloat)1.41421));
             break;
         case DOWN_LEFT:
-            if (y > -1)
-                y -= speed / (GLfloat)1.41421;;
-            if (x > -1)
-                x -= speed / (GLfloat)1.41421;;
+            if (mat.tx > -1)
+                mat.moveTranslate(0.0f, -(speed/(GLfloat)1.41421));
+            if (mat.tx > -1)
+                mat.moveTranslate(-(speed/(GLfloat)1.41421), 0.0f);
             break;
     }
 }

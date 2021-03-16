@@ -20,7 +20,7 @@ private:
                        const GLfloat bulletHeight, 
                        const GLfloat bulletSpeed);
         ~BulletManager ();
-        void activateBullet (const GLfloat x, const GLfloat y, const Rgb& color);
+        void activateBullet (const ModelViewMat2D& mat, const Rgb& color);
         void display () const;
         void update (const int bulletDirection);
         size_t getActivatedBulletsNumber () const;
