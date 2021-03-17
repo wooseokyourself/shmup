@@ -39,7 +39,7 @@
     <ClCompile Include="src\base\DynamicObject.cpp">
       <Filter>소스 파일\base</Filter>
     </ClCompile>
-    <ClCompile Include="src\base\Rectangle.cpp">
+    <ClCompile Include="src\base\Rect.cpp">
       <Filter>소스 파일\base</Filter>
     </ClCompile>
     <ClCompile Include="src\dynamics\Airplane.cpp">
@@ -57,6 +57,9 @@
     <ClCompile Include="main\main.cpp">
       <Filter>소스 파일\main</Filter>
     </ClCompile>
+    <ClCompile Include="src\base\ModelViewMat2D.cpp">
+      <Filter>소스 파일\base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\base\DynamicObject.hpp">
@@ -65,7 +68,7 @@
     <ClInclude Include="include\base\Point2D.hpp">
       <Filter>헤더 파일\base</Filter>
     </ClInclude>
-    <ClInclude Include="include\base\Rectangle.hpp">
+    <ClInclude Include="include\base\Rect.hpp">
       <Filter>헤더 파일\base</Filter>
     </ClInclude>
     <ClInclude Include="include\base\Rgb.hpp">
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="include\gameplay\GamePlay.hpp">
       <Filter>헤더 파일\gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\ModelViewMat2D.hpp">
+      <Filter>헤더 파일\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

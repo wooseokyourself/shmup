@@ -5,6 +5,7 @@
 #include <string>
 #include "gameplay/Constants.hpp"
 #include "gameplay/Ai.hpp"
+#include "base/Rect.hpp"
 #include "dynamics/Airplane.hpp"
 
 class GamePlay {

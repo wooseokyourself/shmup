@@ -6,6 +6,6 @@ var searchData=
   ['gameplay_2ehpp_31',['GamePlay.hpp',['../_game_play_8hpp.html',1,'']]],
   ['getlastactivatedtime_32',['getLastActivatedTime',['../class_airplane.html#a7a7d10288ad3fb7c4926487b9bc2181a',1,'Airplane']]],
   ['getlastdeactivatedtime_33',['getLastDeactivatedTime',['../class_airplane.html#a93d9db5c5ccd1ec6ae91875bc6fc7333',1,'Airplane']]],
-  ['getlefttop_34',['getLeftTop',['../class_rectangle.html#ac3f0efbfdf55eabed1f0d89981dc44a1',1,'Rectangle']]],
-  ['getrightbottom_35',['getRightBottom',['../class_rectangle.html#a2d090fbde0358555bcc665479392041f',1,'Rectangle']]]
+  ['getlefttop_34',['getLeftTop',['../class_rectangle.html#ac3f0efbfdf55eabed1f0d89981dc44a1',1,'Rect']]],
+  ['getrightbottom_35',['getRightBottom',['../class_rectangle.html#a2d090fbde0358555bcc665479392041f',1,'Rect']]]
 ];

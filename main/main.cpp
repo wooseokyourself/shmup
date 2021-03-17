@@ -56,11 +56,10 @@ int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT); // 윈도우의 종횡비
-    glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (Window::WINDOW_WIDTH / 2),
-                            (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (Window::WINDOW_HEIGHT / 2));
+    glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (Window::WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (Window::WINDOW_HEIGHT / 2));
     glutCreateWindow("Assn1");
 
-    glClearColor(1.0, 1.0, 1.0, 0.0);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
     glShadeModel(GL_FLAT);
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);

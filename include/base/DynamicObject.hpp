@@ -2,10 +2,10 @@
 #define __DYNAMICOBJECT__
 
 #include <cstdint>
-#include "base/Rectangle.hpp"
+#include "base/Rect.hpp"
 #include "gameplay/Constants.hpp"
 
-class DynamicObject : public Rectangle {
+class DynamicObject : public Rect {
 public:
     DynamicObject (const GLfloat _width, const GLfloat _height, const GLfloat _speed);
     DynamicObject (const Point2D p, const GLfloat _width, const GLfloat _height, const GLfloat _speed);

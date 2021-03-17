@@ -23,13 +23,13 @@ Airplane::BulletManager::~BulletManager () {
 /**
  * @brief Construct a bullet in (x,y) position.
  */
-void Airplane::BulletManager::activateBullet (const ModelViewMat2D& mat, const Rgb& color) {
+void Airplane::BulletManager::activateBullet (const ModelViewMat2D& mat, const Rgb color) {
     if (pool.empty())
         return;
     Bullet* bullet = pool.top();
     pool.pop();
     bullet->setPosition(mat.tx, mat.ty);
-    // 차후 비행기 각도 조절이 가능하면 bullet->mat = mat 으로 해야할 듯
+    /* 차후 비행기 각도 조절이 가능하면 bullet->mat = mat 으로 해야할 듯 */
     bullet->setColor(color);
     activeBullets.push_back(bullet);
 }

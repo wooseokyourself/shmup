@@ -91,7 +91,7 @@ void GamePlay::displayStage () {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(WORLD_BOUND::RIGHT + 0.05f, 0.9f, 0.0f);
-    glColor3f(0.0f, 1.0f, 0.0f);
+    glColor3f(0.0f, 0.0f, 0.0f);
     glRasterPos2d(0.0f, 0.0f);
     for (int i = 0 ; i < str.size() ; i ++)
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
@@ -99,7 +99,7 @@ void GamePlay::displayStage () {
 
 void GamePlay::displayPlayerLives () {
     for (int i = 0 ; i < player->getLives() ; i ++) {
-        Rectangle rect(0.05, 0.05);
+        Rect rect(0.05, 0.05);
         rect.setColor(1.0f, 0.0f, 0.0f);
         rect.setPosition(-0.9f + (i * 0.08), -0.9f);
         rect.display();
@@ -107,9 +107,9 @@ void GamePlay::displayPlayerLives () {
 }
 
 void GamePlay::displayWall () {
-    Rectangle rect(1.0f - WORLD_BOUND::RIGHT, 2.0f);
+    Rect rect(1.0f - WORLD_BOUND::RIGHT, 2.0f);
     GLfloat centerDiffX = (1.0f - WORLD_BOUND::RIGHT) / 2;
-    rect.setColor(0.0f, 0.0f, 0.0f);
+    rect.setColor(1.0f, 1.0f, 1.0f);
     rect.setPosition(WORLD_BOUND::LEFT - centerDiffX, 0.0f);
     rect.display();
     rect.setPosition(WORLD_BOUND::RIGHT + centerDiffX, 0.0f);
