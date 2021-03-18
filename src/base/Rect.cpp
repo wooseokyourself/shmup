@@ -69,7 +69,7 @@ void Rect::display () const {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(mat.tx, mat.ty, 0.0f);
-    glScalef(mat.sx, mat.sy, 1.0f);
+    // glScalef(mat.sx, mat.sy, 1.0f);
     glColor3f(color.R, color.G, color.B);
     GLfloat w = width / 2;
     GLfloat h = height / 2;
