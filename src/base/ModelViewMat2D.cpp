@@ -1,7 +1,7 @@
 #include "base/ModelViewMat2D.hpp"
 
 ModelViewMat2D::ModelViewMat2D ()
-: tx(0.0f), ty(0.0f), sx(1.0f), sy(1.0f), theta(0.0f) { }
+: tx(0.0f), ty(0.0f), sx(1.0f), sy(1.0f), degree(0.0f) { }
 
 void ModelViewMat2D::setTranslate (const GLfloat& _tx, const GLfloat& _ty) {
     tx = _tx;
@@ -13,8 +13,8 @@ void ModelViewMat2D::moveTranslate (const GLfloat& _tx, const GLfloat& _ty) {
     ty += _ty;
 }
 
-void ModelViewMat2D::setRotate (const GLfloat& _theta) {
-    theta = _theta;
+void ModelViewMat2D::setRotate (const GLfloat& _degree) {
+    degree += _degree;
 }
 
 void ModelViewMat2D::setScale (const GLfloat& _sx, const GLfloat& _sy) {
@@ -27,5 +27,5 @@ void ModelViewMat2D::init () {
     ty = 0.0f;
     sx = 0.0f;
     sy = 0.0f;
-    theta = 0.0f;
+    degree = 0.0f;
 }
