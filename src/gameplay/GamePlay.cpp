@@ -113,10 +113,11 @@ void GamePlay::displayStage () {
 
 void GamePlay::displayPlayerLives () {
     for (int i = 0 ; i < player->getLives() ; i ++) {
-        Rect rect(0.05, 0.05);
-        rect.setColor(1.0f, 0.0f, 0.0f);
-        rect.setPosition(-0.9f + (i * 0.08), -0.9f);
-        rect.display();
+        Triangle tri(0.03);
+        tri.setColor(1.0f, 0.0f, 0.0f);
+        tri.setPosition(-0.9f + (i * 0.08), -0.9f);
+        tri.rotate(90.0f);
+        tri.display();
     }
 }
 
