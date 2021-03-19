@@ -22,7 +22,7 @@ Airplane::BulletManager::~BulletManager () {
 /**
  * @brief Construct a bullet in (x,y) position.
  */
-void Airplane::BulletManager::activateBullet (const ModelViewMat2D& mat, const Rgb color) {
+void Airplane::BulletManager::activateBullet (const ModelViewMat2D& mat, const Rgba color) {
     if (pool.empty())
         return;
     Bullet* bullet = pool.top();
@@ -182,7 +182,7 @@ int Airplane::getLives () const {
  */
 void Airplane::fire () {
     if (isAlive())
-        bulletManager.activateBullet(mat, Rgb(color.R + 0.15f, color.G + 0.15f, color.B + 0.15f));
+        bulletManager.activateBullet(mat, Rgba(color.R + 0.15f, color.G + 0.15f, color.B + 0.15f));
 }
 
 /**

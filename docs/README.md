@@ -59,8 +59,8 @@ mac@mac~ $ brew install glm
 │   │   │   # Header for class "Point2D".
 │   │   ├── Rect.hpp
 │   │   │   # Header for class "Rect".
-│   │   └── Rgb.hpp
-│   │       # Header for class "Rgb".
+│   │   └── Rgba.hpp
+│   │       # Header for class "Rgba".
 │   ├── dynamics
 │   │   ├── Airplane.hpp
 │   │   │   # Header for class "Airplane" and "BulletManager".

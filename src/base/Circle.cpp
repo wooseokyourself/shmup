@@ -13,7 +13,7 @@ void Circle::display () const {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(mat.tx, mat.ty, 0.0f);
-    glColor3f(color.R, color.G, color.B);
+    glColor4f(color.R, color.G, color.B, color.A);
 
     // draw refer: https://stackoverflow.com/questions/22444450/drawing-circle-with-opengl
     int segment = 30;

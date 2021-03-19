@@ -33,7 +33,7 @@
     <ClInclude Include="include\base\ModelViewMat2D.hpp" />
     <ClInclude Include="include\base\Point2D.hpp" />
     <ClInclude Include="include\base\Rect.hpp" />
-    <ClInclude Include="include\base\Rgb.hpp" />
+    <ClInclude Include="include\base\Rgba.hpp" />
     <ClInclude Include="include\dynamics\Airplane.hpp" />
     <ClInclude Include="include\dynamics\Bullet.hpp" />
     <ClInclude Include="include\gameplay\Ai.hpp" />

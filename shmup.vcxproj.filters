@@ -71,7 +71,7 @@
     <ClInclude Include="include\base\Rect.hpp">
       <Filter>헤더 파일\base</Filter>
     </ClInclude>
-    <ClInclude Include="include\base\Rgb.hpp">
+    <ClInclude Include="include\base\Rgba.hpp">
       <Filter>헤더 파일\base</Filter>
     </ClInclude>
     <ClInclude Include="include\dynamics\Airplane.hpp">

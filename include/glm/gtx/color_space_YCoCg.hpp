@@ -8,7 +8,7 @@
 ///
 /// Include <glm/gtx/color_space_YCoCg.hpp> to use the features of this extension.
 ///
-/// RGB to YCoCg conversions and operations
+/// RGBA to YCoCg conversions and operations
 
 #pragma once
 
@@ -28,27 +28,27 @@ namespace glm
 	/// @addtogroup gtx_color_space_YCoCg
 	/// @{
 
-	/// Convert a color from RGB color space to YCoCg color space.
+	/// Convert a color from RGBA color space to YCoCg color space.
 	/// @see gtx_color_space_YCoCg
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<3, T, Q> rgb2YCoCg(
 		vec<3, T, Q> const& rgbColor);
 
-	/// Convert a color from YCoCg color space to RGB color space.
+	/// Convert a color from YCoCg color space to RGBA color space.
 	/// @see gtx_color_space_YCoCg
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<3, T, Q> YCoCg2rgb(
 		vec<3, T, Q> const& YCoCgColor);
 
-	/// Convert a color from RGB color space to YCoCgR color space.
-	/// @see "YCoCg-R: A Color Space with RGB Reversibility and Low Dynamic Range"
+	/// Convert a color from RGBA color space to YCoCgR color space.
+	/// @see "YCoCg-R: A Color Space with RGBA Reversibility and Low Dynamic Range"
 	/// @see gtx_color_space_YCoCg
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<3, T, Q> rgb2YCoCgR(
 		vec<3, T, Q> const& rgbColor);
 
-	/// Convert a color from YCoCgR color space to RGB color space.
-	/// @see "YCoCg-R: A Color Space with RGB Reversibility and Low Dynamic Range"
+	/// Convert a color from YCoCgR color space to RGBA color space.
+	/// @see "YCoCg-R: A Color Space with RGBA Reversibility and Low Dynamic Range"
 	/// @see gtx_color_space_YCoCg
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<3, T, Q> YCoCgR2rgb(

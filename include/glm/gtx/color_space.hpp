@@ -8,7 +8,7 @@
 ///
 /// Include <glm/gtx/color_space.hpp> to use the features of this extension.
 ///
-/// Related to RGB to HSV conversions and operations.
+/// Related to RGBA to HSV conversions and operations.
 
 #pragma once
 
@@ -28,13 +28,13 @@ namespace glm
 	/// @addtogroup gtx_color_space
 	/// @{
 
-	/// Converts a color from HSV color space to its color in RGB color space.
+	/// Converts a color from HSV color space to its color in RGBA color space.
 	/// @see gtx_color_space
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<3, T, Q> rgbColor(
 		vec<3, T, Q> const& hsvValue);
 
-	/// Converts a color from RGB color space to its color in HSV color space.
+	/// Converts a color from RGBA color space to its color in HSV color space.
 	/// @see gtx_color_space
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL vec<3, T, Q> hsvColor(
@@ -60,7 +60,7 @@ namespace glm
 		T const s,
 		vec<4, T, Q> const& color);
 
-	/// Compute color luminosity associating ratios (0.33, 0.59, 0.11) to RGB canals.
+	/// Compute color luminosity associating ratios (0.33, 0.59, 0.11) to RGBA canals.
 	/// @see gtx_color_space
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL T luminosity(
