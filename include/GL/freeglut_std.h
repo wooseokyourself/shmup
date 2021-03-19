@@ -364,7 +364,7 @@
 #define  GLUT_CURSOR_FULL_CROSSHAIR         0x0066
 
 /*
- * GLUT API macro definitions -- RGB color component specification definitions
+ * GLUT API macro definitions -- RGBA color component specification definitions
  */
 #define  GLUT_RED                           0x0000
 #define  GLUT_GREEN                         0x0001

@@ -60,6 +60,8 @@ int main(int argc, char** argv) {
     glutCreateWindow("Assn1");
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glShadeModel(GL_FLAT);
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);

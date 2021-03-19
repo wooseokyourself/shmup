@@ -63,9 +63,9 @@ void Object::setColor (const GLfloat _R, const GLfloat _G, const GLfloat _B) {
 
 /**
  * @brief Set color of the object.
- * @param color The 3-tuple of RGB value of the object's color. (each value is 0.0 to 1.0)
+ * @param color The 3-tuple of RGBA value of the object's color. (each value is 0.0 to 1.0)
  */
-void Object::setColor (const Rgb _color) {
+void Object::setColor (const Rgba _color) {
     color = _color;    
 }
 
@@ -73,7 +73,7 @@ void Object::setColor (const Rgb _color) {
  * @brief Set random color of the object.
  */
 void Object::setRandomColor () {
-    color = Rgb(static_cast <float> (rand()) / static_cast <float> (RAND_MAX), 
+    color = Rgba(static_cast <float> (rand()) / static_cast <float> (RAND_MAX), 
                 static_cast <float> (rand()) / static_cast <float> (RAND_MAX), 
                 static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
 }
