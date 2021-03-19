@@ -132,3 +132,7 @@ void Object::move (const int direction) {
             break;
     }
 }
+
+void Object::rotate (const GLfloat degree) {
+    mat.setRotate(degree);
+}
