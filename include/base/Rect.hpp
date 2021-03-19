@@ -6,7 +6,6 @@
 #include "base/ModelViewMat2D.hpp"
 #include <cstdlib>
 #include <GL/glut.h>
-#include <GL/gl.h>
 
 class Rect {
 public:
