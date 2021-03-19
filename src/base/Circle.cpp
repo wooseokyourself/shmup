@@ -19,19 +19,17 @@ void Circle::display () const {
     int segment = 30;
     glBegin(GL_POLYGON);
     for (int i = 0 ; i < segment ; i ++)   {
-        float theta = 2.0f * 3.1415926f * float(i) / float(segment);//get the current angle 
-        float x = radius * cosf(theta);//calculate the x component 
-        float y = radius * sinf(theta);//calculate the y component 
-        // glVertex2f(x + mat.sx, y + mat.sy);//output vertex 
+        float degree = 2.0f * 3.1415926f * float(i) / float(segment);//get the current angle 
+        float x = radius * cosf(degree);//calculate the x component 
+        float y = radius * sinf(degree);//calculate the y component 
         glVertex2f(x, y);
     }
     glEnd();
     glBegin(GL_LINE_LOOP);
     for (int i = 0 ; i < segment ; i ++)   {
-        float theta = 2.0f * 3.1415926f * float(i) / float(segment);//get the current angle 
-        float x = radius * cosf(theta);//calculate the x component 
-        float y = radius * sinf(theta);//calculate the y component 
-        // glVertex2f(x + mat.sx, y + mat.sy);//output vertex 
+        float degree = 2.0f * 3.1415926f * float(i) / float(segment);//get the current angle 
+        float x = radius * cosf(degree);//calculate the x component 
+        float y = radius * sinf(degree);//calculate the y component 
         glVertex2f(x, y);
     }
     glEnd();
