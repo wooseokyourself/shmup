@@ -1,4 +1,14 @@
 # How to Run
+
+## Windows (x64)
+### Requirements
++ Visual Studio 2019 for C++ Desktop
+
+### Compile and Run
+1. Double click file ```shmup.vcxproj``` to open the project in Visual Studio 2019.
+2. Click ```Build --> Build Solution``` , or press ```F7```
+3. Click ```Debug --> Run without Debug``` , or press ```Ctrl + F5```
+
 ## macOS
 ### Requirements
 + Visual Studio Code
@@ -14,14 +24,6 @@ mac@mac~ $ brew install glm
 2. Click ```Terminal --> Run Build Task..``` , or press ```Shift + Cmd + b```
 3. Run ```./app``` in terminal or double click ```app``` file to run.
 
-## Windows (x64)
-### Requirements
-+ Visual Studio 2019 for C++ Desktop
-
-### Compile and Run
-1. Double click file ```shmup.vcxproj``` to open the project in Visual Studio 2019.
-2. Click ```Build --> Build Solution``` , or press ```F7```
-3. Click ```Debug --> Run without Debug``` , or press ```Ctrl + F5```
 
 # Instructions
 + ``` ←↑→↓ ```: Move player.
@@ -89,6 +91,9 @@ mac@mac~ $ brew install glm
 │       │   # Definitions for class "Ai".
 │       └── GamePlay.cpp
 │           # Definitions for class "GamePlay".
+│
+├── .vscode
+│   # Visual Studio Code project for macOS.
 │
 ├── shmup.sln
 ├── shmup.vcxproj
