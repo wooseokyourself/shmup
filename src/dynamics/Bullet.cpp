@@ -1,10 +1,14 @@
 #include "dynamics/Bullet.hpp"
 
-Bullet::Bullet (const Point2D p, const GLfloat _width, const GLfloat _height, const GLfloat _speed)
-: DynamicObject(p, _width, _height, _speed) { }
+Bullet::Bullet (const GLfloat _radius, const GLfloat _speed) 
+: Circle(_radius) {
+    setSpeed(_speed);
+}
 
-Bullet::Bullet (const GLfloat _width, const GLfloat _height, const GLfloat _speed) 
-: DynamicObject(_width, _height, _speed) { }
+Bullet::Bullet (const Point2D p, const GLfloat _radius, const GLfloat _speed)
+: Circle(p, _radius) {
+    setSpeed(_speed);
+}
 
 /**
  * @return true if the bullet is out of bound.
@@ -29,4 +33,15 @@ bool Bullet::isOutOfBound (const int bound) {
         case DOWN_LEFT:
             return mat.ty < WORLD_BOUND::DOWN || mat.tx < WORLD_BOUND::LEFT;
     }
+}
+
+/**
+ * @return true if the bullet is in rectangle.
+ * @param leftTop The left-top point of the target range in world space.
+ * @param rightBottom The right-bottom point of the target range in world space.
+ */
+bool Bullet::isIn (const Point2D leftTop, const Point2D rightBottom) {
+    Point2D p = getWorldPosition();
+    if ( (leftTop.x <= p.x && p.x <= rightBottom.x) && (rightBottom.y <= p.y && p.y <= leftTop.y))
+        return true;
 }

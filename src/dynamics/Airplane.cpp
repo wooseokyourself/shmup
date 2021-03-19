@@ -1,10 +1,9 @@
 #include "dynamics/Airplane.hpp"
 
-Airplane::BulletManager::BulletManager (const GLfloat bulletWidth, 
-                                        const GLfloat bulletHeight, 
+Airplane::BulletManager::BulletManager (const GLfloat bulletRadius,
                                         const GLfloat bulletSpeed) {
     for (int i = 0 ; i < MAX_BULLETS ; i ++) {
-        Bullet* b = new Bullet(bulletWidth, bulletHeight, bulletSpeed);
+        Bullet* b = new Bullet(bulletRadius, bulletSpeed);
         pool.push(b);
     }
 }
@@ -73,16 +72,13 @@ size_t Airplane::BulletManager::getActivatedBulletsNumber () const {
 
 /**
  * @brief Remove bullets which are in the rectangle constructed by left-top and right-bottom points.
- * @param leftTop The left-top point of the target range.
- * @param rightBottom The right-bottom point of the target range.
+ * @param leftTop The left-top point of the target range in world space.
+ * @param rightBottom The right-bottom point of the target range in world space.
  * @return false if no bullet removed.
  */
 bool Airplane::BulletManager::deactivateBulletWhichIsIn (const Point2D leftTop, const Point2D rightBottom) {
     for (Bullet* bullet : activeBullets) {
-        Point2D bLeftTop = bullet->getLeftTop();
-        Point2D bRightBottom = bullet->getRightBottom();
-        if ( ((bLeftTop.x > rightBottom.x) || (bRightBottom.x < leftTop.x)
-         || (bLeftTop.y < rightBottom.y) || (bRightBottom.y > leftTop.y)) == false ) {
+        if (bullet->isIn(leftTop, rightBottom)) {
             pool.push(bullet);
             activeBullets.remove(bullet);
             return true;
@@ -103,11 +99,13 @@ Airplane::Airplane (const Point2D p,
                     const GLfloat _height, 
                     const GLfloat _speed, 
                     const GLfloat bulletSpeed) 
-: DynamicObject(p, _width, _height, _speed), 
-  bulletManager(0.1f, 0.1f, bulletSpeed), 
+: Rect(p, _width, _height), 
+  bulletManager(0.025f, bulletSpeed), 
   lives(0), 
   lastActivatedTime(0), 
-  lastDeactivatedTime(0) { }
+  lastDeactivatedTime(0) {
+    setSpeed(_speed);
+}
 
 /**
  * @param _x The x value of the center point of the airplane. (-1.0 to 1.0)
@@ -123,11 +121,13 @@ Airplane::Airplane (const GLfloat _x,
                     const GLfloat _height, 
                     const GLfloat _speed, 
                     const GLfloat bulletSpeed) 
-: DynamicObject(_x, _y, _width, _height, _speed), 
-  bulletManager(0.05f, 0.05f, bulletSpeed), 
+: Rect(_x, _y, _width, _height), 
+  bulletManager(0.025f, bulletSpeed), 
   lives(0), 
   lastActivatedTime(0), 
-  lastDeactivatedTime(0) { }
+  lastDeactivatedTime(0) {
+    setSpeed(_speed);
+}
 
 /**
  * @brief Manage all bullets; movement of all bullets, deactivating bullets which is out of bound.
@@ -191,7 +191,7 @@ void Airplane::fire () {
 void Airplane::display () const {
     bulletManager.display();
     if (isAlive())
-        DynamicObject::display();
+        Rect::display();
 }
 
 /**
