@@ -5,19 +5,18 @@
 #include <iostream>
 #include <list>
 #include <stack>
-#include "base/DynamicObject.hpp"
+#include "base/Rect.hpp"
 #include "dynamics/Bullet.hpp"
 
 #define MAX_BULLETS 100
 
 class GamePlay;
 
-class Airplane : public DynamicObject {
+class Airplane : public Rect {
 private:
     class BulletManager {
     public:
-        BulletManager (const GLfloat bulletWidth,
-                       const GLfloat bulletHeight, 
+        BulletManager (const GLfloat bulletRadius, 
                        const GLfloat bulletSpeed);
         ~BulletManager ();
         void activateBullet (const ModelViewMat2D& mat, const Rgb color);
