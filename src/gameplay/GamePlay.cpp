@@ -95,6 +95,20 @@ void GamePlay::displayStage () {
     glRasterPos2d(0.0f, 0.0f);
     for (int i = 0 ; i < str.size() ; i ++)
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
+
+    if (allPassMode || allFailMode) {
+        if (allPassMode)
+            str = "all pass";
+        else if (allFailMode)
+            str = "all fail";
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glTranslatef(WORLD_BOUND::RIGHT + 0.05f, 0.8f, 0.0f);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glRasterPos2d(0.0f, 0.0f);
+        for (int i = 0 ; i < str.size() ; i ++)
+            glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
+    }
 }
 
 void GamePlay::displayPlayerLives () {
