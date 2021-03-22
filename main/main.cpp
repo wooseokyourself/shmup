@@ -52,13 +52,12 @@ void updateFrame () {
 }
 
 int main(int argc, char** argv) {
-    gameplay.startGame();
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT); // 윈도우의 종횡비
     glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (Window::WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (Window::WINDOW_HEIGHT / 2));
     glutCreateWindow("Assn1");
-
+    
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -70,6 +69,9 @@ int main(int argc, char** argv) {
     glutSpecialFunc(specialKeyboardDown);
     glutSpecialUpFunc(specialKeyboardUp);
     glutIdleFunc(updateFrame);
+
+    gameplay.startGame();
     glutMainLoop();
+
     return 0;
 }
