@@ -1,6 +1,6 @@
 #include "gameplay/GamePlay.hpp"
 
-GamePlay::GamePlay () {
+GamePlay::GamePlay () : itemManager(ITEM) {
     player = new Airplane (0.0f, -0.5f, 0.3f, 0.1f, AirplaneSpeed::NORMAL, BulletSpeed::FAST);
     enemy = new Airplane (0.0f, 0.5f, 0.3f, 0.1f, AirplaneSpeed::SLOW, BulletSpeed::SLOW);
     MAX_STAGE = 5;
@@ -29,6 +29,7 @@ void GamePlay::startGame () {
 void GamePlay::render () {
     player->display();
     enemy->display();
+    itemManager.display();
     displayWall();
     displayStage();
     displayPlayerLives();
@@ -44,6 +45,7 @@ void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* as
     handleDiscreteKeyInput(discreteKeyBuf);
     player->update(UP);
     enemy->update(DOWN);
+    itemManager.update(DOWN);
 
     if (!allPassMode && !allFailMode) {
         checkHitNormal(player, enemy);
@@ -113,7 +115,8 @@ void GamePlay::displayStage () {
 
 void GamePlay::displayPlayerLives () {
     for (int i = 0 ; i < player->getLives() ; i ++) {
-        Triangle tri(0.03);
+        Triangle tri;
+        tri.setRadius(0.03);
         tri.setColor(1.0f, 0.0f, 0.0f);
         tri.setPosition(-0.9f + (i * 0.08), -0.9f);
         tri.rotate(90.0f);
@@ -122,7 +125,8 @@ void GamePlay::displayPlayerLives () {
 }
 
 void GamePlay::displayWall () {
-    Rect rect(1.0f - WORLD_BOUND::RIGHT, 2.0f);
+    Rect rect;
+    rect.setSide(1.0f - WORLD_BOUND::RIGHT, 2.0f);
     GLfloat centerDiffX = (1.0f - WORLD_BOUND::RIGHT) / 2;
     rect.setColor(1.0f, 1.0f, 1.0f);
     rect.setPosition(WORLD_BOUND::LEFT - centerDiffX, 0.0f);
@@ -139,12 +143,13 @@ void GamePlay::displayWall () {
 void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    if (attacker->bulletManager.deactivateBulletWhichIsIn(target->getLeftTop(), target->getRightBottom())) {
+    if (attacker->bulletManager.deactivateObjectWhichIsIn(target->getLeftTop(), target->getRightBottom())) {
         target->loseLife();
         if (!target->isAlive()) {
             if (target == player)
                 lose();
             if (target == enemy) {
+                itemManager.activateObject(enemy->mat, 0.05f, enemy->color, BulletSpeed::SLOW);
                 enemyAi.stop();
                 if (stage == MAX_STAGE)
                     win();
@@ -163,12 +168,13 @@ void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
 void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    if (attacker->bulletManager.deactivateBulletWhichIsIn(target->getLeftTop(), target->getRightBottom())) {
+    if (attacker->bulletManager.deactivateObjectWhichIsIn(target->getLeftTop(), target->getRightBottom())) {
         while (target->isAlive())
             target->loseLife();
         if (target == player)
             lose();
         if (target == enemy) {
+            itemManager.activateObject(enemy->mat, 0.05f, enemy->color, BulletSpeed::SLOW);
             enemyAi.stop();
             if (stage == MAX_STAGE)
                 win();
@@ -184,7 +190,7 @@ void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
 void GamePlay::checkHitDodge (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    if (attacker->bulletManager.deactivateBulletWhichIsIn(target->getLeftTop(), target->getRightBottom())) {
+    if (attacker->bulletManager.deactivateObjectWhichIsIn(target->getLeftTop(), target->getRightBottom())) {
 
     }
 }

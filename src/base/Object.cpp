@@ -5,29 +5,6 @@ Object::Object ()
     mat.setScale(1.0f, 1.0f);
 }
 
-/**
- * @param p The center point axis of the object in world space. (each are -1.0 to 1.0)
- * @param _width (-1.0 to 1.0)
- * @param _height (-1.0 to 1.0)
- */
-Object::Object (const Point2D p)
-: color(1.0f, 1.0f, 1.0f), speed(0.0f), direction(NONE) {
-    mat.setTranslate(p.x, p.y);
-    mat.setScale(1.0f, 1.0f);
-}
-
-/**
- * @param x The x value of the center point of the object in world space. (-1.0 to 1.0)
- * @param y The y value of the center point of the object in world space. (-1.0 to 1.0)
- * @param _width (-1.0 to 1.0)
- * @param _height (-1.0 to 1.0)
- */
-Object::Object (const GLfloat x, const GLfloat y)
-: color(1.0f, 1.0f, 1.0f), speed(0.0f), direction(NONE) {
-    mat.setTranslate(x, y);
-    mat.setScale(1.0f, 1.0f);
-}
-
 Point2D Object::getWorldPosition () const {
     return Point2D(mat.tx, mat.ty);
 }
@@ -133,6 +110,18 @@ void Object::move (const int direction) {
     }
 }
 
-void Object::rotate (const GLfloat degree) {
+void Object::setRotate (const GLfloat degree) {
     mat.setRotate(degree);
+}
+
+void Object::rotate (const GLfloat degree) {
+    mat.rotate(degree);
+}
+
+void Object::setScale (const GLfloat x, const GLfloat y) {
+    mat.setScale(x, y);
+}
+
+void Object::scale (const GLfloat x, const GLfloat y) {
+    mat.scale(x, y);
 }

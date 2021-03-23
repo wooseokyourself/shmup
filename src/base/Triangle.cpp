@@ -1,15 +1,13 @@
 #include "base/Triangle.hpp"
 
-Triangle::Triangle (const GLfloat _radius)
-: Object(), radius(_radius) { }
+Triangle::Triangle ()
+: Object(), radius(0.0f) { }
 
-Triangle::Triangle (const Point2D p, const GLfloat _radius)
-: Object(p), radius(_radius) { }
+void Triangle::setRadius (const GLfloat _radius) {
+    radius = _radius;
+}
 
-Triangle::Triangle (const GLfloat x, const GLfloat y, const GLfloat _radius)
-: Object(x, y), radius(_radius) { }
-
-void Triangle::display () const {
+void Triangle::display () {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(mat.tx, mat.ty, 0.0f);

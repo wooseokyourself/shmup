@@ -7,7 +7,8 @@
 #include "gameplay/Ai.hpp"
 #include "base/Rect.hpp"
 #include "base/Triangle.hpp"
-#include "dynamics/Airplane.hpp"
+#include "entity/Airplane.hpp"
+#include "3rdobjects/ThirdObjectManager.hpp"
 
 class GamePlay {
 public:
@@ -45,6 +46,7 @@ private: // Objects
     Airplane* enemy;
 
 private:
+    ThirdObjectManager itemManager;
     uint8_t MAX_STAGE;
     uint8_t stage;
     int enemyRegenIntervalSecs;

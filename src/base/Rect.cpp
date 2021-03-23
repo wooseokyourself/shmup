@@ -1,28 +1,12 @@
 #include "base/Rect.hpp"
 
-/**
- * @param _width (-1.0 to 1.0)
- * @param _height (-1.0 to 1.0)
- */
-Rect::Rect (const GLfloat _width, const GLfloat _height)
-: Object(), width(_width), height(_height) { }
+Rect::Rect ()
+: Object(), width(0.0f), height(0.0f) { }
 
-/**
- * @param p The center point axis of the rectangle in world space. (each are -1.0 to 1.0)
- * @param _width (-1.0 to 1.0)
- * @param _height (-1.0 to 1.0)
- */
-Rect::Rect (const Point2D p, const GLfloat _width, const GLfloat _height)
-: Object(p), width(_width), height(_height) { }
-
-/**
- * @param x The x value of the center point of the rectangle in world space. (-1.0 to 1.0)
- * @param y The y value of the center point of the rectangle in world space. (-1.0 to 1.0)
- * @param _width (-1.0 to 1.0)
- * @param _height (-1.0 to 1.0)
- */
-Rect::Rect (const GLfloat x, const GLfloat y, const GLfloat _width, const GLfloat _height)
-: Object(x, y), width(_width), height(_height) { }
+void Rect::setSide (const GLfloat _width, const GLfloat _height) {
+    width = _width;
+    height = _height;
+}
 
 /**
  * @return The point of the left-top of the rectangle in world space.
@@ -45,7 +29,7 @@ Point2D Rect::getRightBottom () const {
 /**
  * @brief Draw the rectangle in OpenGL world.
  */
-void Rect::display () const {
+void Rect::display () {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(mat.tx, mat.ty, 0.0f);
