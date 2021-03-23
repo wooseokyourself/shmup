@@ -5,12 +5,11 @@
 
 class Circle : public Object {
 public:
-    Circle (const GLfloat _radius);
-    Circle (const Point2D p, const GLfloat _radius);
-    Circle (const GLfloat x, const GLfloat y, const GLfloat _radius);
+    Circle ();
+    void setRadius (const GLfloat _radius);
 
 public:
-    void display () const;
+    void display ();
 
 protected:
     GLfloat radius;

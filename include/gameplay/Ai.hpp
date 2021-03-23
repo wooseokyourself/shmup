@@ -1,7 +1,7 @@
 #ifndef __AI__
 #define __AI__
 
-#include "dynamics/Airplane.hpp"
+#include "entity/Airplane.hpp"
 #include <thread>
 #include <chrono>
 #include <random>

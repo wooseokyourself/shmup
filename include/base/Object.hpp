@@ -11,8 +11,6 @@
 class Object {
 public:
     Object ();
-    Object (const Point2D p);
-    Object (const GLfloat x, const GLfloat y);
     Point2D getWorldPosition () const;
     void setPosition (const Point2D p);
     void setPosition (const GLfloat x, const GLfloat y);
@@ -21,10 +19,13 @@ public:
     void setRandomColor ();
     void setSpeed (const GLfloat _speed);
     void move (const int direction);
+    void setRotate (const GLfloat degree);
     void rotate (const GLfloat degree);
+    void setScale (const GLfloat x, const GLfloat y);
+    void scale (const GLfloat x, const GLfloat y);
 
 public:
-    virtual void display () const = 0;
+    virtual void display () = 0;
 
 protected:
     Rgba color;

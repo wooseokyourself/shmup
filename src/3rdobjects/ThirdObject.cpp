@@ -1,20 +1,16 @@
-#include "dynamics/Bullet.hpp"
+#include "3rdobjects/ThirdObject.hpp"
 
-Bullet::Bullet (const GLfloat _radius, const GLfloat _speed) 
-: Circle(_radius) {
-    setSpeed(_speed);
-}
-
-Bullet::Bullet (const Point2D p, const GLfloat _radius, const GLfloat _speed)
-: Circle(p, _radius) {
-    setSpeed(_speed);
-}
+void ThirdObject::setMatrix (const ModelViewMat2D& mat) {
+    setPosition(mat.tx, mat.ty);
+    setRotate(mat.degree);
+    setScale(mat.sx, mat.sy);
+} 
 
 /**
- * @return true if the bullet is out of bound.
+ * @return true if the object is out of bound.
  * @param bound The target bound; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
  */
-bool Bullet::isOutOfBound (const int bound) {
+bool ThirdObject::isOutOfBound (const int bound) {
     switch (bound) {
         case LEFT:
             return mat.tx < WORLD_BOUND::LEFT;
@@ -36,11 +32,11 @@ bool Bullet::isOutOfBound (const int bound) {
 }
 
 /**
- * @return true if the bullet is in rectangle.
+ * @return true if the center of object is in rectangle.
  * @param leftTop The left-top point of the target range in world space.
  * @param rightBottom The right-bottom point of the target range in world space.
  */
-bool Bullet::isIn (const Point2D leftTop, const Point2D rightBottom) {
+bool ThirdObject::isIn (const Point2D leftTop, const Point2D rightBottom) {
     Point2D p = getWorldPosition();
     if ( (leftTop.x <= p.x && p.x <= rightBottom.x) && (rightBottom.y <= p.y && p.y <= leftTop.y))
         return true;

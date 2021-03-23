@@ -1,15 +1,13 @@
 #include "base/Circle.hpp"
 
-Circle::Circle (const GLfloat _radius)
-: Object(), radius(_radius) { }
+Circle::Circle ()
+: Object(), radius(0.0f) { }
 
-Circle::Circle (const Point2D p, const GLfloat _radius)
-: Object(p), radius(_radius) { }
+void Circle::setRadius (const GLfloat _radius) {
+    radius = _radius;
+}
 
-Circle::Circle (const GLfloat x, const GLfloat y, const GLfloat _radius)
-: Object(x, y), radius(_radius) { }
-
-void Circle::display () const {
+void Circle::display () {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(mat.tx, mat.ty, 0.0f);
