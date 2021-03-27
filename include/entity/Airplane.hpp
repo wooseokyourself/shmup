@@ -40,11 +40,19 @@ private:
     Rect* base; // hitbox
     Rect* body;
     Triangle* head;
+    BaseRect* leftArm;
+    BaseRect* rightArm;
+    BaseRect* leftCanon;
+    BaseRect* rightCanon;
 
     GLfloat bulletSpeed;
     uint8_t lives;
     int lastActivatedTime;
     int lastDeactivatedTime;
+
+private:
+    uint8_t updateCount;
+    bool idleMotionToken;
 };
 
 #endif

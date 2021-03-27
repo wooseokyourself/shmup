@@ -1,16 +1,16 @@
-#ifndef __RECT__
-#define __RECT__
+#ifndef __BASERECT__
+#define __BASERECT__
 
 #include "base/core/Figure.hpp"
 
-class Rect : public Figure {
+class BaseRect : public Figure {
 public:
-    Rect ();
+    BaseRect ();
     void setSide (const GLfloat _width, const GLfloat _height);
     Point2D getLeftTop () const;
     Point2D getRightBottom () const;
 
-public:
+public: 
     void draw () const;
 
 protected:

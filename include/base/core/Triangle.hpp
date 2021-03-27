@@ -9,7 +9,6 @@ public:
     void setRadius (const GLfloat _radius);
 
 public:
-    // void display ();
     void draw () const;
 
 protected:

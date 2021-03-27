@@ -26,14 +26,6 @@ Point2D Rect::getRightBottom () const {
     return Point2D(mat.tx + halfWidth, mat.ty - halfHeight);
 }
 
-/*
-void Rect::display () {
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    draw();
-}
-*/
-
 void Rect::draw () const {
     glTranslatef(mat.tx, mat.ty, 0.0f);
     glRotatef(mat.degree, 0.0f, 0.0f, 1.0f);

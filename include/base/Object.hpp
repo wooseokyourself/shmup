@@ -3,6 +3,7 @@
 
 #include "base/core/Circle.hpp"
 #include "base/core/Rect.hpp"
+#include "base/core/BaseRect.hpp"
 #include "base/core/Triangle.hpp"
 #include "base/core/FigureNode.hpp"
 #include "gameplay/Constants.hpp"

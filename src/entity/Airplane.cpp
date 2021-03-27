@@ -1,12 +1,22 @@
 #include "entity/Airplane.hpp"
 
-Airplane::Airplane () :
-bulletManager(BULLET), bulletSpeed(0.0f), lives(0), lastActivatedTime(0), lastDeactivatedTime(0) {
+Airplane::Airplane ()
+: bulletManager(BULLET), bulletSpeed(0.0f), lives(0), lastActivatedTime(0), lastDeactivatedTime(0), updateCount(0), idleMotionToken(false) {
+    FigureNode * bodyNode, * headNode, * leftArmNode, * rightArmNode, * leftCanonNode, * rightCanonNode;
     base = (Rect*)root->init(RECT);
-    FigureNode* bodyNode = root->addChild(RECT);
+    bodyNode = root->addChild(RECT);
+    headNode = bodyNode->addChild(TRIANGLE);
+    leftArmNode = bodyNode->addChild(BASERECT);
+    rightArmNode = bodyNode->addChild(BASERECT);
+    leftCanonNode = leftArmNode->addChild(BASERECT);
+    rightCanonNode = rightArmNode->addChild(BASERECT);
+
     body = (Rect*)**bodyNode;
-    FigureNode* headNode = bodyNode->addChild(TRIANGLE);
     head = (Triangle*)**headNode;
+    leftArm = (BaseRect*)**leftArmNode;
+    rightArm = (BaseRect*)**rightArmNode;
+    leftCanon = (BaseRect*)**leftCanonNode;
+    rightCanon = (BaseRect*)**rightCanonNode;
 }
 
 Airplane::~Airplane () { }
@@ -18,7 +28,16 @@ Airplane::~Airplane () { }
  */
 void Airplane::update (const int bulletDirection) {
     bulletManager.update(bulletDirection);
-    // 여기에서 model에 움직임 적용해줘야함
+
+    GLfloat degree = idleMotionToken ? 0.2f : -0.2f;
+    leftArm->rotate(degree);
+    rightArm->rotate(-degree);
+    leftCanon->rotate(-degree * 1.2f);
+    rightCanon->rotate(degree * 1.2f);
+    if (++updateCount > 100) {
+        idleMotionToken = !idleMotionToken;
+        updateCount = 0;
+    }
 }
 
 /**
@@ -38,23 +57,50 @@ void Airplane::init (const ModelViewMat2D& mat, const uint8_t _lives, const GLfl
     GLfloat hitBoxWidth = standard;
     GLfloat hitBoxHeight = standard * 0.66666f;
 
-    GLfloat bodyWidth = hitBoxWidth * 0.25f;
+    GLfloat bodyWidth = hitBoxWidth * 0.3f;
     GLfloat bodyHeight = hitBoxHeight * 0.75f;
 
     GLfloat headRadius = bodyWidth / 1.73205f;
+    
+    GLfloat armWidth = bodyWidth * 0.8f;
+    GLfloat armHeight = bodyHeight * 0.9f;
+
+    GLfloat canonWidth = armWidth * 0.9f;
+    GLfloat canonHeight = hitBoxHeight * 0.8f;
 
     base->setSide(hitBoxWidth, hitBoxHeight); // 3:2
     base->setMatrix(mat);
     body->setSide(bodyWidth, bodyHeight);
     body->setTranslate(0.0f, (hitBoxHeight - bodyHeight) / 2.0f);
     body->setRandomColor();
+    
     head->setRadius(headRadius);
     head->setTranslate(0.0f, hitBoxHeight / 2);
     head->setRotate(330.0f);
 
+    leftArm->setSide(armWidth, armHeight);
+    leftArm->setTranslate(-(bodyWidth * 0.34), 0.0f);
+    leftArm->setRotate(145.0f);
+
+    rightArm->setSide(armWidth, armHeight);
+    rightArm->setTranslate(bodyWidth * 0.34, 0.0f);
+    rightArm->setRotate(-145.0f);
+
+    leftCanon->setSide(canonWidth, canonHeight);
+    leftCanon->setTranslate(0.0f, armHeight);
+    leftCanon->setRotate(-145.0f);
+
+    rightCanon->setSide(canonWidth, canonHeight);
+    rightCanon->setTranslate(0.0f, armHeight);
+    rightCanon->setRotate(145.0f);
+
     base->setColor(Rgba(1.0f, 1.0f, 1.0f, 0.3f));
     body->setRandomColor();
     head->setRandomColor();
+    leftArm->setColor(Rgba(1.0f, 0.0f, 0.0f));
+    rightArm->setColor(Rgba(0.0f, 1.0f, 0.0f));
+    leftCanon->setRandomColor();
+    rightCanon->setRandomColor();
 
     lastActivatedTime = glutGet(GLUT_ELAPSED_TIME);
 }
