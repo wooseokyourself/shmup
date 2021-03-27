@@ -15,15 +15,19 @@ void Item::init (const ModelViewMat2D& mat, const GLfloat length, const Rgba col
     Triangle* bottom = (Triangle*)**(triangles.back());
     
     base->setMatrix(mat);
-    GLfloat radius = length / 2.0f;
+    GLfloat radius = length / 3.0f;
+    top->clearMatrix();
     top->setRadius(radius);
-    bottom->setRadius(radius);
     top->setTranslate(0.0f, radius / 2.0f);
-    bottom->setTranslate(0.0f, -(radius / 2.0f));
-    top->rotate(330);
-    bottom->rotate(150);
+    top->setRotate(-30.0f);
     top->setColor(color);
+    
+    bottom->clearMatrix();
+    bottom->setRadius(radius);
+    bottom->setTranslate(0.0f, -(radius / 2.0f));
+    bottom->setRotate(30.0f); 
     bottom->setColor(color);
+    
     setSpeed(speed);
 }
 

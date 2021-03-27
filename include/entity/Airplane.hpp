@@ -41,7 +41,6 @@ private:
     Rect* body;
     Triangle* head;
 
-    GLfloat speed;
     GLfloat bulletSpeed;
     uint8_t lives;
     int lastActivatedTime;

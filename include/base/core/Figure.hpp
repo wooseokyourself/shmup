@@ -19,6 +19,7 @@ public:
 public:
     ModelViewMat2D getMatrix () const;
     void setMatrix (const ModelViewMat2D& mat);
+    void clearMatrix ();
     void setTranslate (const Point2D p);
     void setTranslate (const GLfloat x, const GLfloat y);
     void translate (const Point2D p);
@@ -34,8 +35,6 @@ public:
 protected:
     Rgba color;
     ModelViewMat2D mat;
-    // GLfloat speed;
-    // uint8_t direction;
 };
 
 #endif

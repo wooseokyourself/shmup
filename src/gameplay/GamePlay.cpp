@@ -13,6 +13,7 @@ GamePlay::GamePlay ()
     airplaneWidth = 0.3f;
     playerInitMat.setTranslate(0.0f, -0.5f);
     enemyInitMat.setTranslate(0.0f, 0.5f);
+    enemyInitMat.setRotate(180.0f);
     playerSpeed = AirplaneSpeed::NORMAL;
     playerBulletSpeed = BulletSpeed::FAST;
     enemySpeed = AirplaneSpeed::SLOW;
@@ -161,7 +162,7 @@ void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
             if (target == player)
                 lose();
             if (target == enemy) {
-                itemManager.activateObject(enemy->getModelViewMatrix(), 0.05f, Rgba(0.5f, 0.5f, 0.5f), BulletSpeed::SLOW);
+                itemManager.activateObject(enemy->getModelViewMatrix(), 0.15f, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
                 enemyAi.stop();
                 if (stage == MAX_STAGE)
                     win();
@@ -186,7 +187,7 @@ void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
         if (target == player)
             lose();
         if (target == enemy) {
-            itemManager.activateObject(enemy->getModelViewMatrix(), 0.05f, Rgba(0.5f, 0.5f, 0.5f), BulletSpeed::SLOW);
+            itemManager.activateObject(enemy->getModelViewMatrix(), 0.15f, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
             enemyAi.stop();
             if (stage == MAX_STAGE)
                 win();

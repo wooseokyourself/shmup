@@ -20,11 +20,13 @@ ThirdObjectManager::ThirdObjectManager (const int _objectType)
 
 ThirdObjectManager::~ThirdObjectManager () {
     while (!activeObjects.empty()) {
-        delete activeObjects.back();
+        if (activeObjects.back() != nullptr)
+            delete activeObjects.back();
         activeObjects.pop_back();
     }
     while (!pool.empty()) {
-        delete pool.top();
+        if (pool.top() != nullptr)
+            delete pool.top();
         pool.pop();
     }
 }
