@@ -8,7 +8,7 @@ Item::Item () {
 
 Item::~Item () { }
 
-void Item::init (const GLfloat length, const ModelViewMat2D& mat, const Rgba color, const GLfloat speed) {
+void Item::init (const ModelViewMat2D& mat, const GLfloat length, const Rgba color, const GLfloat speed) {
     Rect* base = (Rect*)**root;
     std::list<FigureNode*> triangles = root->getChildren();
     Triangle* top = (Triangle*)**(triangles.front());

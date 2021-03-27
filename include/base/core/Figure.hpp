@@ -17,6 +17,7 @@ public:
     void setRandomColor ();
 
 public:
+    ModelViewMat2D getMatrix () const;
     void setMatrix (const ModelViewMat2D& mat);
     void setTranslate (const Point2D p);
     void setTranslate (const GLfloat x, const GLfloat y);

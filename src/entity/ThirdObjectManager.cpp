@@ -38,14 +38,16 @@ void ThirdObjectManager::activateObject (const ModelViewMat2D& mat, const GLfloa
     Object* object = pool.top();
     pool.pop();
     switch (objectType) {
-        case BULLET:
+        case BULLET: {
             Bullet* bullet = (Bullet*)object;
-            bullet->init(param, mat, color, speed);
+            bullet->init(mat, param, color, speed);
             break;
-        case ITEM:
+        }
+        case ITEM: {
             Item* item = (Item*)object;
-            item->init(param, mat, color, speed);
+            item->init(mat, param, color, speed);
             break;
+        }
     }
     activeObjects.push_back(object);
 }
