@@ -1,18 +1,25 @@
-#include "base/Circle.hpp"
+#include "base/core/Circle.hpp"
 
 Circle::Circle ()
-: Object(), radius(0.0f) { }
+: Figure(), radius(0.0f) { }
 
 void Circle::setRadius (const GLfloat _radius) {
     radius = _radius;
 }
 
+/*
 void Circle::display () {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(mat.tx, mat.ty, 0.0f);
-    glColor4f(color.R, color.G, color.B, color.A);
+    draw();
+}
+*/
 
+void Circle::draw () const {
+    glPushMatrix();
+    glTranslatef(mat.tx, mat.ty, 0.0f);
+
+    glColor4f(color.R, color.G, color.B, color.A);
     // draw refer: https://stackoverflow.com/questions/22444450/drawing-circle-with-opengl
     int segment = 30;
     glBegin(GL_POLYGON);
@@ -31,4 +38,6 @@ void Circle::display () {
         glVertex2f(x, y);
     }
     glEnd();
+
+    glPopMatrix();
 }

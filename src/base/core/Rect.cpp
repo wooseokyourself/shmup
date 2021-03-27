@@ -1,7 +1,7 @@
-#include "base/Rect.hpp"
+#include "base/core/Rect.hpp"
 
 Rect::Rect ()
-: Object(), width(0.0f), height(0.0f) { }
+: Figure(), width(0.0f), height(0.0f) { }
 
 void Rect::setSide (const GLfloat _width, const GLfloat _height) {
     width = _width;
@@ -26,16 +26,21 @@ Point2D Rect::getRightBottom () const {
     return Point2D(mat.tx + halfWidth, mat.ty - halfHeight);
 }
 
-/**
- * @brief Draw the rectangle in OpenGL world.
- */
+/*
 void Rect::display () {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    draw();
+}
+*/
+
+void Rect::draw () const {
+    glPushMatrix();
+    glPushMatrix();
     glTranslatef(mat.tx, mat.ty, 0.0f);
     glRotatef(mat.degree, 0.0f, 0.0f, 1.0f);
-    glColor4f(color.R, color.G, color.B, color.A);
 
+    glColor4f(color.R, color.G, color.B, color.A);
     GLfloat w = width / 2;
     GLfloat h = height / 2;
     glBegin(GL_POLYGON);
@@ -50,4 +55,7 @@ void Rect::display () {
         glVertex2f(w, h);
         glVertex2f(w, -h);
     glEnd();
+    
+    glPopMatrix();
+    glPopMatrix();
 }

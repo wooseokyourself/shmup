@@ -6,28 +6,23 @@
 #include <list>
 #include <stack>
 #include "base/Rect.hpp"
+#include "base/Triangle.hpp"
+#include "base/ObjectTree.hpp"
 #include "3rdobjects/ThirdObjectManager.hpp"
 
 class GamePlay;
 
-class Airplane : public Rect {
+class Airplane {
 private:
     friend class GamePlay;
 
 public:
-    Airplane (const Point2D p, 
-              const GLfloat width, 
-              const GLfloat height, 
-              const GLfloat speed, 
-              const GLfloat _bulletSpeed);
-    Airplane (const GLfloat x, 
-              const GLfloat y, 
-              const GLfloat width, 
-              const GLfloat height, 
-              const GLfloat speed, 
-              const GLfloat _bulletSpeed);
+    Airplane ();
+    ~Airplane ();
     void update (const int bulletDirection);
-    void init (const uint8_t _lives);
+    void init (const Point2D p, const uint8_t _lives);
+    void setSpeed (const GLfloat _speed);
+    void setBulletSpeed (const GLfloat _bulletSpeed);
     void destruct ();
     void loseLife ();
     bool isAlive () const;
@@ -40,7 +35,9 @@ public:
     void display ();
 
 private:
+    FigureNode* model;
     ThirdObjectManager bulletManager;
+    GLfloat speed;
     GLfloat bulletSpeed;
     uint8_t lives;
     int lastActivatedTime;

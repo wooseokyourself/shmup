@@ -1,9 +1,9 @@
 #ifndef __RECT__
 #define __RECT__
 
-#include "base/Object.hpp"
+#include "base/core/Figure.hpp"
 
-class Rect : public Object {
+class Rect : public Figure {
 public:
     Rect ();
     void setSide (const GLfloat _width, const GLfloat _height);
@@ -11,7 +11,8 @@ public:
     Point2D getRightBottom () const;
 
 public: 
-    void display ();
+    // void display ();
+    void draw () const;
 
 protected:
     GLfloat width;
