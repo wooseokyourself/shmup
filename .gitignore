@@ -9,7 +9,7 @@ app
 # Windows executables
 x64/Debug/
 
-# Compiled Object files
+# Compiled Figure files
 *.slo
 *.lo
 *.o

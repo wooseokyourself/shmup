@@ -1,10 +1,4 @@
-#include "3rdobjects/ThirdObject.hpp"
-
-void ThirdObject::setMatrix (const ModelViewMat2D& mat) {
-    setPosition(mat.tx, mat.ty);
-    setRotate(mat.degree);
-    setScale(mat.sx, mat.sy);
-} 
+#include "base/ThirdObject.hpp"
 
 /**
  * @return true if the object is out of bound.

@@ -1,4 +1,4 @@
-#include "base/ModelViewMat2D.hpp"
+#include "base/core/ModelViewMat2D.hpp"
 
 ModelViewMat2D::ModelViewMat2D ()
 : tx(0.0f), ty(0.0f), sx(1.0f), sy(1.0f), degree(0.0f) { }

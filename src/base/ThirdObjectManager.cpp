@@ -1,4 +1,4 @@
-#include "3rdobjects/ThirdObjectManager.hpp"
+#include "base/ThirdObjectManager.hpp"
 
 ThirdObjectManager::ThirdObjectManager (const int objectType) {
     switch (objectType) {

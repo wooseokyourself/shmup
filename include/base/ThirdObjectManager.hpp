@@ -3,14 +3,15 @@
 
 #include <list>
 #include <stack>
-#include "3rdobjects/ThirdObject.hpp"
-#include "3rdobjects/Bullet.hpp"
-#include "3rdobjects/Item.hpp"
+#include "base/ThirdObject.hpp"
 
 enum ObjectType {
     BULLET,
     ITEM
 };
+
+class Bullet;
+class Item;
 
 class ThirdObjectManager {
 public:

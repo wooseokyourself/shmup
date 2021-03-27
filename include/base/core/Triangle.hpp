@@ -1,15 +1,16 @@
 #ifndef __TRIANGLE__
 #define __TRIANGLE__
 
-#include "base/Object.hpp"
+#include "base/core/Figure.hpp"
 
-class Triangle : public Object {
+class Triangle : public Figure {
 public:
     Triangle ();
     void setRadius (const GLfloat _radius);
 
 public:
-    void display ();
+    // void display ();
+    void draw () const;
 
 protected:
     GLfloat radius;

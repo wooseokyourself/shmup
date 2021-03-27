@@ -1,19 +1,27 @@
-#include "base/Triangle.hpp"
+#include "base/core/Triangle.hpp"
 
 Triangle::Triangle ()
-: Object(), radius(0.0f) { }
+: Figure(), radius(0.0f) { }
 
 void Triangle::setRadius (const GLfloat _radius) {
     radius = _radius;
 }
 
+/*
 void Triangle::display () {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    draw();
+}
+*/
+
+void Triangle::draw () const {
+    glPushMatrix();
+    glPushMatrix();
     glTranslatef(mat.tx, mat.ty, 0.0f);
     glRotatef(mat.degree, 0.0f, 0.0f, 1.0f);
-    glColor4f(color.R, color.G, color.B, color.A);
 
+    glColor4f(color.R, color.G, color.B, color.A);
     // draw refer: https://stackoverflow.com/questions/22444450/drawing-circle-with-opengl
     int segment = 3;
     glBegin(GL_POLYGON);
@@ -32,4 +40,7 @@ void Triangle::display () {
         glVertex2f(x, y);
     }
     glEnd();
+
+    glPopMatrix();
+    glPopMatrix();
 }
