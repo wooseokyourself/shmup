@@ -1,9 +1,6 @@
 #include "base/core/FigureNode.hpp"
 
-FigureNode::FigureNode (Figure* _obj)
-: obj(_obj) {
-    parent = nullptr;
-}
+FigureNode::FigureNode () { }
 
 FigureNode::~FigureNode () {
     delete obj;
@@ -14,16 +11,24 @@ FigureNode::~FigureNode () {
     }
 }
 
+void FigureNode::init (const int figure) {
+    if (obj != nullptr)
+        delete obj;
+    switch (figure) {
+        case CIRCLE:
+            obj = new Circle;
+            break;
+        case RECT:
+            obj = new Rect;
+            break;
+        case TRIANGLE:
+            obj = new Triangle;
+            break;
+    }
+}
+
 Figure* FigureNode::operator * () {
     return obj;
-}
-
-FigureNode* FigureNode::getParent () {
-    return parent;
-}
-
-std::list<FigureNode*>& FigureNode::getChildren () {
-    return children;
 }
 
 bool FigureNode::isRoot () const {
@@ -34,15 +39,34 @@ bool FigureNode::isExternal () const {
     return children.empty();
 }
 
-FigureNode* FigureNode::addChild (Figure* child) {
-    FigureNode* node = new FigureNode(child);
-    node->parent = this;
-    children.push_back(node);
-    return node;
+FigureNode* FigureNode::addChild (const int figure) {
+    FigureNode* child = new FigureNode();
+    child->parent = this;
+    children.push_back(child);
+    switch (figure) {
+        case CIRCLE:
+            child->init(CIRCLE);
+            break;
+        case RECT:
+            child->init(RECT);
+            break;
+        case TRIANGLE:
+            child->init(TRIANGLE);
+            break;
+    }
+    return child;
 }
 
 void FigureNode::addMat (const ModelViewMat2D& mat) {
     obj->setMatrix(mat);
+}
+
+FigureNode* FigureNode::getParent () {
+    return parent;
+}
+
+std::list<FigureNode*>& FigureNode::getChildren () {
+    return children;
 }
 
 void FigureNode::display () const {

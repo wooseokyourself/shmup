@@ -1,13 +1,19 @@
-#include "3rdobjects/Bullet.hpp"
+#include "entity/Bullet.hpp"
+
+Bullet::Bullet () {
+    root->init(CIRCLE);
+}
+
+Bullet::~Bullet () { }
 
 void Bullet::init (const GLfloat radius, const ModelViewMat2D& mat, const Rgba color, const GLfloat speed) {
-    setMatrix(mat);
-    shape.setRadius(radius);
-    shape.setColor(color);
+    Circle* shape = (Circle*)**root;
+    shape->setMatrix(mat);
+    shape->setRadius(radius);
+    shape->setColor(color);
     setSpeed(speed);
 }
 
-void Bullet::display () {
-    shape.setPosition(mat.tx, mat.ty);
-    shape.display();
+void Bullet::display () const {
+    root->display();
 }

@@ -1,17 +1,15 @@
 #ifndef __BULLET__
 #define __BULLET__
 
-#include "base/ThirdObject.hpp"
-#include "base/Circle.hpp"
+#include "base/Object.hpp"
+
 #include <iostream>
 
-class Bullet : public ThirdObject {
+class Bullet : public Object {
 public:
+    Bullet ();
+    ~Bullet ();
     void init (const GLfloat radius, const ModelViewMat2D& mat, const Rgba color, const GLfloat speed);
-    void display ();
-    void draw () const;
-
-private:
-    Circle shape;
+    void display () const;
 };
 #endif
