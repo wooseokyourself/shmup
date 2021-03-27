@@ -16,8 +16,6 @@ void Triangle::display () {
 */
 
 void Triangle::draw () const {
-    glPushMatrix();
-    glPushMatrix();
     glTranslatef(mat.tx, mat.ty, 0.0f);
     glRotatef(mat.degree, 0.0f, 0.0f, 1.0f);
 
@@ -40,7 +38,4 @@ void Triangle::draw () const {
         glVertex2f(x, y);
     }
     glEnd();
-
-    glPopMatrix();
-    glPopMatrix();
 }

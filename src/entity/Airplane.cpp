@@ -1,7 +1,7 @@
 #include "entity/Airplane.hpp"
 
 Airplane::Airplane () :
-bulletManager(BULLET), speed(0.0f), bulletSpeed(0.0f), lives(0), lastActivatedTime(0), lastDeactivatedTime(0) {
+bulletManager(BULLET), bulletSpeed(0.0f), lives(0), lastActivatedTime(0), lastDeactivatedTime(0) {
     base = (Rect*)root->init(RECT);
     FigureNode* bodyNode = root->addChild(RECT);
     body = (Rect*)**bodyNode;
@@ -29,29 +29,30 @@ void Airplane::init (const ModelViewMat2D& mat, const uint8_t _lives, const GLfl
     if (isAlive())
         return;
     lives = _lives;
-    speed = _speed;
+    setSpeed(_speed);
     bulletSpeed = _bulletSpeed;
 
     GLfloat standard = width; // 0.3f
 
     // 3:2
     GLfloat hitBoxWidth = standard;
-    GLfloat hitBoxHeight = standard * 0.333333f;
+    GLfloat hitBoxHeight = standard * 0.66666f;
 
     GLfloat bodyWidth = hitBoxWidth * 0.25f;
     GLfloat bodyHeight = hitBoxHeight * 0.75f;
 
-    GLfloat headRadius = bodyWidth / 2.0f * 1.73205f; // 2*sqrt(3)
+    GLfloat headRadius = bodyWidth / 1.73205f;
 
     base->setSide(hitBoxWidth, hitBoxHeight); // 3:2
-    base->setTranslate(0.0f, 0.0f);
+    base->setMatrix(mat);
     body->setSide(bodyWidth, bodyHeight);
-    body->setTranslate(0.0f, hitBoxHeight - bodyHeight);
+    body->setTranslate(0.0f, (hitBoxHeight - bodyHeight) / 2.0f);
     body->setRandomColor();
     head->setRadius(headRadius);
+    head->setTranslate(0.0f, hitBoxHeight / 2);
     head->setRotate(330.0f);
-    head->setTranslate(0.0f, (hitBoxHeight / 2) + (headRadius / 2));
 
+    base->setColor(Rgba(1.0f, 1.0f, 1.0f, 0.3f));
     body->setRandomColor();
     head->setRandomColor();
 

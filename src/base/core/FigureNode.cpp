@@ -1,14 +1,13 @@
 #include "base/core/FigureNode.hpp"
 
-FigureNode::FigureNode () { }
+FigureNode::FigureNode ()
+: obj(nullptr), parent(nullptr) { }
 
 FigureNode::~FigureNode () {
-    delete obj;
-    for (int i = 0 ; i < children.size() ; i ++) {
-        FigureNode* child = children.front();
+    if (obj != nullptr)
+        delete obj;
+    for (int i = 0 ; i < children.size() ; i ++)
         children.pop_front();
-        delete child;
-    }
 }
 
 Figure* FigureNode::init (const int figure) {
@@ -75,9 +74,10 @@ void FigureNode::display () const {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
     }
-    // draw는 glPushMatrix를 통해 object->mat 을 적용한 뒤
-    // (색칠을 포함하여)자신의 버텍스들을 그리고, draw 말미에서 glPushMatrix!
+    else
+        glPushMatrix();
     obj->draw();
     for (FigureNode* child : children)
         child->display();
+    glPopMatrix();
 }

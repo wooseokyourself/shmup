@@ -35,8 +35,6 @@ void Rect::display () {
 */
 
 void Rect::draw () const {
-    glPushMatrix();
-    glPushMatrix();
     glTranslatef(mat.tx, mat.ty, 0.0f);
     glRotatef(mat.degree, 0.0f, 0.0f, 1.0f);
 
@@ -55,7 +53,4 @@ void Rect::draw () const {
         glVertex2f(w, h);
         glVertex2f(w, -h);
     glEnd();
-    
-    glPopMatrix();
-    glPopMatrix();
 }

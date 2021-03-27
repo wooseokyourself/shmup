@@ -16,8 +16,8 @@ void Circle::display () {
 */
 
 void Circle::draw () const {
-    glPushMatrix();
     glTranslatef(mat.tx, mat.ty, 0.0f);
+    glRotatef(mat.degree, 0.0f, 0.0f, 1.0f);
 
     glColor4f(color.R, color.G, color.B, color.A);
     // draw refer: https://stackoverflow.com/questions/22444450/drawing-circle-with-opengl
@@ -38,6 +38,4 @@ void Circle::draw () const {
         glVertex2f(x, y);
     }
     glEnd();
-
-    glPopMatrix();
 }

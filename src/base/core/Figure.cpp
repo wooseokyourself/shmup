@@ -48,6 +48,12 @@ void Figure::setMatrix (const ModelViewMat2D& mat) {
     setScale(mat.sx, mat.sy);
 } 
 
+void Figure::clearMatrix () {
+    setTranslate(0.0f, 0.0f);
+    setRotate(0.0f);
+    setScale(1.0f, 1.0f);
+}
+
 /**
  * @brief Set the x and y of the object.
  * @param p New point of the center point of the object in world space.
