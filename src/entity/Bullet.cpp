@@ -6,7 +6,7 @@ Bullet::Bullet () {
 
 Bullet::~Bullet () { }
 
-void Bullet::init (const GLfloat radius, const ModelViewMat2D& mat, const Rgba color, const GLfloat speed) {
+void Bullet::init (const ModelViewMat2D& mat, const GLfloat radius, const Rgba color, const GLfloat speed) {
     Circle* shape = (Circle*)**root;
     shape->setMatrix(mat);
     shape->setRadius(radius);

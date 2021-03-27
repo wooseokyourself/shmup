@@ -9,7 +9,7 @@ class Item : public Object {
 public:
     Item ();
     ~Item ();
-    void init (const GLfloat length, const ModelViewMat2D& mat, const Rgba color, const GLfloat speed);
+    void init (const ModelViewMat2D& mat, const GLfloat length, const Rgba color, const GLfloat speed);
     void display () const;
 };
 

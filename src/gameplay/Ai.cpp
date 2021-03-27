@@ -22,8 +22,8 @@ void Ai::action () {
         std::mt19937 gen(rd());
         std::uniform_int_distribution<int> dis(0, 99);
         const int rand = dis(gen);
-        const GLfloat lx = airplane->getLeftTop().x;
-        const GLfloat rx = airplane->getRightBottom().x;
+        const GLfloat lx = airplane->getHitboxLeftTop().x;
+        const GLfloat rx = airplane->getHitboxRightBottom().x;
         int direction = RIGHT;
         if (lx <= -1)
             direction = RIGHT;

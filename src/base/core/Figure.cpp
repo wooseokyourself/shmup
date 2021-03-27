@@ -38,6 +38,10 @@ void Figure::setRandomColor () {
                 static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
 }
 
+ModelViewMat2D Figure::getMatrix () const {
+    return mat;
+}
+
 void Figure::setMatrix (const ModelViewMat2D& mat) {
     setTranslate(mat.tx, mat.ty);
     setRotate(mat.degree);

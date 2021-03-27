@@ -5,10 +5,10 @@
 #include <string>
 #include "gameplay/Constants.hpp"
 #include "gameplay/Ai.hpp"
-#include "base/Rect.hpp"
-#include "base/Triangle.hpp"
+#include "base/core/Rect.hpp"
+#include "base/core/Triangle.hpp"
 #include "entity/Airplane.hpp"
-#include "3rdobjects/ThirdObjectManager.hpp"
+#include "entity/ThirdObjectManager.hpp"
 
 class GamePlay {
 public:
@@ -42,8 +42,15 @@ private:
     Ai enemyAi;
 
 private: // Objects
+    GLfloat airplaneWidth;
     Airplane* player;
     Airplane* enemy;
+    ModelViewMat2D playerInitMat;
+    ModelViewMat2D enemyInitMat;
+    GLfloat playerSpeed;
+    GLfloat playerBulletSpeed;
+    GLfloat enemySpeed;
+    GLfloat enemyBulletSpeed;
 
 private:
     ThirdObjectManager itemManager;

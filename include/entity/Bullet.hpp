@@ -9,7 +9,7 @@ class Bullet : public Object {
 public:
     Bullet ();
     ~Bullet ();
-    void init (const GLfloat radius, const ModelViewMat2D& mat, const Rgba color, const GLfloat speed);
+    void init (const ModelViewMat2D& mat, const GLfloat radius, const Rgba color, const GLfloat speed);
     void display () const;
 };
 #endif

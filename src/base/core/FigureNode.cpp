@@ -11,7 +11,7 @@ FigureNode::~FigureNode () {
     }
 }
 
-void FigureNode::init (const int figure) {
+Figure* FigureNode::init (const int figure) {
     if (obj != nullptr)
         delete obj;
     switch (figure) {
@@ -25,6 +25,7 @@ void FigureNode::init (const int figure) {
             obj = new Triangle;
             break;
     }
+    return obj;
 }
 
 Figure* FigureNode::operator * () {

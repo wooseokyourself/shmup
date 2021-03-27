@@ -17,7 +17,7 @@ class FigureNode {
 public:
     FigureNode ();
     ~FigureNode ();
-    void init (const int figure);
+    Figure* init (const int figure);
     Figure* operator * ();
     bool isRoot () const;
     bool isExternal () const;
