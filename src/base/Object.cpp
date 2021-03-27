@@ -1,7 +1,9 @@
 #include "base/Object.hpp"
 
 Object::Object ()
-: root(nullptr), speed(0) { }
+: speed(0.0f) {
+    root = new FigureNode;
+}
 
 Object::~Object () {
     if (root != nullptr)
@@ -10,6 +12,45 @@ Object::~Object () {
 
 void Object::setSpeed (const GLfloat _speed) {
     speed = _speed;
+}
+
+/**
+ * @return true if the object is out of bound.
+ * @param bound The target bound; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
+ */
+bool Object::isOutOfBound (const int bound) {
+    const Point2D pos = (**root)->getWorldPosition();
+    const GLfloat x = pos.x;
+    const GLfloat y = pos.y;
+    switch (bound) {
+        case LEFT:
+            return x < WORLD_BOUND::LEFT;
+        case UP:
+            return y > WORLD_BOUND::UP;
+        case RIGHT:
+            return x > WORLD_BOUND::RIGHT;
+        case DOWN:
+            return y < WORLD_BOUND::DOWN;
+        case LEFT_UP:
+            return x < WORLD_BOUND::LEFT || y > WORLD_BOUND::UP;
+        case UP_RIGHT:
+            return y > WORLD_BOUND::UP || x > WORLD_BOUND::RIGHT;
+        case RIGHT_DOWN:
+            return x > WORLD_BOUND::RIGHT || y < WORLD_BOUND::DOWN;
+        case DOWN_LEFT:
+            return y < WORLD_BOUND::DOWN || x < WORLD_BOUND::LEFT;
+    }
+}
+
+/**
+ * @return true if the center of object is in rectangle.
+ * @param leftTop The left-top point of the target range in world space.
+ * @param rightBottom The right-bottom point of the target range in world space.
+ */
+bool Object::isIn (const Point2D leftTop, const Point2D rightBottom) {
+    Point2D p = (**root)->getWorldPosition();
+    if ( (leftTop.x <= p.x && p.x <= rightBottom.x) && (rightBottom.y <= p.y && p.y <= leftTop.y))
+        return true;
 }
 
 /**

@@ -1,16 +1,17 @@
-#include "base/ThirdObjectManager.hpp"
+#include "entity/ThirdObjectManager.hpp"
 
-ThirdObjectManager::ThirdObjectManager (const int objectType) {
+ThirdObjectManager::ThirdObjectManager (const int _objectType) 
+: objectType(_objectType) {
     switch (objectType) {
         case BULLET:
             for (int i = 0 ; i < 100 ; i ++) {
-                ThirdObject* b = new Bullet();
+                Object* b = new Bullet();
                 pool.push(b);
             }
             break;
         case ITEM:
             for (int i = 0 ; i < 5 ; i ++) {
-                ThirdObject* b = new Item();
+                Object* b = new Item();
                 pool.push(b);
             }
             break;
@@ -34,9 +35,18 @@ ThirdObjectManager::~ThirdObjectManager () {
 void ThirdObjectManager::activateObject (const ModelViewMat2D& mat, const GLfloat param, const Rgba color, const GLfloat speed) {
     if (pool.empty())
         return;
-    ThirdObject* object = pool.top();
+    Object* object = pool.top();
     pool.pop();
-    object->init(param, mat, color, speed);
+    switch (objectType) {
+        case BULLET:
+            Bullet* bullet = (Bullet*)object;
+            bullet->init(param, mat, color, speed);
+            break;
+        case ITEM:
+            Item* item = (Item*)object;
+            item->init(param, mat, color, speed);
+            break;
+    }
     activeObjects.push_back(object);
 }
 
@@ -44,7 +54,7 @@ void ThirdObjectManager::activateObject (const ModelViewMat2D& mat, const GLfloa
  * @brief Draw all bullets in OpenGL world.
  */
 void ThirdObjectManager::display () const {
-    for (ThirdObject* object : activeObjects)
+    for (Object* object : activeObjects)
         object->display();
 }
 
@@ -54,8 +64,8 @@ void ThirdObjectManager::display () const {
  * @param bulletDirection The direction of all bullets; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
  */
 void ThirdObjectManager::update (const int direction) {
-    std::stack<ThirdObject*> deactivating;
-    for (ThirdObject* object : activeObjects) {
+    std::stack<Object*> deactivating;
+    for (Object* object : activeObjects) {
         if (object->isOutOfBound(direction)) {
             deactivating.push(object);
             continue;
@@ -63,7 +73,7 @@ void ThirdObjectManager::update (const int direction) {
         object->move(direction);
     }
     while (!deactivating.empty()) {
-        ThirdObject* object = deactivating.top();
+        Object* object = deactivating.top();
         deactivating.pop();
         activeObjects.remove(object);
         pool.push(object);
@@ -84,7 +94,7 @@ size_t ThirdObjectManager::getActivatedObjectsNumber () const {
  * @return false if no bullet removed.
  */
 bool ThirdObjectManager::deactivateObjectWhichIsIn (const Point2D leftTop, const Point2D rightBottom) {
-    for (ThirdObject* object : activeObjects) {
+    for (Object* object : activeObjects) {
         if (object->isIn(leftTop, rightBottom)) {
             pool.push(object);
             activeObjects.remove(object);

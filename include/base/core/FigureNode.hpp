@@ -2,19 +2,29 @@
 #define __FIGURENODE__
 
 #include "base/core/Figure.hpp"
+#include "base/core/Circle.hpp"
+#include "base/core/Rect.hpp"
+#include "base/core/Triangle.hpp"
 #include <list>
+
+enum Figures {
+    CIRCLE,
+    RECT,
+    TRIANGLE
+};
 
 class FigureNode {
 public:
-    FigureNode (Figure* _obj);
+    FigureNode ();
     ~FigureNode ();
+    void init (const int figure);
     Figure* operator * ();
-    FigureNode* getParent ();
-    std::list<FigureNode*>& getChildren ();
     bool isRoot () const;
     bool isExternal () const;
-    FigureNode* addChild (Figure* child);
+    FigureNode* addChild (const int figure);
     void addMat (const ModelViewMat2D& mat);
+    FigureNode* getParent ();
+    std::list<FigureNode*>& getChildren ();
 
 public:
     void display () const;
