@@ -201,6 +201,21 @@ void Airplane::addShotgunBullet () {
     shotgunBulletNumber += 1;
 }
 
+void Airplane::handlingWhenOutOfBound () {
+    const ModelViewMat2D& mat = base->getMatrix();
+    const Point2D lt = base->getLeftTop(), rb = base->getRightBottom();
+    const GLfloat width = rb.x - lt.x;
+    const GLfloat height = lt.y - rb.y;
+    if (lt.x < WORLD_BOUND::LEFT)
+        base->setTranslate(WORLD_BOUND::LEFT + width / 2, mat.ty);
+    else if (rb.x > WORLD_BOUND::RIGHT)
+        base->setTranslate(WORLD_BOUND::RIGHT - width / 2, mat.ty);
+    if (lt.y > WORLD_BOUND::UP)
+        base->setTranslate(mat.tx, WORLD_BOUND::UP - height / 2);
+    else if (rb.y < WORLD_BOUND::DOWN)
+        base->setTranslate(mat.tx, WORLD_BOUND::DOWN + height / 2);
+}
+
 /**
  * @brief Draw the airplane and its bullets in OpenGL world.
  */

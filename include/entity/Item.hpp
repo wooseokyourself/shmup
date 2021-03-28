@@ -12,8 +12,10 @@ public:
     ~Item ();
     void init (const ModelViewMat2D& mat, const GLfloat length, const Rgba color, const GLfloat speed);
     void setRandomRotate ();
-    bool shouldBeRemoved ();
-    void move ();
+    bool isDurationTimeout () const;
+
+public:
+    void handlingWhenOutOfBound ();
     void display () const;
 
 private:

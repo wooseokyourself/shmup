@@ -1,6 +1,7 @@
 #include "entity/Bullet.hpp"
 
-Bullet::Bullet () {
+Bullet::Bullet ()
+: outOfBound(false) {
     root->init(CIRCLE);
 }
 
@@ -12,14 +13,16 @@ void Bullet::init (const ModelViewMat2D& mat, const GLfloat radius, const Rgba c
     shape->setRadius(radius);
     shape->setColor(color);
     setSpeed(speed);
+    outOfBound = false;
 }
 
-void Bullet::move () {
-    const ModelViewMat2D& mat = (**root)->getMatrix();
-    GLfloat rad = getRadian(mat.degree + 90.0f);
-    GLfloat x = speed * cos(rad);
-    GLfloat y = speed * sin(rad);
-    (**root)->translate(x, y);
+bool Bullet::isOutOfBound () const {
+    return outOfBound;
+}
+
+void Bullet::handlingWhenOutOfBound () {
+    if (isCenterOutOfBound())
+        outOfBound = true;
 }
 
 void Bullet::display () const {

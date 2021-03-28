@@ -35,6 +35,7 @@ public:
     void addShotgunBullet ();
 
 public:
+    void handlingWhenOutOfBound ();
     void display () const;
 
 private:

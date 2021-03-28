@@ -10,7 +10,13 @@ public:
     Bullet ();
     ~Bullet ();
     void init (const ModelViewMat2D& mat, const GLfloat radius, const Rgba color, const GLfloat speed);
-    void move ();
+    bool isOutOfBound () const;
+
+public:
+    void handlingWhenOutOfBound ();
     void display () const;
+
+private:
+    bool outOfBound;
 };
 #endif
