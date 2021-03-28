@@ -1,6 +1,7 @@
 #ifndef __OBJECT__
 #define __OBJECT__
 
+#include "base/core/Utility.hpp"
 #include "base/core/Circle.hpp"
 #include "base/core/Rect.hpp"
 #include "base/core/BaseRect.hpp"
@@ -12,15 +13,17 @@ class Object {
 public:
     Object ();
     ~Object ();
-    virtual void display () const = 0;
     void setSpeed (GLfloat _speed);
-    bool isOutOfBound () const;
-    bool isOutOfBound (const int bound) const;
     bool isIn (const Point2D leftTop, const Point2D rightBottom) const;
 
 public:
-    void move (const int direction);
+    void move (const GLfloat degree);
     void rotate (const GLfloat degree);
+    bool isCenterOutOfBound () const;
+
+public:
+    virtual void handlingWhenOutOfBound () = 0;
+    virtual void display () const = 0;
 
 protected:
     FigureNode* root;
