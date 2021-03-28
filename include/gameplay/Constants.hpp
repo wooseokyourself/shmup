@@ -26,10 +26,12 @@ enum Direction {
     DOWN_LEFT   = 4
 };
 
+const uint8_t INIT_PLAYER_LIVES = 100;
+const uint8_t MAX_STAGE = 100;
 const GLfloat AIRPLANE_WIDTH = 0.2f;
 const GLfloat BULLET_RADIUS = 0.02f;
 const GLfloat ITEM_HEIGHT = 0.08f;
-const GLfloat ITEM_DURATION_SECS = 5.0f;
+const GLfloat ITEM_DURATION_SECS = 100.0f;
 
 namespace WORLD_BOUND {
     const GLfloat LEFT  = -0.75f;

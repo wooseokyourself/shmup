@@ -55,7 +55,6 @@ private: // Objects
 
 private:
     ThirdObjectManager itemManager;
-    uint8_t MAX_STAGE;
     uint8_t stage;
     int enemyRegenIntervalSecs;
     bool allPassMode;
