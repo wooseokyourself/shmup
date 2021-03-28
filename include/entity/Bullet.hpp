@@ -1,6 +1,7 @@
 #ifndef __BULLET__
 #define __BULLET__
 
+#include "base/core/Utility.hpp"
 #include "base/Object.hpp"
 #include <cmath>
 

@@ -57,16 +57,17 @@ void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* as
     itemManager.update();
 
     if (!allPassMode && !allFailMode) {
-        checkHitNormal(player, enemy);
-        checkHitNormal(enemy, player);
+        handleHitNormal(player, enemy);
+        handleHitNormal(enemy, player);
     }
     else if (allPassMode && !allFailMode) {
-        checkHitInstantKill(player, enemy);
-        checkHitDodge(enemy, player);
+        handleHitInstantKill(player, enemy);
+        handleHitDodge(enemy, player);
     }
     else if (!allPassMode && allFailMode) {
-        checkHitInstantKill(enemy, player);
+        handleHitInstantKill(enemy, player);
     }
+    handleAirplaneGotItem(player);
 
     if (stage > MAX_STAGE)
         win ();
@@ -155,7 +156,7 @@ void GamePlay::displayWall () {
  * @param attacker The object attacking.
  * @param target The object to attack.
  */
-void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
+void GamePlay::handleHitNormal (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
     if (attacker->bulletManager.deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
@@ -180,7 +181,7 @@ void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
  * @param attacker The object attacking.
  * @param target The object to attack.
  */
-void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
+void GamePlay::handleHitInstantKill (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
     if (attacker->bulletManager.deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
@@ -202,12 +203,19 @@ void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
  * @param attacker The object attacking.
  * @param target The object to attack.
  */
-void GamePlay::checkHitDodge (Airplane* attacker, Airplane* target) {
+void GamePlay::handleHitDodge (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
     if (attacker->bulletManager.deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
 
     }
+}
+
+void GamePlay::handleAirplaneGotItem (Airplane* target) {
+    if (!target->isAlive())
+        return;
+    if (itemManager.deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom()))
+        target->addShotgunBullet();
 }
 
 /** @brief It deals with keystrokes that don't be allowed continuous input by keyboard push. */

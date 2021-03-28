@@ -150,7 +150,7 @@ void Airplane::fire () {
         return;
     const ModelViewMat2D& mat = base->getMatrix();
     GLfloat addingDegree = 15.0f;
-    GLfloat bulletDegree = 90.0f;
+    GLfloat bulletDegree = 0.0f;
     if (shotgunBulletNumber % 2 == 0)
         bulletDegree -= (addingDegree / 2.0f);
     for (int i = 0 ; i < shotgunBulletNumber ; i ++) {

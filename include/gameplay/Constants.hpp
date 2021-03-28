@@ -27,6 +27,7 @@ enum Direction {
 const GLfloat AIRPLANE_WIDTH = 0.2f;
 const GLfloat BULLET_RADIUS = 0.02f;
 const GLfloat ITEM_HEIGHT = 0.08f;
+const GLfloat ITEM_DURATION_SECS = 5.0f;
 
 namespace WORLD_BOUND {
     const GLfloat LEFT  = -0.75f;
