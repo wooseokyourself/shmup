@@ -4,7 +4,6 @@ GamePlay::GamePlay ()
 : itemManager(ITEM) {
     player = new Airplane;
     enemy = new Airplane;
-    MAX_STAGE = 5;
     stage = 1;
     enemyRegenIntervalSecs = 3;
     allPassMode = false;
@@ -26,8 +25,7 @@ GamePlay::~GamePlay () {
 }
 
 void GamePlay::startGame () {
-    int playerLives = 3;
-    player->init(playerInitMat, playerLives, airplaneWidth, playerSpeed, playerBulletSpeed);
+    player->init(playerInitMat, INIT_PLAYER_LIVES, airplaneWidth, playerSpeed, playerBulletSpeed);
     enemy->init(enemyInitMat, stage, airplaneWidth, enemySpeed, enemyBulletSpeed);
     enemyAi.start(enemy, DOWN);
 }
@@ -258,19 +256,19 @@ void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf
 void GamePlay::handleAsyncKeyInput (const bool* asyncKeyBuf) {
     const bool* buf = asyncKeyBuf;
     if (buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
-        player->move(LEFT);
+        player->move(180.0f); // left
     else if (!buf[GLUT_KEY_LEFT] && buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
-        player->move(UP);
+        player->move(90.0f); // up
     else if (!buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
-        player->move(RIGHT);
+        player->move(0.0f); // right
     else if (!buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && buf[GLUT_KEY_DOWN])
-        player->move(DOWN);
+        player->move(270.f); // down
     else if (buf[GLUT_KEY_LEFT] && buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
-        player->move(LEFT_UP);
+        player->move(135.0f); 
     else if (!buf[GLUT_KEY_LEFT] && buf[GLUT_KEY_UP] && buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
-        player->move(UP_RIGHT);
+        player->move(45.0f);
     else if (!buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && buf[GLUT_KEY_RIGHT] && buf[GLUT_KEY_DOWN])
-        player->move(RIGHT_DOWN);
+        player->move(315.0f);
     else if (buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && buf[GLUT_KEY_DOWN])
-        player->move(DOWN_LEFT);
+        player->move(225.0f);
 }
