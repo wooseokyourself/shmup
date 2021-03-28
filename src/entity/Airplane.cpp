@@ -4,12 +4,12 @@ Airplane::Airplane ()
 : bulletManager(BULLET), shotgunBulletNumber(1), bulletSpeed(0.0f), lives(0), lastActivatedTime(0), lastDeactivatedTime(0), updateCount(0), idleMotionToken(false) {
     FigureNode * bodyNode, * headNode, * leftArmNode, * rightArmNode, * leftCanonNode, * rightCanonNode;
     base = (Rect*)root->init(RECT);
-    bodyNode = root->addChild(RECT);
+    bodyNode = root->addChild(RECT, FRONT);
     headNode = bodyNode->addChild(TRIANGLE);
-    leftArmNode = bodyNode->addChild(BASERECT);
-    rightArmNode = bodyNode->addChild(BASERECT);
-    leftCanonNode = leftArmNode->addChild(BASERECT);
-    rightCanonNode = rightArmNode->addChild(BASERECT);
+    leftArmNode = bodyNode->addChild(BASERECT, BACK);
+    rightArmNode = bodyNode->addChild(BASERECT, BACK);
+    leftCanonNode = leftArmNode->addChild(BASERECT, FRONT);
+    rightCanonNode = rightArmNode->addChild(BASERECT, FRONT);
 
     body = (Rect*)**bodyNode;
     head = (Triangle*)**headNode;
