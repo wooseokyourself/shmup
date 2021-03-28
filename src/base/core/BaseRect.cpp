@@ -25,7 +25,7 @@ Point2D BaseRect::getRightBottom () const {
 }
 
 void BaseRect::draw () const {
-    glTranslatef(mat.tx, mat.ty, 0.0f);
+    glTranslatef(mat.tx, mat.ty, mat.tz);
     glRotatef(mat.degree, 0.0f, 0.0f, 1.0f);
 
     glColor4f(color.R, color.G, color.B, color.A);
