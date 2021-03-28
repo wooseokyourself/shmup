@@ -11,9 +11,9 @@ GamePlay::GamePlay ()
     allFailMode = false;
 
     airplaneWidth = 0.3f;
+    enemyInitMat.setRotate(180.0f);
     playerInitMat.setTranslate(0.0f, -0.5f);
     enemyInitMat.setTranslate(0.0f, 0.5f);
-    enemyInitMat.setRotate(180.0f);
     playerSpeed = AirplaneSpeed::NORMAL;
     playerBulletSpeed = BulletSpeed::FAST;
     enemySpeed = AirplaneSpeed::SLOW;
@@ -52,9 +52,9 @@ void GamePlay::render () {
 void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* asyncKeyBuf) {
     handleAsyncKeyInput(asyncKeyBuf);
     handleDiscreteKeyInput(discreteKeyBuf);
-    player->update(UP);
-    enemy->update(DOWN);
-    itemManager.update(DOWN);
+    player->update();
+    enemy->update();
+    itemManager.update();
 
     if (!allPassMode && !allFailMode) {
         checkHitNormal(player, enemy);
@@ -73,6 +73,8 @@ void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* as
     if (!enemy->isAlive() &&
         (glutGet(GLUT_ELAPSED_TIME) - enemy->getLastDeactivatedTime() >= enemyRegenIntervalSecs * 1000)) {
         enemy->init(enemyInitMat, ++stage, airplaneWidth, enemySpeed, enemyBulletSpeed);
+        for (int i = 1 ; i < enemy->getLives() ; i ++)
+            enemy->addShotgunBullet();
         enemyAi.start(enemy, DOWN);
     }
 }
@@ -169,7 +171,7 @@ void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
             }
         }
         if (target == player) { }
-            // 플레이어 색변경
+            player->setRandomColor();
     }
 }
 

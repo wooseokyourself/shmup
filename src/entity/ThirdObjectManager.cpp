@@ -65,16 +65,27 @@ void ThirdObjectManager::display () const {
 /**
  * @brief Manage all bullets; movement of all bullets, deactivating bullets which is out of bound.
  * This method must be called in all frame.
- * @param bulletDirection The direction of all bullets; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
+ * activateObject 메소드의 인자로 온 mat의 y방향으로 쭉 전진함.
  */
-void ThirdObjectManager::update (const int direction) {
+void ThirdObjectManager::update () {
     std::stack<Object*> deactivating;
     for (Object* object : activeObjects) {
-        if (object->isOutOfBound(direction)) {
+        if (object->isOutOfBound()) {
             deactivating.push(object);
             continue;
         }
-        object->move(direction);
+        switch (objectType) {
+        case BULLET: {
+            Bullet* bullet = (Bullet*)object;
+            bullet->move();
+            break;
+        }
+        case ITEM: {
+            Item* item = (Item*)object;
+            item->move();
+            break;
+        }
+    }
     }
     while (!deactivating.empty()) {
         Object* object = deactivating.top();

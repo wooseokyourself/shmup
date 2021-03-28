@@ -1,7 +1,7 @@
 #include "entity/Airplane.hpp"
 
 Airplane::Airplane ()
-: bulletManager(BULLET), bulletSpeed(0.0f), lives(0), lastActivatedTime(0), lastDeactivatedTime(0), updateCount(0), idleMotionToken(false) {
+: bulletManager(BULLET), shotgunBulletNumber(1), bulletSpeed(0.0f), lives(0), lastActivatedTime(0), lastDeactivatedTime(0), updateCount(0), idleMotionToken(false) {
     FigureNode * bodyNode, * headNode, * leftArmNode, * rightArmNode, * leftCanonNode, * rightCanonNode;
     base = (Rect*)root->init(RECT);
     bodyNode = root->addChild(RECT);
@@ -26,8 +26,8 @@ Airplane::~Airplane () { }
  * This method must be called in all frame.
  * @param bulletDirection The direction of all bullets; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
  */
-void Airplane::update (const int bulletDirection) {
-    bulletManager.update(bulletDirection);
+void Airplane::update () {
+    bulletManager.update();
 
     GLfloat degree = idleMotionToken ? 0.2f : -0.2f;
     leftArm->rotate(degree);
@@ -47,6 +47,7 @@ void Airplane::update (const int bulletDirection) {
 void Airplane::init (const ModelViewMat2D& mat, const uint8_t _lives, const GLfloat width, const GLfloat _speed, const GLfloat _bulletSpeed) {
     if (isAlive())
         return;
+    shotgunBulletNumber = 1;
     lives = _lives;
     setSpeed(_speed);
     bulletSpeed = _bulletSpeed;
@@ -145,8 +146,19 @@ int Airplane::getLives () const {
  * @brief Fire a bullet.
  */
 void Airplane::fire () {
-    if (isAlive())
-        bulletManager.activateObject(base->getMatrix(), 0.025, Rgba(0.5f, 0.5f, 0.5f), bulletSpeed);
+    if (!isAlive())
+        return;
+    const ModelViewMat2D& mat = base->getMatrix();
+    GLfloat bulletDegree = 15.0f;
+    GLfloat initDegree = mat.degree;
+    std::cout << "initDegree=" << initDegree << std::endl;
+    if (shotgunBulletNumber % 2 == 0)
+        initDegree -= (bulletDegree / 2.0f);
+    for (int i = 0 ; i < shotgunBulletNumber ; i ++) {
+        ModelViewMat2D bulletMat = mat;
+        bulletMat.rotate(initDegree + (bulletDegree * ( (i % 2 == 1) ? i : -i) ));
+        bulletManager.activateObject(bulletMat, 0.025, Rgba(0.5f, 0.5f, 0.5f), bulletSpeed);   
+    }
 }
 
 Point2D Airplane::getHitboxLeftTop () const {
@@ -175,6 +187,19 @@ int Airplane::getLastActivatedTime () const {
  */
 int Airplane::getLastDeactivatedTime () const {
     return lastDeactivatedTime;
+}
+
+void Airplane::setRandomColor () {
+    body->setRandomColor();
+    head->setRandomColor();
+    leftArm->setRandomColor();
+    rightArm->setRandomColor();
+    leftCanon->setRandomColor();
+    rightCanon->setRandomColor();
+}
+
+void Airplane::addShotgunBullet () {
+    shotgunBulletNumber += 1;
 }
 
 /**

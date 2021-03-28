@@ -17,7 +17,7 @@ private:
 public:
     Airplane ();
     ~Airplane ();
-    void update (const int bulletDirection);
+    void update ();
     void init (const ModelViewMat2D& mat, const uint8_t _lives, const GLfloat width, const GLfloat _speed, const GLfloat _bulletSpeed);
     void setSpeed (const GLfloat _speed);
     void setBulletSpeed (const GLfloat _bulletSpeed);
@@ -31,6 +31,8 @@ public:
     ModelViewMat2D getModelViewMatrix () const;
     int getLastActivatedTime () const;
     int getLastDeactivatedTime () const;
+    void setRandomColor ();
+    void addShotgunBullet ();
 
 public:
     void display () const;
@@ -45,6 +47,7 @@ private:
     BaseRect* leftCanon;
     BaseRect* rightCanon;
 
+    uint8_t shotgunBulletNumber;
     GLfloat bulletSpeed;
     uint8_t lives;
     int lastActivatedTime;
