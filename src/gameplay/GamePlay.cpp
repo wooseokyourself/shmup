@@ -102,7 +102,7 @@ void GamePlay::displayStage () {
     std::string str = "Stage " + std::to_string(stage);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(WORLD_BOUND::RIGHT + 0.05f, 0.9f, Window::MIN_DEPTH);
+    glTranslatef(WORLD_BOUND::RIGHT + 0.05f, 0.9f, 0.0f);
     glColor3f(0.0f, 0.0f, 0.0f);
     glRasterPos2d(0.0f, 0.0f);
     for (int i = 0 ; i < str.size() ; i ++)
@@ -115,7 +115,7 @@ void GamePlay::displayStage () {
             str = "all fail";
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        glTranslatef(WORLD_BOUND::RIGHT + 0.05f, 0.8f, Window::MIN_DEPTH);
+        glTranslatef(WORLD_BOUND::RIGHT + 0.05f, 0.8f, 0.0f);
         glColor3f(1.0f, 0.0f, 0.0f);
         glRasterPos2d(0.0f, 0.0f);
         for (int i = 0 ; i < str.size() ; i ++)
@@ -128,7 +128,7 @@ void GamePlay::displayPlayerLives () {
         Triangle tri;
         tri.setRadius(0.03);
         tri.setColor(1.0f, 0.0f, 0.0f);
-        tri.setTranslate(-0.9f + (i * 0.08), -0.9f, Window::MIN_DEPTH);
+        tri.setTranslate(-0.9f + (i * 0.08), -0.9f);
         tri.rotate(90.0f);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
@@ -141,11 +141,11 @@ void GamePlay::displayWall () {
     rect.setSide(1.0f - WORLD_BOUND::RIGHT, 2.0f);
     GLfloat centerDiffX = (1.0f - WORLD_BOUND::RIGHT) / 2;
     rect.setColor(1.0f, 1.0f, 1.0f);
-    rect.setTranslate(WORLD_BOUND::LEFT - centerDiffX, 0.0f, Window::MIN_DEPTH - 1.0f);
+    rect.setTranslate(WORLD_BOUND::LEFT - centerDiffX, 0.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     rect.draw();
-    rect.setTranslate(WORLD_BOUND::RIGHT + centerDiffX, 0.0f, Window::MIN_DEPTH - 1.0f);
+    rect.setTranslate(WORLD_BOUND::RIGHT + centerDiffX, 0.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     rect.draw();

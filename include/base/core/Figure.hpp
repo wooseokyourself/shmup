@@ -22,10 +22,8 @@ public:
     void clearMatrix ();
     void setTranslate (const Point2D p);
     void setTranslate (const GLfloat x, const GLfloat y);
-    void setTranslate (const GLfloat x, const GLfloat y, const GLfloat z);
     void translate (const Point2D p);
     void translate (const GLfloat x, const GLfloat y);
-    void translate (const GLfloat x, const GLfloat y, const GLfloat z);
     void setRotate (const GLfloat degree);
     void rotate (const GLfloat degree);
     void setScale (const GLfloat x, const GLfloat y);

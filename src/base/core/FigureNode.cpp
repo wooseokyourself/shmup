@@ -63,31 +63,6 @@ FigureNode* FigureNode::addChild (const int figure) {
     return child;
 }
 
-FigureNode* FigureNode::addChild (const int figure, const int priority) {
-    FigureNode* child = new FigureNode();
-    child->parent = this;
-    children.push_back(child);
-    switch (figure) {
-        case CIRCLE:
-            child->init(CIRCLE);
-            break;
-        case RECT:
-            child->init(RECT);
-            break;
-        case BASERECT:
-            child->init(BASERECT);
-            break;
-        case TRIANGLE:
-            child->init(TRIANGLE);
-            break;
-    }
-    if (priority == FRONT)
-        (**child)->translate(0.0f, 0.0f, obj->getMatrix().tz + 0.01f);
-    else if (priority == BACK)
-        (**child)->translate(0.0f, 0.0f, obj->getMatrix().tz - 0.01f);
-    return child;
-}
-
 void FigureNode::addMat (const ModelViewMat2D& mat) {
     obj->setMatrix(mat);
 }

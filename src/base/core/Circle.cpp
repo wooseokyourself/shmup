@@ -8,7 +8,7 @@ void Circle::setRadius (const GLfloat _radius) {
 }
 
 void Circle::draw () const {
-    glTranslatef(mat.tx, mat.ty, mat.tz);
+    glTranslatef(mat.tx, mat.ty, 0.0f);
     glRotatef(mat.degree, 0.0f, 0.0f, 1.0f);
 
     glColor4f(color.R, color.G, color.B, color.A);

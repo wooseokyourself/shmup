@@ -10,8 +10,6 @@ const int TIME_PER_FRAME = 1000 / FPS;
 namespace Window {
     const GLint WINDOW_WIDTH = 1024;
     const GLint WINDOW_HEIGHT = 1024;
-    const GLfloat MIN_DEPTH = 1000.0f;
-    const GLfloat MAX_DEPTH = -1000.0f;
 };
 
 enum Direction {

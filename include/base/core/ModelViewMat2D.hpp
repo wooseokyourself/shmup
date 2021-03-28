@@ -10,19 +10,16 @@ class ModelViewMat2D {
 public:
     ModelViewMat2D ();
     void setTranslate (const GLfloat& _tx, const GLfloat& _ty);
-    void setTranslate (const GLfloat& _tx, const GLfloat& _ty, const GLfloat& _tz);
-    void moveTranslate (const GLfloat& tx, const GLfloat& ty);
-    void moveTranslate (const GLfloat& tx, const GLfloat& ty, const GLfloat& tz);
+    void moveTranslate (const GLfloat& _tx, const GLfloat& _ty);
     void setRotate (const GLfloat& _degree);
-    void rotate (const GLfloat& degree);
+    void rotate (const GLfloat& accDegree);
     void setScale (const GLfloat& _sx, const GLfloat& _sy);
-    void scale (const GLfloat& sx, const GLfloat& sy);
+    void scale (const GLfloat& x, const GLfloat& y);
     void init ();
 
 public:
     GLfloat tx;
     GLfloat ty;
-    GLfloat tz;
     GLfloat sx;
     GLfloat sy;
     GLfloat degree;
