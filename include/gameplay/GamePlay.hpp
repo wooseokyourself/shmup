@@ -30,9 +30,10 @@ private:
     void displayWall ();
 
 private:
-    void checkHitNormal (Airplane* attacker, Airplane* target);
-    void checkHitInstantKill (Airplane* attacker, Airplane* target);
-    void checkHitDodge (Airplane* attacker, Airplane* target);
+    void handleHitNormal (Airplane* attacker, Airplane* target);
+    void handleHitInstantKill (Airplane* attacker, Airplane* target);
+    void handleHitDodge (Airplane* attacker, Airplane* target);
+    void handleAirplaneGotItem (Airplane* target);
 
 private:
     void handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf);

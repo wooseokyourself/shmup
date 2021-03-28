@@ -13,6 +13,7 @@
                 "`pkg-config", "--cflags", "--libs", "glut`",
                 "`pkg-config", "--cflags", "--libs", "glm`",
 				"-I./include",
+				"src/base/core/Utility.cpp",
 				"src/base/core/ModelViewMat2D.cpp",
 				"src/base/core/Figure.cpp",
 				"src/base/core/Circle.cpp",

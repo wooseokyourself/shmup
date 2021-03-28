@@ -1,11 +1,10 @@
 #ifndef __AI__
 #define __AI__
 
+#include "base/core/Utility.hpp"
 #include "entity/Airplane.hpp"
-#include <thread>
 #include <chrono>
-#include <random>
-#include <map>
+#include <thread>
 
 using namespace std::chrono_literals;
 

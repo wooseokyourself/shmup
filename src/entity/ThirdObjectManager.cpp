@@ -39,15 +39,17 @@ void ThirdObjectManager::activateObject (const ModelViewMat2D& mat, const GLfloa
         return;
     Object* object = pool.top();
     pool.pop();
+    ModelViewMat2D objectInitMat = mat;
+    objectInitMat.rotate(90.0f);
     switch (objectType) {
         case BULLET: {
             Bullet* bullet = (Bullet*)object;
-            bullet->init(mat, param, color, speed);
+            bullet->init(objectInitMat, param, color, speed);
             break;
         }
         case ITEM: {
             Item* item = (Item*)object;
-            item->init(mat, param, color, speed);
+            item->init(objectInitMat, param, color, speed);
             break;
         }
     }
@@ -70,18 +72,24 @@ void ThirdObjectManager::display () const {
 void ThirdObjectManager::update () {
     std::stack<Object*> deactivating;
     for (Object* object : activeObjects) {
-        if (object->isOutOfBound()) {
-            deactivating.push(object);
-            continue;
-        }
         switch (objectType) {
         case BULLET: {
             Bullet* bullet = (Bullet*)object;
+            if (bullet->isOutOfBound()) {
+                deactivating.push(bullet);
+                continue;
+            }
             bullet->move();
             break;
         }
         case ITEM: {
             Item* item = (Item*)object;
+            if (item->shouldBeRemoved()) {
+                deactivating.push(item);
+                continue;
+            }
+            if (item->isOutOfBound())
+                item->setRandomRotate();
             item->move();
             break;
         }

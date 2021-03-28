@@ -1,6 +1,7 @@
 #include "entity/Item.hpp"
 
-Item::Item () {
+Item::Item ():
+base(nullptr), activatedTime(0.0f) {
     root->init(RECT);
     root->addChild(TRIANGLE);
     root->addChild(TRIANGLE);
@@ -9,7 +10,7 @@ Item::Item () {
 Item::~Item () { }
 
 void Item::init (const ModelViewMat2D& mat, const GLfloat length, const Rgba color, const GLfloat speed) {
-    Rect* base = (Rect*)**root;
+    base = (Rect*)**root;
     std::list<FigureNode*> triangles = root->getChildren();
     Triangle* top = (Triangle*)**(triangles.front());
     Triangle* bottom = (Triangle*)**(triangles.back());
@@ -29,10 +30,25 @@ void Item::init (const ModelViewMat2D& mat, const GLfloat length, const Rgba col
     bottom->setColor(color);
     
     setSpeed(speed);
+    activatedTime = glutGet(GLUT_ELAPSED_TIME);
+}
+
+void Item::setRandomRotate () {
+    base->setRotate(randomRealNumber(0.0f, 360.0f));
+}
+
+bool Item::shouldBeRemoved () {
+    if (glutGet(GLUT_ELAPSED_TIME) - activatedTime >= ITEM_DURATION_SECS * 1000.0f) 
+        return true;
+    return false;
 }
 
 void Item::move () {
-    (**root)->translate(0.0f, speed);
+    const ModelViewMat2D& mat = (**root)->getMatrix();
+    GLfloat rad = getRadian(mat.degree);
+    GLfloat x = speed * cos(rad);
+    GLfloat y = speed * sin(rad);
+    (**root)->translate(x, y);
 }
 
 void Item::display () const {

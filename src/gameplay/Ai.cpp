@@ -18,10 +18,7 @@ void Ai::stop () {
 
 void Ai::action () {
     while (airplane->isAlive()) {
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<int> dis(0, 99);
-        const int rand = dis(gen);
+        const int rand = randomIntegerNumber(0, 99);
         const GLfloat lx = airplane->getHitboxLeftTop().x;
         const GLfloat rx = airplane->getHitboxRightBottom().x;
         int direction = RIGHT;
