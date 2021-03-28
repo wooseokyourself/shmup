@@ -156,7 +156,7 @@ void Airplane::fire () {
     for (int i = 0 ; i < shotgunBulletNumber ; i ++) {
         ModelViewMat2D bulletMat = mat;
         bulletMat.rotate(bulletDegree += (addingDegree * ( (i % 2 == 1) ? i : -i) ));
-        bulletManager.activateObject(bulletMat, BULLET_RADIUS, Rgba(0.5f, 0.5f, 0.5f), bulletSpeed);   
+        bulletManager.activateObject(bulletMat, BULLET_RADIUS, head->getColor(), bulletSpeed);   
     }
 }
 

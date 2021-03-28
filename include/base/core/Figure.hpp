@@ -14,6 +14,7 @@ public:
     Point2D getWorldPosition () const;
     void setColor (const GLfloat _R, const GLfloat _G, const GLfloat _B);
     void setColor (const Rgba _color);
+    Rgba getColor () const;
     void setRandomColor ();
 
 public:

@@ -16,7 +16,7 @@ void Bullet::init (const ModelViewMat2D& mat, const GLfloat radius, const Rgba c
 
 void Bullet::move () {
     const ModelViewMat2D& mat = (**root)->getMatrix();
-    GLfloat rad = getRadian(mat.degree);
+    GLfloat rad = getRadian(mat.degree + 90.0f);
     GLfloat x = speed * cos(rad);
     GLfloat y = speed * sin(rad);
     (**root)->translate(x, y);

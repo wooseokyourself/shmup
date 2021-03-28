@@ -40,7 +40,6 @@ void ThirdObjectManager::activateObject (const ModelViewMat2D& mat, const GLfloa
     Object* object = pool.top();
     pool.pop();
     ModelViewMat2D objectInitMat = mat;
-    objectInitMat.rotate(90.0f);
     switch (objectType) {
         case BULLET: {
             Bullet* bullet = (Bullet*)object;

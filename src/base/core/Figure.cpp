@@ -31,6 +31,10 @@ void Figure::setColor (const Rgba _color) {
     color = _color;    
 }
 
+Rgba Figure::getColor () const {
+    return color;
+}
+
 /**
  * @brief Set random color of the object.
  */
