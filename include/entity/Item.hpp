@@ -10,6 +10,7 @@ public:
     Item ();
     ~Item ();
     void init (const ModelViewMat2D& mat, const GLfloat length, const Rgba color, const GLfloat speed);
+    void move ();
     void display () const;
 };
 

@@ -31,6 +31,10 @@ void Item::init (const ModelViewMat2D& mat, const GLfloat length, const Rgba col
     setSpeed(speed);
 }
 
+void Item::move () {
+    (**root)->translate(0.0f, speed);
+}
+
 void Item::display () const {
     root->display();
 }

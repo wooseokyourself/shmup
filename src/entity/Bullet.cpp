@@ -14,6 +14,14 @@ void Bullet::init (const ModelViewMat2D& mat, const GLfloat radius, const Rgba c
     setSpeed(speed);
 }
 
+void Bullet::move () {
+    const ModelViewMat2D& mat = (**root)->getMatrix();
+    GLfloat rad = mat.degree * 3.141592653589793f / 180.0f;
+    GLfloat x = speed * cos(rad);
+    GLfloat y = speed * sin(rad);
+    (**root)->translate(x, y);
+}
+
 void Bullet::display () const {
     root->display();
 }

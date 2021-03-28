@@ -20,7 +20,7 @@ public:
     ~ThirdObjectManager ();
     void activateObject (const ModelViewMat2D& mat, const GLfloat param, const Rgba color, const GLfloat speed);
     void display () const;
-    void update (const int bulletDirection);
+    void update ();
     size_t getActivatedObjectsNumber () const;
     bool deactivateObjectWhichIsIn (const Point2D leftTop, const Point2D rightBottom);
 

@@ -20,6 +20,9 @@ Figure* FigureNode::init (const int figure) {
         case RECT:
             obj = new Rect;
             break;
+        case BASERECT:
+            obj = new BaseRect;
+            break;
         case TRIANGLE:
             obj = new Triangle;
             break;
@@ -49,6 +52,9 @@ FigureNode* FigureNode::addChild (const int figure) {
             break;
         case RECT:
             child->init(RECT);
+            break;
+        case BASERECT:
+            child->init(BASERECT);
             break;
         case TRIANGLE:
             child->init(TRIANGLE);

@@ -4,12 +4,14 @@
 #include "base/core/Figure.hpp"
 #include "base/core/Circle.hpp"
 #include "base/core/Rect.hpp"
+#include "base/core/BaseRect.hpp"
 #include "base/core/Triangle.hpp"
 #include <list>
 
 enum Figures {
     CIRCLE,
     RECT,
+    BASERECT,
     TRIANGLE
 };
 

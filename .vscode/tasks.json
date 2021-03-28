@@ -18,6 +18,7 @@
 				"src/base/core/Circle.cpp",
 				"src/base/core/Triangle.cpp",
 				"src/base/core/Rect.cpp",
+				"src/base/core/BaseRect.cpp",
 				"src/base/core/FigureNode.cpp",
 				"src/base/Object.cpp",
 				"src/entity/Bullet.cpp",

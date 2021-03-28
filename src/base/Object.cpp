@@ -16,9 +16,19 @@ void Object::setSpeed (const GLfloat _speed) {
 
 /**
  * @return true if the object is out of bound.
+ */
+bool Object::isOutOfBound () const {
+    const Point2D pos = (**root)->getWorldPosition();
+    const GLfloat x = pos.x;
+    const GLfloat y = pos.y;
+    return x < WORLD_BOUND::LEFT || x > WORLD_BOUND::RIGHT || y < WORLD_BOUND::DOWN || y > WORLD_BOUND::UP;
+}
+
+/**
+ * @return true if the object is out of bound.
  * @param bound The target bound; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
  */
-bool Object::isOutOfBound (const int bound) {
+bool Object::isOutOfBound (const int bound) const {
     const Point2D pos = (**root)->getWorldPosition();
     const GLfloat x = pos.x;
     const GLfloat y = pos.y;
@@ -47,7 +57,7 @@ bool Object::isOutOfBound (const int bound) {
  * @param leftTop The left-top point of the target range in world space.
  * @param rightBottom The right-bottom point of the target range in world space.
  */
-bool Object::isIn (const Point2D leftTop, const Point2D rightBottom) {
+bool Object::isIn (const Point2D leftTop, const Point2D rightBottom) const {
     Point2D p = (**root)->getWorldPosition();
     if ( (leftTop.x <= p.x && p.x <= rightBottom.x) && (rightBottom.y <= p.y && p.y <= leftTop.y))
         return true;
