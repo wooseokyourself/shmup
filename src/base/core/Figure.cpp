@@ -2,6 +2,8 @@
 
 Figure::Figure ()
 : color(1.0f, 1.0f, 1.0f) {
+    mat.setTranslate(0.0f, 0.0f, 0.0f);
+    mat.setRotate(0.0f);
     mat.setScale(1.0f, 1.0f);
 }
 
@@ -71,6 +73,10 @@ void Figure::setTranslate (const GLfloat x, const GLfloat y) {
     mat.setTranslate(x, y);
 }
 
+void Figure::setTranslate (const GLfloat x, const GLfloat y, const GLfloat z) {
+    mat.setTranslate(x, y, z);
+}
+
 void Figure::translate (const Point2D p) {
     mat.moveTranslate(p.x, p.y);
 }
@@ -78,6 +84,11 @@ void Figure::translate (const Point2D p) {
 void Figure::translate (const GLfloat x, const GLfloat y) {
     mat.moveTranslate(x, y);
 }
+
+void Figure::translate (const GLfloat x, const GLfloat y, const GLfloat z) {
+    mat.moveTranslate(x, y, z);
+}
+
 
 void Figure::setRotate (const GLfloat degree) {
     mat.setRotate(degree);

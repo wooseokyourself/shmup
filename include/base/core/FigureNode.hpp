@@ -15,6 +15,11 @@ enum Figures {
     TRIANGLE
 };
 
+enum Priority {
+    FRONT, 
+    BACK
+};
+
 class FigureNode {
 public:
     FigureNode ();
@@ -24,6 +29,7 @@ public:
     bool isRoot () const;
     bool isExternal () const;
     FigureNode* addChild (const int figure);
+    FigureNode* addChild (const int figure, const int priority);
     void addMat (const ModelViewMat2D& mat);
     FigureNode* getParent ();
     std::list<FigureNode*>& getChildren ();
