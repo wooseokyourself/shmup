@@ -78,18 +78,16 @@ void ThirdObjectManager::update () {
                 deactivating.push(bullet);
                 continue;
             }
-            bullet->move();
+            bullet->move(90.0f);
             break;
         }
         case ITEM: {
             Item* item = (Item*)object;
-            if (item->shouldBeRemoved()) {
+            if (item->isDurationTimeout()) {
                 deactivating.push(item);
                 continue;
             }
-            if (item->isOutOfBound())
-                item->setRandomRotate();
-            item->move();
+            item->move(90.0f);
             break;
         }
     }
