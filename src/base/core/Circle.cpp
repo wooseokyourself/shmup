@@ -21,8 +21,6 @@ void Circle::draw () const {
         float y = radius * sinf(degree);//calculate the y component 
         glVertex2f(x, y);
     }
-    glVertex2f(0.0f, 0.0f);
-    glVertex2f(0.0f, 0.1f);
     glEnd();
     glBegin(GL_LINE_LOOP);
     for (int i = 0 ; i < segment ; i ++)   {
@@ -31,7 +29,5 @@ void Circle::draw () const {
         float y = radius * sinf(degree);//calculate the y component 
         glVertex2f(x, y);
     }
-    glVertex2f(0.0f, 0.0f);
-    glVertex2f(0.0f, 0.1f);
     glEnd();
 }

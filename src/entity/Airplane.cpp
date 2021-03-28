@@ -149,15 +149,14 @@ void Airplane::fire () {
     if (!isAlive())
         return;
     const ModelViewMat2D& mat = base->getMatrix();
-    GLfloat bulletDegree = 15.0f;
-    GLfloat initDegree = mat.degree;
-    std::cout << "initDegree=" << initDegree << std::endl;
+    GLfloat addingDegree = 15.0f;
+    GLfloat bulletDegree = 90.0f;
     if (shotgunBulletNumber % 2 == 0)
-        initDegree -= (bulletDegree / 2.0f);
+        bulletDegree -= (addingDegree / 2.0f);
     for (int i = 0 ; i < shotgunBulletNumber ; i ++) {
         ModelViewMat2D bulletMat = mat;
-        bulletMat.rotate(initDegree + (bulletDegree * ( (i % 2 == 1) ? i : -i) ));
-        bulletManager.activateObject(bulletMat, 0.025, Rgba(0.5f, 0.5f, 0.5f), bulletSpeed);   
+        bulletMat.rotate(bulletDegree += (addingDegree * ( (i % 2 == 1) ? i : -i) ));
+        bulletManager.activateObject(bulletMat, BULLET_RADIUS, Rgba(0.5f, 0.5f, 0.5f), bulletSpeed);   
     }
 }
 

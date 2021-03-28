@@ -10,7 +10,7 @@ GamePlay::GamePlay ()
     allPassMode = false;
     allFailMode = false;
 
-    airplaneWidth = 0.3f;
+    airplaneWidth = AIRPLANE_WIDTH;
     enemyInitMat.setRotate(180.0f);
     playerInitMat.setTranslate(0.0f, -0.5f);
     enemyInitMat.setTranslate(0.0f, 0.5f);
@@ -164,13 +164,13 @@ void GamePlay::checkHitNormal (Airplane* attacker, Airplane* target) {
             if (target == player)
                 lose();
             if (target == enemy) {
-                itemManager.activateObject(enemy->getModelViewMatrix(), 0.15f, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
+                itemManager.activateObject(enemy->getModelViewMatrix(), ITEM_HEIGHT, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
                 enemyAi.stop();
                 if (stage == MAX_STAGE)
                     win();
             }
         }
-        if (target == player) { }
+        if (target == player)
             player->setRandomColor();
     }
 }
@@ -189,7 +189,7 @@ void GamePlay::checkHitInstantKill (Airplane* attacker, Airplane* target) {
         if (target == player)
             lose();
         if (target == enemy) {
-            itemManager.activateObject(enemy->getModelViewMatrix(), 0.15f, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
+            itemManager.activateObject(enemy->getModelViewMatrix(), ITEM_HEIGHT, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
             enemyAi.stop();
             if (stage == MAX_STAGE)
                 win();
