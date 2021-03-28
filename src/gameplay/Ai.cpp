@@ -17,18 +17,19 @@ void Ai::stop () {
 }
 
 void Ai::action () {
+    const GLfloat LEFT = 180.0f, RIGHT = 0.0f, STOP = -1.0f;
     while (airplane->isAlive()) {
         const int rand = randomIntegerNumber(0, 99);
         const GLfloat lx = airplane->getHitboxLeftTop().x;
         const GLfloat rx = airplane->getHitboxRightBottom().x;
-        int direction = RIGHT;
+        GLfloat direction = RIGHT;
         if (lx <= -1)
             direction = RIGHT;
         else if (rx >= 1)
             direction = LEFT;
         else {
             if (rand % 10 == 0 || rand % 10 == 9)
-                direction = NONE;
+                direction = STOP;
             else if (rand % 2 == 0)
                 direction = LEFT;
         }
@@ -40,7 +41,8 @@ void Ai::action () {
             auto ELAPSED_TIME = std::chrono::duration_cast<std::chrono::milliseconds>(NOW - START).count();
             if (ELAPSED_TIME > taskMills)
                 break;
-            airplane->move(direction);
+            if (direction != STOP)
+                airplane->move(direction);
             std::this_thread::sleep_for(16ms);
         }
         _t.join();
