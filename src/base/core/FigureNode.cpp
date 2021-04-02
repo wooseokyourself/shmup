@@ -26,6 +26,9 @@ Figure* FigureNode::init (const int figure) {
         case TRIANGLE:
             obj = new Triangle;
             break;
+        case TEXT:
+            obj = new Text;
+            break;
     }
     return obj;
 }
@@ -59,6 +62,9 @@ FigureNode* FigureNode::addChild (const int figure) {
         case TRIANGLE:
             child->init(TRIANGLE);
             break;
+        case TEXT:
+            child->init(TEXT);
+            break;
     }
     return child;
 }
@@ -80,11 +86,15 @@ FigureNode* FigureNode::addChild (const int figure, const int priority) {
         case TRIANGLE:
             child->init(TRIANGLE);
             break;
+        case TEXT:
+            child->init(TEXT);
+            break;
     }
+    const GLfloat cmpz = obj->getMatrix().tz;
     if (priority == FRONT)
-        (**child)->translate(0.0f, 0.0f, obj->getMatrix().tz + 0.01f);
+        (**child)->translate(0.0f, 0.0f, cmpz >= Window::MIN_DEPTH ? cmpz : cmpz + 0.01f);
     else if (priority == BACK)
-        (**child)->translate(0.0f, 0.0f, obj->getMatrix().tz - 0.01f);
+        (**child)->translate(0.0f, 0.0f, cmpz <= Window::MAX_DEPTH ? cmpz : cmpz - 0.01f);
     return child;
 }
 

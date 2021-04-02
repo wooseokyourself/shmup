@@ -25,6 +25,7 @@ GamePlay::~GamePlay () {
 }
 
 void GamePlay::startGame () {
+    ui.init(INIT_PLAYER_LIVES);
     player->init(playerInitMat, INIT_PLAYER_LIVES, airplaneWidth, playerSpeed, playerBulletSpeed);
     enemy->init(enemyInitMat, stage, airplaneWidth, enemySpeed, enemyBulletSpeed);
     enemyAi.start(enemy, DOWN);
@@ -37,9 +38,7 @@ void GamePlay::render () {
     player->display();
     enemy->display();
     itemManager.display();
-    displayWall();
-    displayStage();
-    displayPlayerLives();
+    ui.display();
 }
 
 /**
@@ -50,6 +49,7 @@ void GamePlay::render () {
 void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* asyncKeyBuf) {
     handleAsyncKeyInput(asyncKeyBuf);
     handleDiscreteKeyInput(discreteKeyBuf);
+    ui.update(stage, !allPassMode && !allFailMode ? " " : (allPassMode ? "All-Pass Mode" : "All-Fail Mode"), player->getLives());
     player->update();
     enemy->update();
     itemManager.update();
@@ -94,59 +94,6 @@ void GamePlay::lose () {
     std::cout << "Lose.." << std::endl;
     enemyAi.stop();
     glutLeaveMainLoop();
-}
-
-void GamePlay::displayStage () {
-    std::string str = "Stage " + std::to_string(stage);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(WORLD_BOUND::RIGHT + 0.05f, 0.9f, Window::MIN_DEPTH);
-    glColor3f(0.0f, 0.0f, 0.0f);
-    glRasterPos2d(0.0f, 0.0f);
-    for (int i = 0 ; i < str.size() ; i ++)
-        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
-
-    if (allPassMode || allFailMode) {
-        if (allPassMode)
-            str = "all pass";
-        else if (allFailMode)
-            str = "all fail";
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        glTranslatef(WORLD_BOUND::RIGHT + 0.05f, 0.8f, Window::MIN_DEPTH);
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glRasterPos2d(0.0f, 0.0f);
-        for (int i = 0 ; i < str.size() ; i ++)
-            glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
-    }
-}
-
-void GamePlay::displayPlayerLives () {
-    for (int i = 0 ; i < player->getLives() ; i ++) {
-        Triangle tri;
-        tri.setRadius(0.03);
-        tri.setColor(1.0f, 0.0f, 0.0f);
-        tri.setTranslate(-0.9f + (i * 0.08), -0.9f, Window::MIN_DEPTH);
-        tri.rotate(90.0f);
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        tri.draw();
-    }
-}
-
-void GamePlay::displayWall () {
-    Rect rect;
-    rect.setSide(1.0f - WORLD_BOUND::RIGHT, 2.0f);
-    GLfloat centerDiffX = (1.0f - WORLD_BOUND::RIGHT) / 2;
-    rect.setColor(1.0f, 1.0f, 1.0f);
-    rect.setTranslate(WORLD_BOUND::LEFT - centerDiffX, 0.0f, Window::MIN_DEPTH - 1.0f);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    rect.draw();
-    rect.setTranslate(WORLD_BOUND::RIGHT + centerDiffX, 0.0f, Window::MIN_DEPTH - 1.0f);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    rect.draw();
 }
 
 /**

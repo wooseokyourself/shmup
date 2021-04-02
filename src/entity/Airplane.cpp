@@ -95,11 +95,11 @@ void Airplane::init (const ModelViewMat2D& mat, const uint8_t _lives, const GLfl
     rightCanon->setTranslate(0.0f, armHeight);
     rightCanon->setRotate(145.0f);
 
-    base->setColor(Rgba(1.0f, 1.0f, 1.0f, 0.3f));
+    base->setColor(1.0f, 1.0f, 1.0f, 0.0f);
     body->setRandomColor();
     head->setRandomColor();
-    leftArm->setColor(Rgba(1.0f, 0.0f, 0.0f));
-    rightArm->setColor(Rgba(0.0f, 1.0f, 0.0f));
+    leftArm->setColor(1.0f, 0.0f, 0.0f);
+    rightArm->setColor(0.0f, 1.0f, 0.0f);
     leftCanon->setRandomColor();
     rightCanon->setRandomColor();
 

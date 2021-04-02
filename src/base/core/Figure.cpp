@@ -23,6 +23,13 @@ void Figure::setColor (const GLfloat _R, const GLfloat _G, const GLfloat _B) {
     color.B = _B;
 }
 
+void Figure::setColor (const GLfloat _R, const GLfloat _G, const GLfloat _B, const GLfloat _A) {
+    color.R = _R;
+    color.G = _G;
+    color.B = _B;
+    color.A = _A;
+}
+
 /**
  * @brief Set color of the object.
  * @param color The 3-tuple of RGBA value of the object's color. (each value is 0.0 to 1.0)

@@ -2,13 +2,13 @@
 #define __GAMEPLAY__
 
 #include <queue>
-#include <string>
 #include "gameplay/Constants.hpp"
 #include "gameplay/Ai.hpp"
 #include "base/core/Rect.hpp"
 #include "base/core/Triangle.hpp"
 #include "entity/Airplane.hpp"
 #include "entity/ThirdObjectManager.hpp"
+#include "entity/Ui.hpp"
 
 class GamePlay {
 public:
@@ -23,11 +23,6 @@ public:
 private:
     void win ();
     void lose ();
-
-private:
-    void displayStage ();
-    void displayPlayerLives ();
-    void displayWall ();
 
 private:
     void handleHitNormal (Airplane* attacker, Airplane* target);
@@ -54,6 +49,7 @@ private: // Objects
     GLfloat enemyBulletSpeed;
 
 private:
+    Ui ui;
     ThirdObjectManager itemManager;
     uint8_t stage;
     int enemyRegenIntervalSecs;
