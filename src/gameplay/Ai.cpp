@@ -23,9 +23,9 @@ void Ai::action () {
         const GLfloat lx = airplane->getHitboxLeftTop().x;
         const GLfloat rx = airplane->getHitboxRightBottom().x;
         GLfloat direction = RIGHT;
-        if (lx <= -1)
+        if (lx < WORLD_BOUND::LEFT)
             direction = RIGHT;
-        else if (rx >= 1)
+        else if (rx > WORLD_BOUND::RIGHT)
             direction = LEFT;
         else {
             if (rand % 10 == 0 || rand % 10 == 9)
