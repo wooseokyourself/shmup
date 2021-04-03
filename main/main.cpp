@@ -58,12 +58,12 @@ int main(int argc, char** argv) {
     glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (Window::WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (Window::WINDOW_HEIGHT / 2));
     glutCreateWindow("Assn2");
     
-    glClearColor(0.0, 0.0, 0.0, Window::MAX_DEPTH);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+    glDepthFunc(GL_LEQUAL);
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutIgnoreKeyRepeat(1);

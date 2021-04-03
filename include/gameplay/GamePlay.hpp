@@ -4,6 +4,7 @@
 #include <queue>
 #include "gameplay/Constants.hpp"
 #include "gameplay/Ai.hpp"
+#include "entity/Planetary.hpp"
 #include "entity/Airplane.hpp"
 #include "entity/ThirdObjectManager.hpp"
 #include "entity/Ui.hpp"
@@ -40,6 +41,8 @@ private: // Objects
     ThirdObjectManager* playerBulletManager;
     ThirdObjectManager* enemyBulletManager;
     ThirdObjectManager* itemManager;
+    Planetary* planetaryA;
+    Planetary* planetaryB;
 
 private: // Objects Attributes for Initializing
     GLfloat airplaneWidth;

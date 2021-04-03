@@ -7,16 +7,14 @@ Ui::Ui (const int playerLives) {
         heartPtrs.push_back(pushChild(new Heart));
 }
 
-Ui::~Ui () { }
-
 void Ui::init () {
-    stageText->setTranslate(WORLD_BOUND::LEFT + 0.05f, 0.9f, Window::MIN_DEPTH);
-    stageText->setColor(1.0f, 1.0f, 1.0f, 0.5f);
-    additionalText->setTranslate(WORLD_BOUND::LEFT + 0.05f, 0.8f, Window::MIN_DEPTH);
-    additionalText->setColor(1.0f, 0.0f, 0.0f, 0.5f);
+    stageText->setTranslate(WORLD_BOUND::LEFT + 0.05f, 0.9f);
+    stageText->setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    additionalText->setTranslate(WORLD_BOUND::LEFT + 0.05f, 0.8f);
+    additionalText->setColor(1.0f, 0.0f, 0.0f, 1.0f);
     for (int i = 0 ; i < heartPtrs.size() ; i ++) {
         TransformMatrix mat;
-        mat.setTranslate(-0.9f + (i * 0.08), -0.9f, Window::MIN_DEPTH);
+        mat.setTranslate(-0.9f + (i * 0.08), -0.9f);
         ((Heart*)heartPtrs[i])->init(mat, 0.03f, Rgba(1.0f, 0.0f, 0.0f, 1.0f));
     }
 }
