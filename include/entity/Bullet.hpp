@@ -8,7 +8,6 @@
 class Bullet : public Object {
 public:
     Bullet ();
-    ~Bullet ();
     void init (const TransformMatrix& mat, const GLfloat radius, const Rgba color, const GLfloat speed);
     bool isOutOfBound () const;
 

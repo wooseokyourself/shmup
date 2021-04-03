@@ -11,8 +11,6 @@ Airplane::Airplane ()
     rightCanon = rightArm->pushChild(BASERECT, FRONT);
 }
 
-Airplane::~Airplane () { }
-
 /**
  * @brief Construct the airplane.
  * @param _lives The number of lives of the airplane.
@@ -45,6 +43,7 @@ void Airplane::init (const TransformMatrix& mat, const uint8_t _lives, const GLf
     // hitbox (this figure)
     hitbox->setSide(hitBoxWidth, hitBoxHeight); // 3:2
     setMatrix(mat);
+    setColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     // body
     ((Rect*)**body)->setSide(bodyWidth, bodyHeight);

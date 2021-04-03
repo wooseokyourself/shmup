@@ -16,6 +16,7 @@
 				"src/base/Object.cpp",
 				"src/entity/Heart.cpp",
 				"src/entity/Ui.cpp",
+				"src/entity/Planetary.cpp",
 				"src/entity/Bullet.cpp",
 				"src/entity/Item.cpp",
 				"src/entity/Airplane.cpp",

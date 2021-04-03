@@ -10,8 +10,12 @@ GamePlay::GamePlay () {
     playerBulletManager = new ThirdObjectManager(BULLET);
     enemyBulletManager = new ThirdObjectManager(BULLET);
     itemManager = new ThirdObjectManager(ITEM);
+    planetaryA = new Planetary;
+    planetaryB = new Planetary;
 
-    gameworld->pushChild(ui);
+    gameworld->pushChild(ui, FRONT);
+    gameworld->pushChild(planetaryA, BACK);
+    gameworld->pushChild(planetaryB, BACK);
     gameworld->pushChild(player);
     gameworld->pushChild(enemy);
     gameworld->pushChild(playerBulletManager);
@@ -42,6 +46,12 @@ void GamePlay::startGame () {
     player->init(playerInitMat, INIT_PLAYER_LIVES, airplaneWidth, playerSpeed, playerBulletSpeed);
     enemy->init(enemyInitMat, stage, airplaneWidth, enemySpeed, enemyBulletSpeed);
     enemyAi.start(enemy, enemyBulletManager);
+
+    TransformMatrix mat;
+    mat.setTranslate(randomRealNumber(-1.0f, -0.3f), randomRealNumber(-1.0f, -0.3f));
+    planetaryA->init(mat, randomRealNumber(0.05f, 0.3f));
+    mat.setTranslate(randomRealNumber(0.3f, 1.0f), randomRealNumber(0.3f, 1.0f));
+    planetaryB->init(mat, randomRealNumber(0.05f, 0.3f));
 }
 
 /**

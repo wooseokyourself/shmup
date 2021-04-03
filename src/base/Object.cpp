@@ -45,6 +45,16 @@ Object* Object::pushChild (Object* child) {
     return child;
 }
 
+Object* Object::pushChild (Object* child, const int priority) {
+    pushChild(child);
+    const GLfloat cmpz = modelViewMat.tz;
+    if (priority == FRONT)
+        child->translate(0.0f, 0.0f, cmpz >= Window::MIN_DEPTH ? cmpz : cmpz + 1.0f);
+    else if (priority == BACK)
+        child->translate(0.0f, 0.0f, cmpz <= Window::MAX_DEPTH ? cmpz : cmpz - 1.0f);
+    return child;
+}
+
 Object* Object::pushChild (const int figureType) {
     Object* child = new Object;
     child->parent = this;
@@ -197,6 +207,10 @@ void Object::setRandomColor () {
     color = Rgba(static_cast <float> (rand()) / static_cast <float> (RAND_MAX), 
                 static_cast <float> (rand()) / static_cast <float> (RAND_MAX), 
                 static_cast <float> (rand()) / static_cast <float> (RAND_MAX));
+}
+
+void Object::setColorAlpha (const GLfloat _A) {
+    color.A = _A;
 }
 
 Point2D Object::getWorldPosition () const {

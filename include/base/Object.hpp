@@ -28,6 +28,7 @@ public: // Graph API
     Figure* setFigure (const int figureType);
     Figure* operator * ();
     Object* pushChild (Object* child);
+    Object* pushChild (Object* child, const int priority);
     Object* pushChild (const int figureType);
     Object* pushChild (const int figureType, const int priority);
     void popBackChild ();
@@ -55,6 +56,7 @@ public: // Colors
     void setColor (const Rgba _color);
     Rgba getColor () const;
     void setRandomColor ();
+    void setColorAlpha (const GLfloat _A);
 
 public: // Utilities
     Point2D getWorldPosition () const;

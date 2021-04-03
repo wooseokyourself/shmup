@@ -6,8 +6,6 @@ Item::Item ()
     bottom = pushChild(TRIANGLE, FRONT);
 }
 
-Item::~Item () { }
-
 void Item::init (const TransformMatrix& mat, const GLfloat length, const Rgba color, const GLfloat speed) {
     setMatrix(mat);
     GLfloat radius = length / 3.0f;
