@@ -38,9 +38,13 @@ private:
     Ai enemyAi;
 
 private: // Objects
-    GLfloat airplaneWidth;
     Airplane* player;
     Airplane* enemy;
+    Ui* ui;
+    ThirdObjectManager* itemManager;
+
+private: // Objects Attributes
+    GLfloat airplaneWidth;
     ModelViewMat2D playerInitMat;
     ModelViewMat2D enemyInitMat;
     GLfloat playerSpeed;
@@ -49,8 +53,6 @@ private: // Objects
     GLfloat enemyBulletSpeed;
 
 private:
-    Ui ui;
-    ThirdObjectManager itemManager;
     uint8_t stage;
     int enemyRegenIntervalSecs;
     bool allPassMode;

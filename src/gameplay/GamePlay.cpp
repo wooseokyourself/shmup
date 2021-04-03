@@ -1,9 +1,11 @@
 #include "gameplay/GamePlay.hpp"
 
-GamePlay::GamePlay () 
-: itemManager(ITEM) {
+GamePlay::GamePlay () {
     player = new Airplane;
     enemy = new Airplane;
+    ui = new Ui;
+    itemManager = new ThirdObjectManager(ITEM);
+
     stage = 1;
     enemyRegenIntervalSecs = 3;
     allPassMode = false;
@@ -25,7 +27,7 @@ GamePlay::~GamePlay () {
 }
 
 void GamePlay::startGame () {
-    ui.init(INIT_PLAYER_LIVES);
+    ui->init(INIT_PLAYER_LIVES);
     player->init(playerInitMat, INIT_PLAYER_LIVES, airplaneWidth, playerSpeed, playerBulletSpeed);
     enemy->init(enemyInitMat, stage, airplaneWidth, enemySpeed, enemyBulletSpeed);
     enemyAi.start(enemy, DOWN);
@@ -37,8 +39,8 @@ void GamePlay::startGame () {
 void GamePlay::render () {
     player->display();
     enemy->display();
-    itemManager.display();
-    ui.display();
+    itemManager->display();
+    ui->display();
 }
 
 /**
@@ -49,10 +51,10 @@ void GamePlay::render () {
 void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* asyncKeyBuf) {
     handleAsyncKeyInput(asyncKeyBuf);
     handleDiscreteKeyInput(discreteKeyBuf);
-    ui.update(stage, !allPassMode && !allFailMode ? " " : (allPassMode ? "All-Pass Mode" : "All-Fail Mode"), player->getLives());
+    ui->update(stage, !allPassMode && !allFailMode ? " " : (allPassMode ? "All-Pass Mode" : "All-Fail Mode"), player->getLives());
     player->update();
     enemy->update();
-    itemManager.update();
+    itemManager->update();
 
     if (!allPassMode && !allFailMode) {
         handleHitNormal(player, enemy);
@@ -104,13 +106,13 @@ void GamePlay::lose () {
 void GamePlay::handleHitNormal (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    if (attacker->bulletManager.deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
+    if (attacker->bulletManager->deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
         target->loseLife();
         if (!target->isAlive()) {
             if (target == player)
                 lose();
             if (target == enemy) {
-                itemManager.activateObject(enemy->getModelViewMatrix(), ITEM_HEIGHT, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
+                itemManager->activateObject(enemy->getModelViewMatrix(), ITEM_HEIGHT, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
                 enemyAi.stop();
                 if (stage == MAX_STAGE)
                     win();
@@ -129,13 +131,13 @@ void GamePlay::handleHitNormal (Airplane* attacker, Airplane* target) {
 void GamePlay::handleHitInstantKill (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    if (attacker->bulletManager.deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
+    if (attacker->bulletManager->deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
         while (target->isAlive())
             target->loseLife();
         if (target == player)
             lose();
         if (target == enemy) {
-            itemManager.activateObject(enemy->getModelViewMatrix(), ITEM_HEIGHT, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
+            itemManager->activateObject(enemy->getModelViewMatrix(), ITEM_HEIGHT, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
             enemyAi.stop();
             if (stage == MAX_STAGE)
                 win();
@@ -151,7 +153,7 @@ void GamePlay::handleHitInstantKill (Airplane* attacker, Airplane* target) {
 void GamePlay::handleHitDodge (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    if (attacker->bulletManager.deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
+    if (attacker->bulletManager->deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
 
     }
 }
@@ -159,7 +161,7 @@ void GamePlay::handleHitDodge (Airplane* attacker, Airplane* target) {
 void GamePlay::handleAirplaneGotItem (Airplane* target) {
     if (!target->isAlive())
         return;
-    if (itemManager.deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom()))
+    if (itemManager->deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom()))
         target->addShotgunBullet();
 }
 

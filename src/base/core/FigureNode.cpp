@@ -98,7 +98,7 @@ FigureNode* FigureNode::addChild (const int figure, const int priority) {
     return child;
 }
 
-void FigureNode::addMat (const ModelViewMat2D& mat) {
+void FigureNode::setModelViewMat (const ModelViewMat2D& mat) {
     obj->setMatrix(mat);
 }
 

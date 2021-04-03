@@ -2,19 +2,18 @@
 
 ThirdObjectManager::ThirdObjectManager (const int _objectType) 
 : objectType(_objectType) {
-    switch (objectType) {
-        case BULLET:
-            for (int i = 0 ; i < 100 ; i ++) {
-                Object* b = new Bullet();
-                pool.push(b);
-            }
-            break;
-        case ITEM:
-            for (int i = 0 ; i < 5 ; i ++) {
-                Object* b = new Item();
-                pool.push(b);
-            }
-            break;
+    for (int i = 0 ; i < 100 ; i ++) {
+        Object* b;
+        switch (objectType) {
+            case BULLET:
+                b = new Bullet();
+                break;
+            case ITEM:
+                b = new Item();
+                break;
+        }
+        pool.push(b);
+        addChild(b);
     }
 }
 
@@ -53,14 +52,6 @@ void ThirdObjectManager::activateObject (const ModelViewMat2D& mat, const GLfloa
         }
     }
     activeObjects.push_back(object);
-}
-
-/**
- * @brief Draw all bullets in OpenGL world.
- */
-void ThirdObjectManager::display () const {
-    for (Object* object : activeObjects)
-        object->display();
 }
 
 /**
@@ -122,4 +113,12 @@ bool ThirdObjectManager::deactivateObjectWhichIsIn (const Point2D leftTop, const
         }
     }
     return false;
+}
+
+/**
+ * @brief Draw all bullets in OpenGL world.
+ */
+void ThirdObjectManager::display () const {
+    for (Object* object : activeObjects)
+        object->display();
 }

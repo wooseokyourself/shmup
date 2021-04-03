@@ -35,11 +35,11 @@ public:
     void addShotgunBullet ();
 
 public:
-    void handlingWhenOutOfBound ();
-    void display () const;
+    virtual void handlingWhenOutOfBound ();
+    virtual void display () const;
 
 private:
-    ThirdObjectManager bulletManager;
+    ThirdObjectManager* bulletManager;
     Rect* base; // hitbox
     Rect* body;
     Triangle* head;

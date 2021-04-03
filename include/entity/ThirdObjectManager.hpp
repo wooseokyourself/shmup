@@ -1,8 +1,8 @@
 #ifndef __THIRDOBJECTMANAGER__
 #define __THIRDOBJECTMANAGER__
 
-#include <list>
 #include <stack>
+#include "base/Object.hpp"
 #include "entity/Bullet.hpp"
 #include "entity/Item.hpp"
 
@@ -14,15 +14,18 @@ enum ObjectType {
 class Bullet;
 class Item;
 
-class ThirdObjectManager {
+class ThirdObjectManager : public Object {
 public:
     ThirdObjectManager (const int _objectType);
     ~ThirdObjectManager ();
     void activateObject (const ModelViewMat2D& mat, const GLfloat param, const Rgba color, const GLfloat speed);
-    void display () const;
     void update ();
     size_t getActivatedObjectsNumber () const;
     bool deactivateObjectWhichIsIn (const Point2D leftTop, const Point2D rightBottom);
+
+public:
+    virtual void handlingWhenOutOfBound () { }
+    virtual void display () const;
 
 private:
     int objectType;

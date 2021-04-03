@@ -1,7 +1,7 @@
 #include "base/Object.hpp"
 
 Object::Object ()
-: speed(0.0f) {
+: speed(0.0f), parent(nullptr) {
     root = new FigureNode;
 }
 
@@ -46,4 +46,19 @@ bool Object::isCenterOutOfBound () const {
     const GLfloat x = pos.x;
     const GLfloat y = pos.y;
     return x < WORLD_BOUND::LEFT || x > WORLD_BOUND::RIGHT || y < WORLD_BOUND::DOWN || y > WORLD_BOUND::UP;
+}
+
+void Object::addChild (Object* child) {
+    child->parent = this;
+    children.push_back(child);
+}
+
+std::list<Object*>& Object::getChildren () {
+    return children;
+}
+
+void Object::display () const {
+    root->display();
+    for (Object* child : children)
+        child->display();
 }

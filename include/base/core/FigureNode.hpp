@@ -32,7 +32,7 @@ public:
     bool isExternal () const;
     FigureNode* addChild (const int figure);
     FigureNode* addChild (const int figure, const int priority);
-    void addMat (const ModelViewMat2D& mat);
+    void setModelViewMat (const ModelViewMat2D& mat);
     FigureNode* getParent ();
     std::list<FigureNode*>& getChildren ();
 

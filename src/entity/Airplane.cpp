@@ -1,7 +1,9 @@
 #include "entity/Airplane.hpp"
 
 Airplane::Airplane ()
-: bulletManager(BULLET), shotgunBulletNumber(1), bulletSpeed(0.0f), lives(0), lastActivatedTime(0), lastDeactivatedTime(0), updateCount(0), idleMotionToken(false) {
+: shotgunBulletNumber(1), bulletSpeed(0.0f), lives(0), lastActivatedTime(0), lastDeactivatedTime(0), updateCount(0), idleMotionToken(false) {
+    bulletManager = new ThirdObjectManager(BULLET);
+    addChild(bulletManager);
     FigureNode * bodyNode, * headNode, * leftArmNode, * rightArmNode, * leftCanonNode, * rightCanonNode;
     base = (Rect*)root->init(RECT);
     bodyNode = root->addChild(RECT, FRONT);
@@ -27,7 +29,7 @@ Airplane::~Airplane () { }
  * @param bulletDirection The direction of all bullets; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
  */
 void Airplane::update () {
-    bulletManager.update();
+    bulletManager->update();
 
     GLfloat degree = idleMotionToken ? 0.2f : -0.2f;
     leftArm->rotate(degree);
@@ -156,7 +158,7 @@ void Airplane::fire () {
     for (int i = 0 ; i < shotgunBulletNumber ; i ++) {
         ModelViewMat2D bulletMat = mat;
         bulletMat.rotate(bulletDegree += (addingDegree * ( (i % 2 == 1) ? i : -i) ));
-        bulletManager.activateObject(bulletMat, BULLET_RADIUS, head->getColor(), bulletSpeed);   
+        bulletManager->activateObject(bulletMat, BULLET_RADIUS, head->getColor(), bulletSpeed);   
     }
 }
 
@@ -220,7 +222,8 @@ void Airplane::handlingWhenOutOfBound () {
  * @brief Draw the airplane and its bullets in OpenGL world.
  */
 void Airplane::display () const {
-    bulletManager.display();
     if (isAlive())
-        root->display();
+        Object::display();
+    else
+        bulletManager->display();
 }
