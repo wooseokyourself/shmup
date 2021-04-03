@@ -4,8 +4,6 @@
 #include <queue>
 #include "gameplay/Constants.hpp"
 #include "gameplay/Ai.hpp"
-#include "base/core/Rect.hpp"
-#include "base/core/Triangle.hpp"
 #include "entity/Airplane.hpp"
 #include "entity/ThirdObjectManager.hpp"
 #include "entity/Ui.hpp"
@@ -34,11 +32,8 @@ private:
     void handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf);
     void handleAsyncKeyInput (const bool* asyncKeyBuf);
 
-private:
-    Ai enemyAi;
-
 private: // Objects
-    Object* gameworld;
+    Object* gameworld; // root of scene graph
     Ui* ui;
     Airplane* player;
     Airplane* enemy;
@@ -46,7 +41,7 @@ private: // Objects
     ThirdObjectManager* enemyBulletManager;
     ThirdObjectManager* itemManager;
 
-private: // Objects Attributes
+private: // Objects Attributes for Initializing
     GLfloat airplaneWidth;
     TransformMatrix playerInitMat;
     TransformMatrix enemyInitMat;
@@ -55,11 +50,14 @@ private: // Objects Attributes
     GLfloat enemySpeed;
     GLfloat enemyBulletSpeed;
 
-private:
+private: // Game Play
     uint8_t stage;
-    int enemyRegenIntervalSecs;
     bool allPassMode;
     bool allFailMode;
+
+private: // Enemy AI
+    Ai enemyAi;
+    int enemyRegenIntervalSecs;
 };
 
 #endif

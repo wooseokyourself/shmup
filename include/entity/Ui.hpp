@@ -22,7 +22,7 @@ public:
 private:
     Object* stageText; // Text
     Object* additionalText; // Text
-    std::vector<Heart*> lives;
+    std::vector<Object*> heartPtrs; // Heart
 };
 
 #endif

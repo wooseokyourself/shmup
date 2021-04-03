@@ -39,9 +39,10 @@ Figure* Object::operator * () {
     return figure;
 }
 
-void Object::pushChild (Object* child) {
+Object* Object::pushChild (Object* child) {
     child->parent = this;
     children.push_back(child);
+    return child;
 }
 
 Object* Object::pushChild (const int figureType) {
@@ -97,7 +98,7 @@ TransformMatrix Object::getModelViewMatrix () const {
 }
 
 void Object::setMatrix (const TransformMatrix& mat) {
-    setTranslate(mat.tx, mat.ty);
+    setTranslate(mat.tx, mat.ty, mat.tz);
     setRotate(mat.degree);
     setScale(mat.sx, mat.sy);
 } 

@@ -89,6 +89,7 @@
         "csignal": "cpp",
         "fstream": "cpp",
         "future": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "*.ipp": "cpp"
     }
 }

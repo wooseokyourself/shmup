@@ -27,7 +27,7 @@ public:
 public: // Graph API
     Figure* setFigure (const int figureType);
     Figure* operator * ();
-    void pushChild (Object* child);
+    Object* pushChild (Object* child);
     Object* pushChild (const int figureType);
     Object* pushChild (const int figureType, const int priority);
     void popBackChild ();

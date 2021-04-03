@@ -1,9 +1,9 @@
 #include "entity/Heart.hpp"
 
 Heart::Heart () {
-    bottom = pushChild(RECT, FRONT);
-    left = pushChild(CIRCLE, FRONT);
-    right = pushChild(CIRCLE, FRONT);
+    bottom = pushChild(RECT);
+    left = pushChild(CIRCLE);
+    right = pushChild(CIRCLE);
 }
 
 Heart::~Heart () { }
@@ -16,9 +16,9 @@ void Heart::init (const TransformMatrix& mat, const GLfloat unit, const Rgba col
     ((Circle*)**left)->setRadius(unit / 2.0f);
     ((Circle*)**right)->setRadius(unit / 2.0f);
 
-    bottom->rotate(45.0f);
-    left->translate(m, m);
-    right->translate(-m, m);
+    bottom->setRotate(45.0f);
+    left->setTranslate(m, m);
+    right->setTranslate(-m, m);
 
     bottom->setColor(color);
     left->setColor(color);
