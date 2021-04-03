@@ -1,9 +1,23 @@
 #include "gameplay/GamePlay.hpp"
+#include <iostream>
+using namespace std;
 
-GamePlay::GamePlay () 
-: itemManager(ITEM) {
+GamePlay::GamePlay () {
+    gameworld = new Object;
+    ui = new Ui(INIT_PLAYER_LIVES);
     player = new Airplane;
     enemy = new Airplane;
+    playerBulletManager = new ThirdObjectManager(BULLET);
+    enemyBulletManager = new ThirdObjectManager(BULLET);
+    itemManager = new ThirdObjectManager(ITEM);
+
+    gameworld->pushChild(ui);
+    gameworld->pushChild(player);
+    gameworld->pushChild(enemy);
+    gameworld->pushChild(playerBulletManager);
+    gameworld->pushChild(enemyBulletManager);
+    gameworld->pushChild(itemManager);
+
     stage = 1;
     enemyRegenIntervalSecs = 3;
     allPassMode = false;
@@ -20,26 +34,21 @@ GamePlay::GamePlay ()
 }
 
 GamePlay::~GamePlay () {
-    delete player;
-    delete enemy;
+    delete gameworld;
 }
 
 void GamePlay::startGame () {
+    ui->init();
     player->init(playerInitMat, INIT_PLAYER_LIVES, airplaneWidth, playerSpeed, playerBulletSpeed);
     enemy->init(enemyInitMat, stage, airplaneWidth, enemySpeed, enemyBulletSpeed);
-    enemyAi.start(enemy, DOWN);
+    enemyAi.start(enemy, enemyBulletManager);
 }
 
 /**
  * @brief Draw all objects in OpenGL world.
  */
 void GamePlay::render () {
-    player->display();
-    enemy->display();
-    itemManager.display();
-    displayWall();
-    displayStage();
-    displayPlayerLives();
+    gameworld->display();
 }
 
 /**
@@ -50,9 +59,8 @@ void GamePlay::render () {
 void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* asyncKeyBuf) {
     handleAsyncKeyInput(asyncKeyBuf);
     handleDiscreteKeyInput(discreteKeyBuf);
-    player->update();
-    enemy->update();
-    itemManager.update();
+    ui->setValue(stage, !allPassMode && !allFailMode ? " " : (allPassMode ? "All-Pass Mode" : "All-Fail Mode"), player->getLives());
+    gameworld->update();
 
     if (!allPassMode && !allFailMode) {
         handleHitNormal(player, enemy);
@@ -74,7 +82,7 @@ void GamePlay::update (std::queue<unsigned char>& discreteKeyBuf, const bool* as
         enemy->init(enemyInitMat, ++stage, airplaneWidth, enemySpeed, enemyBulletSpeed);
         for (int i = 1 ; i < enemy->getLives() ; i ++)
             enemy->addShotgunBullet();
-        enemyAi.start(enemy, DOWN);
+        enemyAi.start(enemy, enemyBulletManager);
     }
 }
 
@@ -96,59 +104,6 @@ void GamePlay::lose () {
     glutLeaveMainLoop();
 }
 
-void GamePlay::displayStage () {
-    std::string str = "Stage " + std::to_string(stage);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(WORLD_BOUND::RIGHT + 0.05f, 0.9f, Window::MIN_DEPTH);
-    glColor3f(0.0f, 0.0f, 0.0f);
-    glRasterPos2d(0.0f, 0.0f);
-    for (int i = 0 ; i < str.size() ; i ++)
-        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
-
-    if (allPassMode || allFailMode) {
-        if (allPassMode)
-            str = "all pass";
-        else if (allFailMode)
-            str = "all fail";
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        glTranslatef(WORLD_BOUND::RIGHT + 0.05f, 0.8f, Window::MIN_DEPTH);
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glRasterPos2d(0.0f, 0.0f);
-        for (int i = 0 ; i < str.size() ; i ++)
-            glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
-    }
-}
-
-void GamePlay::displayPlayerLives () {
-    for (int i = 0 ; i < player->getLives() ; i ++) {
-        Triangle tri;
-        tri.setRadius(0.03);
-        tri.setColor(1.0f, 0.0f, 0.0f);
-        tri.setTranslate(-0.9f + (i * 0.08), -0.9f, Window::MIN_DEPTH);
-        tri.rotate(90.0f);
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        tri.draw();
-    }
-}
-
-void GamePlay::displayWall () {
-    Rect rect;
-    rect.setSide(1.0f - WORLD_BOUND::RIGHT, 2.0f);
-    GLfloat centerDiffX = (1.0f - WORLD_BOUND::RIGHT) / 2;
-    rect.setColor(1.0f, 1.0f, 1.0f);
-    rect.setTranslate(WORLD_BOUND::LEFT - centerDiffX, 0.0f, Window::MIN_DEPTH - 1.0f);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    rect.draw();
-    rect.setTranslate(WORLD_BOUND::RIGHT + centerDiffX, 0.0f, Window::MIN_DEPTH - 1.0f);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    rect.draw();
-}
-
 /**
  * @brief Handle whether the attacker's bullet hit the target; if hit then subtract a life of the target.
  * @param attacker The object attacking.
@@ -157,13 +112,14 @@ void GamePlay::displayWall () {
 void GamePlay::handleHitNormal (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    if (attacker->bulletManager.deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
+    ThirdObjectManager* attackerBulletManager = attacker == player ? playerBulletManager : enemyBulletManager;
+    if (attackerBulletManager->deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
         target->loseLife();
         if (!target->isAlive()) {
             if (target == player)
                 lose();
             if (target == enemy) {
-                itemManager.activateObject(enemy->getModelViewMatrix(), ITEM_HEIGHT, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
+                itemManager->activateObject(enemy->getModelViewMatrix(), ITEM_HEIGHT, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
                 enemyAi.stop();
                 if (stage == MAX_STAGE)
                     win();
@@ -182,13 +138,14 @@ void GamePlay::handleHitNormal (Airplane* attacker, Airplane* target) {
 void GamePlay::handleHitInstantKill (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    if (attacker->bulletManager.deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
+    ThirdObjectManager* attackerBulletManager = attacker == player ? playerBulletManager : enemyBulletManager;
+    if (attackerBulletManager->deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
         while (target->isAlive())
             target->loseLife();
         if (target == player)
             lose();
         if (target == enemy) {
-            itemManager.activateObject(enemy->getModelViewMatrix(), ITEM_HEIGHT, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
+            itemManager->activateObject(enemy->getModelViewMatrix(), ITEM_HEIGHT, Rgba(1.0f, 0.0f, 0.0f), BulletSpeed::SLOW);
             enemyAi.stop();
             if (stage == MAX_STAGE)
                 win();
@@ -204,7 +161,8 @@ void GamePlay::handleHitInstantKill (Airplane* attacker, Airplane* target) {
 void GamePlay::handleHitDodge (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    if (attacker->bulletManager.deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
+    ThirdObjectManager* attackerBulletManager = attacker == player ? playerBulletManager : enemyBulletManager;
+    if (attackerBulletManager->deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
 
     }
 }
@@ -212,7 +170,7 @@ void GamePlay::handleHitDodge (Airplane* attacker, Airplane* target) {
 void GamePlay::handleAirplaneGotItem (Airplane* target) {
     if (!target->isAlive())
         return;
-    if (itemManager.deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom()))
+    if (itemManager->deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom()))
         target->addShotgunBullet();
 }
 
@@ -224,7 +182,7 @@ void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf
         switch (key) {
             case ' ':
                 if (!allFailMode)
-                    player->fire();
+                    player->fire(playerBulletManager);
                 break;
             case 'c':
                 if (!allPassMode) {

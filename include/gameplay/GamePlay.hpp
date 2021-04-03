@@ -2,13 +2,11 @@
 #define __GAMEPLAY__
 
 #include <queue>
-#include <string>
 #include "gameplay/Constants.hpp"
 #include "gameplay/Ai.hpp"
-#include "base/core/Rect.hpp"
-#include "base/core/Triangle.hpp"
 #include "entity/Airplane.hpp"
 #include "entity/ThirdObjectManager.hpp"
+#include "entity/Ui.hpp"
 
 class GamePlay {
 public:
@@ -25,11 +23,6 @@ private:
     void lose ();
 
 private:
-    void displayStage ();
-    void displayPlayerLives ();
-    void displayWall ();
-
-private:
     void handleHitNormal (Airplane* attacker, Airplane* target);
     void handleHitInstantKill (Airplane* attacker, Airplane* target);
     void handleHitDodge (Airplane* attacker, Airplane* target);
@@ -39,26 +32,32 @@ private:
     void handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf);
     void handleAsyncKeyInput (const bool* asyncKeyBuf);
 
-private:
-    Ai enemyAi;
-
 private: // Objects
-    GLfloat airplaneWidth;
+    Object* gameworld; // root of scene graph
+    Ui* ui;
     Airplane* player;
     Airplane* enemy;
-    ModelViewMat2D playerInitMat;
-    ModelViewMat2D enemyInitMat;
+    ThirdObjectManager* playerBulletManager;
+    ThirdObjectManager* enemyBulletManager;
+    ThirdObjectManager* itemManager;
+
+private: // Objects Attributes for Initializing
+    GLfloat airplaneWidth;
+    TransformMatrix playerInitMat;
+    TransformMatrix enemyInitMat;
     GLfloat playerSpeed;
     GLfloat playerBulletSpeed;
     GLfloat enemySpeed;
     GLfloat enemyBulletSpeed;
 
-private:
-    ThirdObjectManager itemManager;
+private: // Game Play
     uint8_t stage;
-    int enemyRegenIntervalSecs;
     bool allPassMode;
     bool allFailMode;
+
+private: // Enemy AI
+    Ai enemyAi;
+    int enemyRegenIntervalSecs;
 };
 
 #endif

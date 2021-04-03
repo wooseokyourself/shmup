@@ -2,16 +2,16 @@
 
 Bullet::Bullet ()
 : outOfBound(false) {
-    root->init(CIRCLE);
+    setFigure(CIRCLE);
 }
 
 Bullet::~Bullet () { }
 
-void Bullet::init (const ModelViewMat2D& mat, const GLfloat radius, const Rgba color, const GLfloat speed) {
-    Circle* shape = (Circle*)**root;
-    shape->setMatrix(mat);
+void Bullet::init (const TransformMatrix& mat, const GLfloat radius, const Rgba color, const GLfloat speed) {
+    Circle* shape = (Circle*)**this;
     shape->setRadius(radius);
-    shape->setColor(color);
+    setMatrix(mat);
+    setColor(color);
     setSpeed(speed);
     outOfBound = false;
 }
@@ -25,6 +25,10 @@ void Bullet::handlingWhenOutOfBound () {
         outOfBound = true;
 }
 
+void Bullet::update () {
+    Object::update();
+}
+
 void Bullet::display () const {
-    root->display();
+    Object::display();
 }
