@@ -6,8 +6,6 @@ Heart::Heart () {
     right = pushChild(CIRCLE);
 }
 
-Heart::~Heart () { }
-
 void Heart::init (const TransformMatrix& mat, const GLfloat unit, const Rgba color) {
     const GLfloat m = 0.353553 * unit; // sqrt(2) / 4 * unit
 

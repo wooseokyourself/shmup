@@ -10,7 +10,6 @@
 class Ui : public Object {
 public:
     Ui (const int playerLives);
-    ~Ui ();
     void init ();
     void setValue (const uint8_t stage, const std::string additional, const int playerLives);
 

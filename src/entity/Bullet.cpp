@@ -5,8 +5,6 @@ Bullet::Bullet ()
     setFigure(CIRCLE);
 }
 
-Bullet::~Bullet () { }
-
 void Bullet::init (const TransformMatrix& mat, const GLfloat radius, const Rgba color, const GLfloat speed) {
     Circle* shape = (Circle*)**this;
     shape->setRadius(radius);

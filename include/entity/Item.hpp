@@ -9,7 +9,6 @@
 class Item : public Object {
 public:
     Item ();
-    ~Item ();
     void init (const TransformMatrix& mat, const GLfloat length, const Rgba color, const GLfloat speed);
     bool isDurationTimeout () const;
 

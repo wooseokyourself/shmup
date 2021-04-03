@@ -6,7 +6,6 @@
 class Heart : public Object {
 public:
     Heart ();
-    ~Heart ();
     void init (const TransformMatrix& mat, const GLfloat unit, const Rgba color);
 
 public:

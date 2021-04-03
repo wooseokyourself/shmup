@@ -16,7 +16,6 @@ private:
 
 public:
     Airplane ();
-    ~Airplane ();
     void init (const TransformMatrix& mat, const uint8_t _lives, const GLfloat width, const GLfloat _speed, const GLfloat _bulletSpeed);
     void setBulletSpeed (const GLfloat _bulletSpeed);
     void destruct ();
