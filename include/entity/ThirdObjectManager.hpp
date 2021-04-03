@@ -18,13 +18,13 @@ class ThirdObjectManager : public Object {
 public:
     ThirdObjectManager (const int _objectType);
     ~ThirdObjectManager ();
-    void activateObject (const ModelViewMat2D& mat, const GLfloat param, const Rgba color, const GLfloat speed);
-    void update ();
+    void activateObject (const TransformMatrix& mat, const GLfloat param, const Rgba color, const GLfloat speed);
     size_t getActivatedObjectsNumber () const;
     bool deactivateObjectWhichIsIn (const Point2D leftTop, const Point2D rightBottom);
 
 public:
     virtual void handlingWhenOutOfBound () { }
+    virtual void update ();
     virtual void display () const;
 
 private:

@@ -10,16 +10,17 @@ class Item : public Object {
 public:
     Item ();
     ~Item ();
-    void init (const ModelViewMat2D& mat, const GLfloat length, const Rgba color, const GLfloat speed);
-    void setRandomRotate ();
+    void init (const TransformMatrix& mat, const GLfloat length, const Rgba color, const GLfloat speed);
     bool isDurationTimeout () const;
 
 public:
-    void handlingWhenOutOfBound ();
-    void display () const;
+    virtual void handlingWhenOutOfBound ();
+    virtual void update ();
+    virtual void display () const;
 
 private:
-    Rect* base;
+    Object* top; // Triangle
+    Object* bottom; // Triangle
     GLfloat activatedTime;
 };
 

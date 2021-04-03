@@ -9,12 +9,13 @@ class Bullet : public Object {
 public:
     Bullet ();
     ~Bullet ();
-    void init (const ModelViewMat2D& mat, const GLfloat radius, const Rgba color, const GLfloat speed);
+    void init (const TransformMatrix& mat, const GLfloat radius, const Rgba color, const GLfloat speed);
     bool isOutOfBound () const;
 
 public:
-    void handlingWhenOutOfBound ();
-    void display () const;
+    virtual void handlingWhenOutOfBound ();
+    virtual void update ();
+    virtual void display () const;
 
 private:
     bool outOfBound;

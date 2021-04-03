@@ -7,16 +7,17 @@ class Heart : public Object {
 public:
     Heart ();
     ~Heart ();
-    void init (const ModelViewMat2D& mat, const GLfloat unit, const Rgba color);
+    void init (const TransformMatrix& mat, const GLfloat unit, const Rgba color);
 
 public:
-    void handlingWhenOutOfBound ();
-    void display () const;
+    virtual void handlingWhenOutOfBound () { }
+    virtual void update ();
+    virtual void display () const;
 
 private:
-    Rect* bottom;
-    Circle* left;
-    Circle* right;
+    Object* bottom; // Rect
+    Object* left; // Circle
+    Object* right; // Circle
 };
 
 #endif

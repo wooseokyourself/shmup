@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 
 struct Rgba {
+    Rgba () : R(0.0f), G(0.0f), B(0.0f), A(0.0f) { }
     Rgba (GLfloat _R, GLfloat _G, GLfloat _B) : R(_R), G(_G), B(_B), A(1.0f) { }
     Rgba (GLfloat _R, GLfloat _G, GLfloat _B, GLfloat _A) : R(_R), G(_G), B(_B), A(_A) { }
     GLfloat R;

@@ -2,51 +2,22 @@
 
 Airplane::Airplane ()
 : shotgunBulletNumber(1), bulletSpeed(0.0f), lives(0), lastActivatedTime(0), lastDeactivatedTime(0), updateCount(0), idleMotionToken(false) {
-    bulletManager = new ThirdObjectManager(BULLET);
-    addChild(bulletManager);
-    FigureNode * bodyNode, * headNode, * leftArmNode, * rightArmNode, * leftCanonNode, * rightCanonNode;
-    base = (Rect*)root->init(RECT);
-    bodyNode = root->addChild(RECT, FRONT);
-    headNode = bodyNode->addChild(TRIANGLE);
-    leftArmNode = bodyNode->addChild(BASERECT, BACK);
-    rightArmNode = bodyNode->addChild(BASERECT, BACK);
-    leftCanonNode = leftArmNode->addChild(BASERECT, FRONT);
-    rightCanonNode = rightArmNode->addChild(BASERECT, FRONT);
-
-    body = (Rect*)**bodyNode;
-    head = (Triangle*)**headNode;
-    leftArm = (BaseRect*)**leftArmNode;
-    rightArm = (BaseRect*)**rightArmNode;
-    leftCanon = (BaseRect*)**leftCanonNode;
-    rightCanon = (BaseRect*)**rightCanonNode;
+    hitbox = (Rect*)setFigure(RECT);
+    body = pushChild(RECT, FRONT);
+    head = body->pushChild(TRIANGLE);
+    leftArm = body->pushChild(BASERECT, BACK);
+    rightArm = body->pushChild(BASERECT, BACK);
+    leftCanon = leftArm->pushChild(BASERECT, FRONT);
+    rightCanon = rightArm->pushChild(BASERECT, FRONT);
 }
 
 Airplane::~Airplane () { }
 
 /**
- * @brief Manage all bullets; movement of all bullets, deactivating bullets which is out of bound.
- * This method must be called in all frame.
- * @param bulletDirection The direction of all bullets; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
- */
-void Airplane::update () {
-    bulletManager->update();
-
-    GLfloat degree = idleMotionToken ? 0.2f : -0.2f;
-    leftArm->rotate(degree);
-    rightArm->rotate(-degree);
-    leftCanon->rotate(-degree * 1.2f);
-    rightCanon->rotate(degree * 1.2f);
-    if (++updateCount > 100) {
-        idleMotionToken = !idleMotionToken;
-        updateCount = 0;
-    }
-}
-
-/**
  * @brief Construct the airplane.
  * @param _lives The number of lives of the airplane.
  */
-void Airplane::init (const ModelViewMat2D& mat, const uint8_t _lives, const GLfloat width, const GLfloat _speed, const GLfloat _bulletSpeed) {
+void Airplane::init (const TransformMatrix& mat, const uint8_t _lives, const GLfloat width, const GLfloat _speed, const GLfloat _bulletSpeed) {
     if (isAlive())
         return;
     shotgunBulletNumber = 1;
@@ -71,45 +42,46 @@ void Airplane::init (const ModelViewMat2D& mat, const uint8_t _lives, const GLfl
     GLfloat canonWidth = armWidth * 0.9f;
     GLfloat canonHeight = hitBoxHeight * 0.8f;
 
-    base->setSide(hitBoxWidth, hitBoxHeight); // 3:2
-    base->setMatrix(mat);
-    body->setSide(bodyWidth, bodyHeight);
+    // hitbox (this figure)
+    hitbox->setSide(hitBoxWidth, hitBoxHeight); // 3:2
+    setMatrix(mat);
+
+    // body
+    ((Rect*)**body)->setSide(bodyWidth, bodyHeight);
     body->setTranslate(0.0f, (hitBoxHeight - bodyHeight) / 2.0f);
     body->setRandomColor();
     
-    head->setRadius(headRadius);
+    // head
+    ((Triangle*)**head)->setRadius(headRadius);
     head->setTranslate(0.0f, hitBoxHeight / 2);
     head->setRotate(330.0f);
+    head->setRandomColor();
 
-    leftArm->setSide(armWidth, armHeight);
+    // left arm
+    ((BaseRect*)**leftArm)->setSide(armWidth, armHeight);
     leftArm->setTranslate(-(bodyWidth * 0.34), 0.0f);
     leftArm->setRotate(145.0f);
+    leftArm->setRandomColor();
 
-    rightArm->setSide(armWidth, armHeight);
+    // right arm
+    ((BaseRect*)**rightArm)->setSide(armWidth, armHeight);
     rightArm->setTranslate(bodyWidth * 0.34, 0.0f);
     rightArm->setRotate(-145.0f);
+    rightArm->setRandomColor();
 
-    leftCanon->setSide(canonWidth, canonHeight);
+    // left canon
+    ((BaseRect*)**leftCanon)->setSide(canonWidth, canonHeight);
     leftCanon->setTranslate(0.0f, armHeight);
     leftCanon->setRotate(-145.0f);
+    leftCanon->setRandomColor();
 
-    rightCanon->setSide(canonWidth, canonHeight);
+    // right canon
+    ((BaseRect*)**rightCanon)->setSide(canonWidth, canonHeight);
     rightCanon->setTranslate(0.0f, armHeight);
     rightCanon->setRotate(145.0f);
-
-    base->setColor(1.0f, 1.0f, 1.0f, 0.0f);
-    body->setRandomColor();
-    head->setRandomColor();
-    leftArm->setColor(1.0f, 0.0f, 0.0f);
-    rightArm->setColor(0.0f, 1.0f, 0.0f);
-    leftCanon->setRandomColor();
     rightCanon->setRandomColor();
 
     lastActivatedTime = glutGet(GLUT_ELAPSED_TIME);
-}
-
-void Airplane::setSpeed (const GLfloat _speed) {
-    speed = _speed;
 }
 
 void Airplane::setBulletSpeed (const GLfloat _bulletSpeed) {
@@ -147,31 +119,33 @@ int Airplane::getLives () const {
 /**
  * @brief Fire a bullet.
  */
-void Airplane::fire () {
+void Airplane::fire (ThirdObjectManager* bulletManager) {
     if (!isAlive())
         return;
-    const ModelViewMat2D& mat = base->getMatrix();
+    const TransformMatrix& mat = getModelViewMatrix();
     GLfloat addingDegree = 15.0f;
     GLfloat bulletDegree = 0.0f;
     if (shotgunBulletNumber % 2 == 0)
         bulletDegree -= (addingDegree / 2.0f);
     for (int i = 0 ; i < shotgunBulletNumber ; i ++) {
-        ModelViewMat2D bulletMat = mat;
+        TransformMatrix bulletMat = mat;
         bulletMat.rotate(bulletDegree += (addingDegree * ( (i % 2 == 1) ? i : -i) ));
         bulletManager->activateObject(bulletMat, BULLET_RADIUS, head->getColor(), bulletSpeed);   
     }
 }
 
 Point2D Airplane::getHitboxLeftTop () const {
-    return base->getLeftTop();
+    GLfloat halfWidth = hitbox->getWidth() / 2.0f;
+    GLfloat halfHeight = hitbox->getHeight() / 2.0f;
+    TransformMatrix mat = getModelViewMatrix();
+    return Point2D(mat.tx - halfWidth, mat.ty + halfHeight);
 }
 
 Point2D Airplane::getHitboxRightBottom () const {
-    return base->getRightBottom();
-}
-
-ModelViewMat2D Airplane::getModelViewMatrix () const {
-    return base->getMatrix();
+    GLfloat halfWidth = hitbox->getWidth() / 2.0f;
+    GLfloat halfHeight = hitbox->getHeight() / 2.0f;
+    TransformMatrix mat = getModelViewMatrix();
+    return Point2D(mat.tx + halfWidth, mat.ty - halfHeight);
 }
 
 /**
@@ -204,18 +178,38 @@ void Airplane::addShotgunBullet () {
 }
 
 void Airplane::handlingWhenOutOfBound () {
-    const ModelViewMat2D& mat = base->getMatrix();
-    const Point2D lt = base->getLeftTop(), rb = base->getRightBottom();
+    const TransformMatrix& mat = getModelViewMatrix();
+    const Point2D lt = getHitboxLeftTop(), rb = getHitboxRightBottom();
     const GLfloat width = rb.x - lt.x;
     const GLfloat height = lt.y - rb.y;
     if (lt.x < WORLD_BOUND::LEFT)
-        base->setTranslate(WORLD_BOUND::LEFT + width / 2, mat.ty);
+        setTranslate(WORLD_BOUND::LEFT + width / 2, mat.ty);
     else if (rb.x > WORLD_BOUND::RIGHT)
-        base->setTranslate(WORLD_BOUND::RIGHT - width / 2, mat.ty);
+        setTranslate(WORLD_BOUND::RIGHT - width / 2, mat.ty);
     if (lt.y > WORLD_BOUND::UP)
-        base->setTranslate(mat.tx, WORLD_BOUND::UP - height / 2);
+        setTranslate(mat.tx, WORLD_BOUND::UP - height / 2);
     else if (rb.y < WORLD_BOUND::DOWN)
-        base->setTranslate(mat.tx, WORLD_BOUND::DOWN + height / 2);
+        setTranslate(mat.tx, WORLD_BOUND::DOWN + height / 2);
+}
+
+/**
+ * @brief Manage all bullets; movement of all bullets, deactivating bullets which is out of bound.
+ * This method must be called in all frame.
+ * @param bulletDirection The direction of all bullets; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
+ */
+void Airplane::update () {
+    if (!isAlive())
+        return;
+    GLfloat degree = idleMotionToken ? 0.2f : -0.2f;
+    leftArm->rotate(degree);
+    rightArm->rotate(-degree);
+    leftCanon->rotate(-degree * 1.2f);
+    rightCanon->rotate(degree * 1.2f);
+    if (++updateCount > 100) {
+        idleMotionToken = !idleMotionToken;
+        updateCount = 0;
+    }
+    Object::update();
 }
 
 /**
@@ -224,6 +218,4 @@ void Airplane::handlingWhenOutOfBound () {
 void Airplane::display () const {
     if (isAlive())
         Object::display();
-    else
-        bulletManager->display();
 }

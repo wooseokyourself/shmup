@@ -38,15 +38,18 @@ private:
     Ai enemyAi;
 
 private: // Objects
+    Object* gameworld;
+    Ui* ui;
     Airplane* player;
     Airplane* enemy;
-    Ui* ui;
+    ThirdObjectManager* playerBulletManager;
+    ThirdObjectManager* enemyBulletManager;
     ThirdObjectManager* itemManager;
 
 private: // Objects Attributes
     GLfloat airplaneWidth;
-    ModelViewMat2D playerInitMat;
-    ModelViewMat2D enemyInitMat;
+    TransformMatrix playerInitMat;
+    TransformMatrix enemyInitMat;
     GLfloat playerSpeed;
     GLfloat playerBulletSpeed;
     GLfloat enemySpeed;

@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClCompile Include="main\main.cpp" />
     <ClCompile Include="src\base\DynamicObject.cpp" />
-    <ClCompile Include="src\base\ModelViewMat2D.cpp" />
+    <ClCompile Include="src\base\TransformMatrix.cpp" />
     <ClCompile Include="src\base\Rect.cpp" />
     <ClCompile Include="src\dynamics\Airplane.cpp" />
     <ClCompile Include="src\dynamics\Bullet.cpp" />
@@ -30,7 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\base\DynamicObject.hpp" />
-    <ClInclude Include="include\base\ModelViewMat2D.hpp" />
+    <ClInclude Include="include\base\TransformMatrix.hpp" />
     <ClInclude Include="include\base\Point2D.hpp" />
     <ClInclude Include="include\base\Rect.hpp" />
     <ClInclude Include="include\base\Rgba.hpp" />

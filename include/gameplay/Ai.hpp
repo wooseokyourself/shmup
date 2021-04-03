@@ -10,7 +10,7 @@ using namespace std::chrono_literals;
 
 class Ai {
 public:
-    void start (Airplane* _airplane, const int _bulletDirection);
+    void start (Airplane* _airplane, ThirdObjectManager* _bulletManager);
     void stop ();
 
 protected:
@@ -21,7 +21,7 @@ private:
 
 private:
     Airplane* airplane;
-    int bulletDirection;
+    ThirdObjectManager* bulletManager;
 
 private:
     std::thread t;

@@ -9,18 +9,19 @@
 
 class Ui : public Object {
 public:
-    Ui ();
+    Ui (const int playerLives);
     ~Ui ();
-    void init (const int playerLives);
-    void update (const uint8_t stage, const std::string additionalText, const int playerLives);
+    void init ();
+    void setValue (const uint8_t stage, const std::string additional, const int playerLives);
 
 public:
-    void handlingWhenOutOfBound ();
-    void display () const;
+    virtual void handlingWhenOutOfBound () { }
+    virtual void update ();
+    virtual void display () const;
 
 private:
-    Text* stageText;
-    Text* additionalText;
+    Object* stageText; // Text
+    Object* additionalText; // Text
     std::vector<Heart*> lives;
 };
 

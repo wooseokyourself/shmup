@@ -1,40 +1,45 @@
 #include "entity/Ui.hpp"
+#include <iostream>
+using namespace std;
 
-Ui::Ui () {
-    root->init(RECT);
-    stageText = (Text*)**root->addChild(TEXT, FRONT);
-    additionalText = (Text*)**root->addChild(TEXT, FRONT);
-}
-
-Ui::~Ui () { }
-void Ui::init (const int playerLives) {
-    Rect* windowBox = (Rect*)**root;
-    windowBox->setSide(Window::WINDOW_HEIGHT, Window::WINDOW_WIDTH);
-    windowBox->setTranslate(0.0f, 0.0f, Window::MAX_DEPTH);
-    windowBox->setColor(0.0f, 0.0f, 0.0f, 0.0f);
-    stageText->setTranslate(WORLD_BOUND::LEFT + 0.05f, 0.9f, Window::MIN_DEPTH);
-    stageText->setColor(1.0f, 1.0f, 1.0f, 0.5f);
-    additionalText->setTranslate(WORLD_BOUND::LEFT + 0.05f, 0.8f, Window::MIN_DEPTH);
-    additionalText->setColor(1.0f, 0.0f, 0.0f, 0.5f);
+Ui::Ui (const int playerLives) {
+    stageText = pushChild(TEXT, FRONT);
+    additionalText = pushChild(TEXT, FRONT);
+    
     for (int i = 0 ; i < playerLives ; i ++) {
-        lives.push_back(new Heart);
-        ModelViewMat2D mat;
-        mat.setTranslate(-0.9f + (i * 0.08), -0.9f, Window::MIN_DEPTH);
-        lives.back()->init(mat, 0.03f, Rgba(1.0f, 0.0f, 0.0f, 1.0f));
+        Heart* heart = new Heart;
+        pushChild(heart);
+        lives.push_back(heart);
     }
 }
 
-void Ui::update (const uint8_t stage, const std::string additionalText, const int playerLives) {
-    stageText->setText("Stage " + std::to_string(stage));
-    this->additionalText->setText(additionalText);
-    while (lives.size() > playerLives)
-        lives.pop_back();
+Ui::~Ui () { }
+
+void Ui::init () {
+    stageText->setTranslate(WORLD_BOUND::LEFT + 0.05f, 0.9f);
+    stageText->setColor(1.0f, 1.0f, 1.0f, 0.5f);
+    additionalText->setTranslate(WORLD_BOUND::LEFT + 0.05f, 0.8f);
+    additionalText->setColor(1.0f, 0.0f, 0.0f, 0.5f);
+    for (int i = 0 ; i < lives.size() ; i ++) {
+        TransformMatrix mat;
+        mat.setTranslate(-0.9f + (i * 0.08), -0.9f);
+        lives[i]->init(mat, 0.03f, Rgba(1.0f, 0.0f, 0.0f, 1.0f));
+    }
 }
 
-void Ui::handlingWhenOutOfBound () { }
+void Ui::setValue (const uint8_t stage, const std::string additional, const int playerLives) {
+    ((Text*)**stageText)->setText("Stage " + std::to_string(stage));
+    ((Text*)**additionalText)->setText(additional);
+    while (lives.size() > playerLives) {
+        lives.pop_back();
+        popBackChild();
+    }
+}
+
+void Ui::update () {
+    Object::update();
+}
 
 void Ui::display () const {
-    root->display();
-    for (Heart* heart : lives)
-        heart->display();
+    Object::display();
 }

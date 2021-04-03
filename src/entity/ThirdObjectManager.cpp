@@ -13,7 +13,7 @@ ThirdObjectManager::ThirdObjectManager (const int _objectType)
                 break;
         }
         pool.push(b);
-        addChild(b);
+        pushChild(b);
     }
 }
 
@@ -33,12 +33,12 @@ ThirdObjectManager::~ThirdObjectManager () {
 /**
  * @brief Construct a bullet in (x,y) position.
  */
-void ThirdObjectManager::activateObject (const ModelViewMat2D& mat, const GLfloat param, const Rgba color, const GLfloat speed) {
+void ThirdObjectManager::activateObject (const TransformMatrix& mat, const GLfloat param, const Rgba color, const GLfloat speed) {
     if (pool.empty())
         return;
     Object* object = pool.top();
     pool.pop();
-    ModelViewMat2D objectInitMat = mat;
+    TransformMatrix objectInitMat = mat;
     switch (objectType) {
         case BULLET: {
             Bullet* bullet = (Bullet*)object;
@@ -52,6 +52,30 @@ void ThirdObjectManager::activateObject (const ModelViewMat2D& mat, const GLfloa
         }
     }
     activeObjects.push_back(object);
+}
+
+/**
+ * @return The number of existing bullets.
+ */
+size_t ThirdObjectManager::getActivatedObjectsNumber () const {
+    return activeObjects.size();
+}
+
+/**
+ * @brief Remove bullets which are in the rectangle constructed by left-top and right-bottom points.
+ * @param leftTop The left-top point of the target range in world space.
+ * @param rightBottom The right-bottom point of the target range in world space.
+ * @return false if no bullet removed.
+ */
+bool ThirdObjectManager::deactivateObjectWhichIsIn (const Point2D leftTop, const Point2D rightBottom) {
+    for (Object* object : activeObjects) {
+        if (object->isIn(leftTop, rightBottom)) {
+            pool.push(object);
+            activeObjects.remove(object);
+            return true;
+        }
+    }
+    return false;
 }
 
 /**
@@ -89,30 +113,6 @@ void ThirdObjectManager::update () {
         activeObjects.remove(object);
         pool.push(object);
     }
-}
-
-/**
- * @return The number of existing bullets.
- */
-size_t ThirdObjectManager::getActivatedObjectsNumber () const {
-    return activeObjects.size();
-}
-
-/**
- * @brief Remove bullets which are in the rectangle constructed by left-top and right-bottom points.
- * @param leftTop The left-top point of the target range in world space.
- * @param rightBottom The right-bottom point of the target range in world space.
- * @return false if no bullet removed.
- */
-bool ThirdObjectManager::deactivateObjectWhichIsIn (const Point2D leftTop, const Point2D rightBottom) {
-    for (Object* object : activeObjects) {
-        if (object->isIn(leftTop, rightBottom)) {
-            pool.push(object);
-            activeObjects.remove(object);
-            return true;
-        }
-    }
-    return false;
 }
 
 /**

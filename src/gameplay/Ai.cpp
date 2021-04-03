@@ -5,9 +5,9 @@
  * @param _airplane The target airplane. It must be constructed.
  * @param _bulletDirection The bullet direction of the airplane.
  */
-void Ai::start (Airplane* _airplane, const int _bulletDirection) {
+void Ai::start (Airplane* _airplane, ThirdObjectManager* _bulletManager) {
     airplane = _airplane;
-    bulletDirection = _bulletDirection;
+    bulletManager = _bulletManager;
     t = std::thread(&Ai::action, this);
 }
 
@@ -58,7 +58,7 @@ void Ai::fire (const int rand) {
         if (ELAPSED_TIME > taskMills)
             break;
         if (rand % 2 == 0)
-            airplane->fire();
+            airplane->fire(bulletManager);
         std::this_thread::sleep_for(350ms);
     }
 }
