@@ -26,8 +26,8 @@ enum Direction {
     DOWN_LEFT   = 4
 };
 
-const uint8_t INIT_PLAYER_LIVES = 10;
-const uint8_t MAX_STAGE = 100;
+const uint8_t INIT_PLAYER_LIVES = 3;
+const uint8_t MAX_STAGE = 5;
 const GLfloat AIRPLANE_WIDTH = 0.2f;
 const GLfloat BULLET_RADIUS = 0.02f;
 const GLfloat ITEM_HEIGHT = 0.08f;
