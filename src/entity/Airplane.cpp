@@ -183,12 +183,20 @@ void Airplane::handlingWhenOutOfBound () {
     const GLfloat height = lt.y - rb.y;
     if (lt.x < WORLD_BOUND::LEFT)
         setTranslate(WORLD_BOUND::LEFT + width / 2, mat.ty);
-    else if (rb.x > WORLD_BOUND::RIGHT)
+    if (rb.x > WORLD_BOUND::RIGHT)
         setTranslate(WORLD_BOUND::RIGHT - width / 2, mat.ty);
     if (lt.y > WORLD_BOUND::UP)
         setTranslate(mat.tx, WORLD_BOUND::UP - height / 2);
-    else if (rb.y < WORLD_BOUND::DOWN)
+    if (rb.y < WORLD_BOUND::DOWN)
         setTranslate(mat.tx, WORLD_BOUND::DOWN + height / 2);
+    if (lt.x < WORLD_BOUND::LEFT && rb.y < WORLD_BOUND::DOWN)
+        setTranslate(WORLD_BOUND::LEFT + width / 2, WORLD_BOUND::DOWN + height / 2);
+    if (lt.x < WORLD_BOUND::LEFT && lt.y > WORLD_BOUND::UP)
+        setTranslate(WORLD_BOUND::LEFT + width / 2, WORLD_BOUND::UP - height / 2);
+    if (rb.x > WORLD_BOUND::RIGHT && rb.y < WORLD_BOUND::DOWN)
+        setTranslate(WORLD_BOUND::RIGHT - width / 2, WORLD_BOUND::DOWN + height / 2);
+    if (rb.x > WORLD_BOUND::RIGHT && lt.y > WORLD_BOUND::UP)
+        setTranslate(WORLD_BOUND::RIGHT - width / 2, WORLD_BOUND::UP - height / 2);
 }
 
 /**
