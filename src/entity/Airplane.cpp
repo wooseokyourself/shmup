@@ -2,13 +2,13 @@
 
 Airplane::Airplane ()
 : shotgunBulletNumber(1), bulletSpeed(0.0f), lives(0), lastActivatedTime(0), lastDeactivatedTime(0), updateCount(0), idleMotionToken(false) {
-    hitbox = (Rect*)setFigure(RECT);
-    body = pushChild(RECT, FRONT);
-    head = body->pushChild(TRIANGLE);
-    leftArm = body->pushChild(BASERECT, BACK);
-    rightArm = body->pushChild(BASERECT, BACK);
-    leftCanon = leftArm->pushChild(BASERECT, FRONT);
-    rightCanon = rightArm->pushChild(BASERECT, FRONT);
+    hitbox = (Rect*)setFigure(FigureType::RECT);
+    body = pushChild(FigureType::RECT, FRONT);
+    head = body->pushChild(FigureType::TRIANGLE);
+    leftArm = body->pushChild(FigureType::BASERECT, BACK);
+    rightArm = body->pushChild(FigureType::BASERECT, BACK);
+    leftCanon = leftArm->pushChild(FigureType::BASERECT, FRONT);
+    rightCanon = rightArm->pushChild(FigureType::BASERECT, FRONT);
 }
 
 /**

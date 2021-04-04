@@ -1,8 +1,8 @@
 #include "entity/Ui.hpp"
 
 Ui::Ui (const int playerLives) {
-    stageText = pushChild(TEXT);
-    additionalText = pushChild(TEXT);
+    stageText = pushChild(FigureType::TEXT);
+    additionalText = pushChild(FigureType::TEXT);
     for (int i = 0 ; i < playerLives ; i ++)
         heartPtrs.push_back(pushChild(new Heart));
 }

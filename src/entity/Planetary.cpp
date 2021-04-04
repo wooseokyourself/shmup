@@ -1,9 +1,9 @@
 #include "entity/Planetary.hpp"
 
 Planetary::Planetary () {
-    star = pushChild(CIRCLE);
-    orbit = star->pushChild(CIRCLE);
-    satellite = orbit->pushChild(CIRCLE);
+    star = pushChild(FigureType::CIRCLE);
+    orbit = star->pushChild(FigureType::CIRCLE);
+    satellite = orbit->pushChild(FigureType::CIRCLE);
     
     starAngle = randomRealNumber(0.05f, 1.0f);
     orbitAngle = randomRealNumber(0.2f, 2.0f);

@@ -5,12 +5,14 @@
 #include <GL/glut.h>
 #include <cstdlib>
 
-enum Figures {
-    CIRCLE,
-    RECT,
-    BASERECT,
-    TRIANGLE,
-    TEXT
+namespace FigureType {
+    enum {
+        CIRCLE,
+        RECT,
+        BASERECT,
+        TRIANGLE,
+        TEXT
+    };
 };
 
 class Figure {

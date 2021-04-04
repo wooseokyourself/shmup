@@ -1,9 +1,9 @@
 #include "entity/Heart.hpp"
 
 Heart::Heart () {
-    bottom = pushChild(RECT);
-    left = pushChild(CIRCLE);
-    right = pushChild(CIRCLE);
+    bottom = pushChild(FigureType::RECT);
+    left = pushChild(FigureType::CIRCLE);
+    right = pushChild(FigureType::CIRCLE);
 }
 
 void Heart::init (const TransformMatrix& mat, const GLfloat unit, const Rgba color) {

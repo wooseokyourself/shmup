@@ -2,7 +2,7 @@
 
 Bullet::Bullet ()
 : outOfBound(false) {
-    setFigure(CIRCLE);
+    setFigure(FigureType::CIRCLE);
 }
 
 void Bullet::init (const TransformMatrix& mat, const GLfloat radius, const Rgba color, const GLfloat speed) {

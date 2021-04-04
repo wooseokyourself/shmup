@@ -16,19 +16,19 @@ Figure* Object::setFigure (const int figureType) {
     if (figure != nullptr)
         delete figure;
     switch (figureType) {
-        case CIRCLE:
+        case FigureType::CIRCLE:
             figure = new Circle;
             break;
-        case RECT:
+        case FigureType::RECT:
             figure = new Rect;
             break;
-        case BASERECT:
+        case FigureType::BASERECT:
             figure = new BaseRect;
             break;
-        case TRIANGLE:
+        case FigureType::TRIANGLE:
             figure = new Triangle;
             break;
-        case TEXT:
+        case FigureType::TEXT:
             figure = new Text;
             break;
     }
@@ -60,20 +60,20 @@ Object* Object::pushChild (const int figureType) {
     child->parent = this;
     children.push_back(child);
     switch (figureType) {
-        case CIRCLE:
-            child->setFigure(CIRCLE);
+        case FigureType::CIRCLE:
+            child->setFigure(FigureType::CIRCLE);
             break;
-        case RECT:
-            child->setFigure(RECT);
+        case FigureType::RECT:
+            child->setFigure(FigureType::RECT);
             break;
-        case BASERECT:
-            child->setFigure(BASERECT);
+        case FigureType::BASERECT:
+            child->setFigure(FigureType::BASERECT);
             break;
-        case TRIANGLE:
-            child->setFigure(TRIANGLE);
+        case FigureType::TRIANGLE:
+            child->setFigure(FigureType::TRIANGLE);
             break;
-        case TEXT:
-            child->setFigure(TEXT);
+        case FigureType::TEXT:
+            child->setFigure(FigureType::TEXT);
             break;
     }
     return child;
@@ -233,8 +233,9 @@ GLfloat Object::getSpeed () const {
 bool Object::isIn (const Point2D leftTop, const Point2D rightBottom) const {
     const GLfloat x = modelViewMat.tx;
     const GLfloat y = modelViewMat.ty;
-    if ( (leftTop.x <= x && x <= rightBottom.x) && (rightBottom.y <= y && y <= leftTop.y))
+    if ((leftTop.x <= x && x <= rightBottom.x) && (rightBottom.y <= y && y <= leftTop.y))
         return true;
+    return false;
 }
 
 void Object::move (const GLfloat degree) {

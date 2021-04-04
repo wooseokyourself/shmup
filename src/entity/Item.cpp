@@ -2,8 +2,8 @@
 
 Item::Item ()
 : activatedTime(0.0f) {
-    top = pushChild(TRIANGLE, FRONT);
-    bottom = pushChild(TRIANGLE, FRONT);
+    top = pushChild(FigureType::TRIANGLE, FRONT);
+    bottom = pushChild(FigureType::TRIANGLE, FRONT);
 }
 
 void Item::init (const TransformMatrix& mat, const GLfloat length, const Rgba color, const GLfloat speed) {
