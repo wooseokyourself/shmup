@@ -19,26 +19,71 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main\main.cpp" />
-    <ClCompile Include="src\base\DynamicObject.cpp" />
-    <ClCompile Include="src\base\TransformMatrix.cpp" />
-    <ClCompile Include="src\base\Rect.cpp" />
-    <ClCompile Include="src\dynamics\Airplane.cpp" />
-    <ClCompile Include="src\dynamics\Bullet.cpp" />
-    <ClCompile Include="src\gameplay\Ai.cpp" />
-    <ClCompile Include="src\gameplay\GamePlay.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\base\DynamicObject.hpp" />
-    <ClInclude Include="include\base\TransformMatrix.hpp" />
-    <ClInclude Include="include\base\Point2D.hpp" />
-    <ClInclude Include="include\base\Rect.hpp" />
-    <ClInclude Include="include\base\Rgba.hpp" />
-    <ClInclude Include="include\dynamics\Airplane.hpp" />
-    <ClInclude Include="include\dynamics\Bullet.hpp" />
+    <ClInclude Include="include\base\core\BaseRect.hpp" />
+    <ClInclude Include="include\base\core\Circle.hpp" />
+    <ClInclude Include="include\base\core\Figure.hpp" />
+    <ClInclude Include="include\base\core\Point2D.hpp" />
+    <ClInclude Include="include\base\core\Rect.hpp" />
+    <ClInclude Include="include\base\core\Rgba.hpp" />
+    <ClInclude Include="include\base\core\Text.hpp" />
+    <ClInclude Include="include\base\core\TransformMatrix.hpp" />
+    <ClInclude Include="include\base\core\Triangle.hpp" />
+    <ClInclude Include="include\base\core\Utility.hpp" />
+    <ClInclude Include="include\base\Object.hpp" />
+    <ClInclude Include="include\entity\Airplane.hpp" />
+    <ClInclude Include="include\entity\Bullet.hpp" />
+    <ClInclude Include="include\entity\Heart.hpp" />
+    <ClInclude Include="include\entity\Item.hpp" />
+    <ClInclude Include="include\entity\Planetary.hpp" />
+    <ClInclude Include="include\entity\ThirdObjectManager.hpp" />
+    <ClInclude Include="include\entity\Ui.hpp" />
     <ClInclude Include="include\gameplay\Ai.hpp" />
     <ClInclude Include="include\gameplay\Constants.hpp" />
     <ClInclude Include="include\gameplay\GamePlay.hpp" />
+    <ClInclude Include="include\glm\common.hpp" />
+    <ClInclude Include="include\glm\exponential.hpp" />
+    <ClInclude Include="include\glm\ext.hpp" />
+    <ClInclude Include="include\glm\fwd.hpp" />
+    <ClInclude Include="include\glm\geometric.hpp" />
+    <ClInclude Include="include\glm\glm.hpp" />
+    <ClInclude Include="include\glm\integer.hpp" />
+    <ClInclude Include="include\glm\mat2x2.hpp" />
+    <ClInclude Include="include\glm\mat2x3.hpp" />
+    <ClInclude Include="include\glm\mat2x4.hpp" />
+    <ClInclude Include="include\glm\mat3x2.hpp" />
+    <ClInclude Include="include\glm\mat3x3.hpp" />
+    <ClInclude Include="include\glm\mat3x4.hpp" />
+    <ClInclude Include="include\glm\mat4x2.hpp" />
+    <ClInclude Include="include\glm\mat4x3.hpp" />
+    <ClInclude Include="include\glm\mat4x4.hpp" />
+    <ClInclude Include="include\glm\matrix.hpp" />
+    <ClInclude Include="include\glm\packing.hpp" />
+    <ClInclude Include="include\glm\trigonometric.hpp" />
+    <ClInclude Include="include\glm\vec2.hpp" />
+    <ClInclude Include="include\glm\vec3.hpp" />
+    <ClInclude Include="include\glm\vec4.hpp" />
+    <ClInclude Include="include\glm\vector_relational.hpp" />
+    <ClInclude Include="include\GL\eglew.h" />
+    <ClInclude Include="include\GL\freeglut.h" />
+    <ClInclude Include="include\GL\freeglut_ext.h" />
+    <ClInclude Include="include\GL\freeglut_std.h" />
+    <ClInclude Include="include\GL\glew.h" />
+    <ClInclude Include="include\GL\glut.h" />
+    <ClInclude Include="include\GL\glxew.h" />
+    <ClInclude Include="include\GL\wglew.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main\main.cpp" />
+    <ClCompile Include="src\base\Object.cpp" />
+    <ClCompile Include="src\entity\Airplane.cpp" />
+    <ClCompile Include="src\entity\Bullet.cpp" />
+    <ClCompile Include="src\entity\Heart.cpp" />
+    <ClCompile Include="src\entity\Item.cpp" />
+    <ClCompile Include="src\entity\Planetary.cpp" />
+    <ClCompile Include="src\entity\ThirdObjectManager.cpp" />
+    <ClCompile Include="src\entity\Ui.cpp" />
+    <ClCompile Include="src\gameplay\Ai.cpp" />
+    <ClCompile Include="src\gameplay\GamePlay.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
