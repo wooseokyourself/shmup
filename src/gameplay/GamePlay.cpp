@@ -1,6 +1,4 @@
 #include "gameplay/GamePlay.hpp"
-#include <iostream>
-using namespace std;
 
 GamePlay::GamePlay () {
     gameworld = new Object;
@@ -122,7 +120,7 @@ void GamePlay::lose () {
 void GamePlay::handleHitNormal (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    ThirdObjectManager* attackerBulletManager = attacker == player ? playerBulletManager : enemyBulletManager;
+    ThirdObjectManager* attackerBulletManager = (attacker == player ? playerBulletManager : enemyBulletManager);
     if (attackerBulletManager->deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
         target->loseLife();
         if (!target->isAlive()) {
@@ -148,8 +146,11 @@ void GamePlay::handleHitNormal (Airplane* attacker, Airplane* target) {
 void GamePlay::handleHitInstantKill (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    ThirdObjectManager* attackerBulletManager = attacker == player ? playerBulletManager : enemyBulletManager;
+    ThirdObjectManager* attackerBulletManager = (attacker == player ? playerBulletManager : enemyBulletManager);
     if (attackerBulletManager->deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
+        TransformMatrix attackerMat = attacker->getModelViewMatrix();
+        TransformMatrix targetMat = target->getModelViewMatrix();
+        Point2D attackerLt = attacker->getHitboxLeftTop(), attackerRb = attacker->getHitboxRightBottom(), targetLt = target->getHitboxLeftTop(), targetRb = target->getHitboxRightBottom();
         while (target->isAlive())
             target->loseLife();
         if (target == player)
@@ -171,7 +172,7 @@ void GamePlay::handleHitInstantKill (Airplane* attacker, Airplane* target) {
 void GamePlay::handleHitDodge (Airplane* attacker, Airplane* target) {
     if (!target->isAlive())
         return;
-    ThirdObjectManager* attackerBulletManager = attacker == player ? playerBulletManager : enemyBulletManager;
+    ThirdObjectManager* attackerBulletManager = (attacker == player ? playerBulletManager : enemyBulletManager);
     if (attackerBulletManager->deactivateObjectWhichIsIn(target->getHitboxLeftTop(), target->getHitboxRightBottom())) {
 
     }
