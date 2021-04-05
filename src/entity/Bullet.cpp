@@ -22,11 +22,3 @@ void Bullet::handlingWhenOutOfBound () {
     if (isCenterOutOfBound())
         outOfBound = true;
 }
-
-void Bullet::update () {
-    Object::update();
-}
-
-void Bullet::display () const {
-    Object::display();
-}

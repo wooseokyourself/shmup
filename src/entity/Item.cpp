@@ -35,7 +35,7 @@ void Item::handlingWhenOutOfBound () {
     const GLfloat x = mat.tx, y = mat.ty;
     bool outOfBound = false;
     GLfloat minDegree = mat.degree, maxDegree = mat.degree;
-    if (mat.tx < WORLD_BOUND::LEFT) { // 총알이 0 ~ 180 
+    if (mat.tx < WORLD_BOUND::LEFT) {
         setTranslate(WORLD_BOUND::LEFT, mat.ty);
         if (mat.degree < 90.0f)
             minDegree = 270.0f, maxDegree = 360.0f;
@@ -72,12 +72,4 @@ void Item::handlingWhenOutOfBound () {
             minDegree = 270.0f, maxDegree = 450.0f;
     }
     setRotate(randomRealNumber(minDegree, maxDegree));
-}
-
-void Item::update () {
-    Object::update();
-}
-
-void Item::display () const {
-    Object::display();
 }

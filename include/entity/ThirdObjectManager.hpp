@@ -23,7 +23,6 @@ public:
     bool deactivateObjectWhichIsIn (const Point2D leftTop, const Point2D rightBottom);
 
 public:
-    virtual void handlingWhenOutOfBound () { }
     virtual void update ();
     virtual void display () const;
 

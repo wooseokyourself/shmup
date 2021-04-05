@@ -9,9 +9,7 @@ public:
     void init (const TransformMatrix& mat, const GLfloat starRadius);
 
 public:
-    virtual void handlingWhenOutOfBound () { }
     virtual void update ();
-    virtual void diaplay () const;
 
 private:
     Object* star; // Circle

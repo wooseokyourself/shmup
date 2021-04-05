@@ -11,10 +11,6 @@ Airplane::Airplane ()
     rightCanon = rightArm->pushChild(FigureType::BASERECT, FRONT);
 }
 
-/**
- * @brief Construct the airplane.
- * @param _lives The number of lives of the airplane.
- */
 void Airplane::init (const TransformMatrix& mat, const uint8_t _lives, const GLfloat width, const GLfloat _speed, const GLfloat _bulletSpeed) {
     if (isAlive())
         return;
@@ -87,26 +83,17 @@ void Airplane::setBulletSpeed (const GLfloat _bulletSpeed) {
     bulletSpeed = _bulletSpeed;
 }
 
-/**
- * @brief Destruct the airplane.
- */
 void Airplane::destruct () {
     std::cout << "Airplane Destructed!" << std::endl;
     lives = 0;
     lastDeactivatedTime = glutGet(GLUT_ELAPSED_TIME);
 }
 
-/**
- * @brief Subtract a life of the airplane. If the airplane's life is 0, the airplane will be destructed.
- */
 void Airplane::loseLife () {
     if (--lives <= 0)
         destruct();
 }
 
-/**
- * @return true if the airplane was not destructed.
- */
 bool Airplane::isAlive () const {
     return lives > 0;
 }
@@ -115,9 +102,6 @@ int Airplane::getLives () const {
     return lives;
 }
 
-/**
- * @brief Fire a bullet.
- */
 void Airplane::fire (ThirdObjectManager* bulletManager) {
     if (!isAlive())
         return;
@@ -147,18 +131,10 @@ Point2D Airplane::getHitboxRightBottom () const {
     return Point2D(mat.tx + halfWidth, mat.ty - halfHeight);
 }
 
-/**
- * @return The last constructed time of the airplane.
- * The time is the elapsed time from the process executed.
- */
 int Airplane::getLastActivatedTime () const {
     return lastActivatedTime;
 }
 
-/**
- * @return The last destructed time of the airplane.
- * The time is the elapsed time from the process executed.
- */
 int Airplane::getLastDeactivatedTime () const {
     return lastDeactivatedTime;
 }
@@ -199,11 +175,6 @@ void Airplane::handlingWhenOutOfBound () {
         setTranslate(WORLD_BOUND::RIGHT - width / 2, WORLD_BOUND::UP - height / 2);
 }
 
-/**
- * @brief Manage all bullets; movement of all bullets, deactivating bullets which is out of bound.
- * This method must be called in all frame.
- * @param bulletDirection The direction of all bullets; LEFT, RIGHT, UP, DOWN, LEFT_UP, UP_RIGHT, RIGHT_DOWN, DOWN_LEFT
- */
 void Airplane::update () {
     if (!isAlive())
         return;
@@ -219,9 +190,6 @@ void Airplane::update () {
     Object::update();
 }
 
-/**
- * @brief Draw the airplane and its bullets in OpenGL world.
- */
 void Airplane::display () const {
     if (isAlive())
         Object::display();

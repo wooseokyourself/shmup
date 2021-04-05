@@ -11,21 +11,20 @@ public:
 
 public:
     inline virtual void draw () const {
-        // draw refer: https://stackoverflow.com/questions/22444450/drawing-circle-with-opengl
-        int segment = 30;
+        int factor = 30;
         glBegin(GL_POLYGON);
-        for (int i = 0 ; i < segment ; i ++)   {
-            float degree = 2.0f * 3.1415926f * float(i) / float(segment);//get the current angle 
-            float x = radius * cosf(degree);//calculate the x component 
-            float y = radius * sinf(degree);//calculate the y component 
+        for (int i = 0 ; i < factor ; i ++)   {
+            float degree = 2.0f * 3.1415926f * float(i) / float(factor);
+            float x = radius * cosf(degree); 
+            float y = radius * sinf(degree);
             glVertex2f(x, y);
         }
         glEnd();
         glBegin(GL_LINE_LOOP);
-        for (int i = 0 ; i < segment ; i ++)   {
-            float degree = 2.0f * 3.1415926f * float(i) / float(segment);//get the current angle 
-            float x = radius * cosf(degree);//calculate the x component 
-            float y = radius * sinf(degree);//calculate the y component 
+        for (int i = 0 ; i < factor ; i ++)   {
+            float degree = 2.0f * 3.1415926f * float(i) / float(factor);
+            float x = radius * cosf(degree);
+            float y = radius * sinf(degree);
             glVertex2f(x, y);
         }
         glEnd();

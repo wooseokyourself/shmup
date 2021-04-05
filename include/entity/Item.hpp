@@ -14,8 +14,6 @@ public:
 
 public:
     virtual void handlingWhenOutOfBound ();
-    virtual void update ();
-    virtual void display () const;
 
 private:
     Object* top; // Triangle

@@ -54,7 +54,7 @@ void updateFrame () {
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
-    glutInitWindowSize(Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT); // 윈도우의 종횡비
+    glutInitWindowSize(Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT);
     glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (Window::WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (Window::WINDOW_HEIGHT / 2));
     glutCreateWindow("Assn2");
     

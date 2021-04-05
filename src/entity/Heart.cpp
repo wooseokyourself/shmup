@@ -22,11 +22,3 @@ void Heart::init (const TransformMatrix& mat, const GLfloat unit, const Rgba col
     left->setColor(color);
     right->setColor(color);
 }
-
-void Heart::update () {
-    Object::update();
-}
-
-void Heart::display () const {
-    Object::display();
-}

@@ -5,3 +5,4 @@ working on...
 https://research.ncl.ac.uk/game/mastersdegree/graphicsforgames/scenegraphs/Tutorial%206%20-%20Scene%20Graphs.pdf   
 https://learnopengl.com/Advanced-OpenGL/Blending   
 https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDepthFunc.xhtml   
+https://stackoverflow.com/questions/22444450/drawing-circle-with-opengl

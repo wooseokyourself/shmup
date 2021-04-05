@@ -1,10 +1,5 @@
 #include "gameplay/Ai.hpp"
 
-/**
- * @brief Let _airplane behave itself.
- * @param _airplane The target airplane. It must be constructed.
- * @param _bulletDirection The bullet direction of the airplane.
- */
 void Ai::start (Airplane* _airplane, ThirdObjectManager* _bulletManager) {
     airplane = _airplane;
     bulletManager = _bulletManager;

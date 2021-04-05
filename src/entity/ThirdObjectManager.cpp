@@ -30,9 +30,6 @@ ThirdObjectManager::~ThirdObjectManager () {
     }
 }
 
-/**
- * @brief Construct a bullet in (x,y) position.
- */
 void ThirdObjectManager::activateObject (const TransformMatrix& mat, const GLfloat param, const Rgba color, const GLfloat speed) {
     if (pool.empty())
         return;
@@ -54,19 +51,10 @@ void ThirdObjectManager::activateObject (const TransformMatrix& mat, const GLflo
     activeObjects.push_back(object);
 }
 
-/**
- * @return The number of existing bullets.
- */
 size_t ThirdObjectManager::getActivatedObjectsNumber () const {
     return activeObjects.size();
 }
 
-/**
- * @brief Remove bullets which are in the rectangle constructed by left-top and right-bottom points.
- * @param leftTop The left-top point of the target range in world space.
- * @param rightBottom The right-bottom point of the target range in world space.
- * @return false if no bullet removed.
- */
 bool ThirdObjectManager::deactivateObjectWhichIsIn (const Point2D leftTop, const Point2D rightBottom) {
     for (Object* object : activeObjects) {
         if (object->isIn(leftTop, rightBottom)) {
@@ -78,11 +66,6 @@ bool ThirdObjectManager::deactivateObjectWhichIsIn (const Point2D leftTop, const
     return false;
 }
 
-/**
- * @brief Manage all bullets; movement of all bullets, deactivating bullets which is out of bound.
- * This method must be called in all frame.
- * activateObject 메소드의 인자로 온 mat의 y방향으로 쭉 전진함.
- */
 void ThirdObjectManager::update () {
     std::stack<Object*> deactivating;
     for (Object* object : activeObjects) {
@@ -115,9 +98,6 @@ void ThirdObjectManager::update () {
     }
 }
 
-/**
- * @brief Draw all bullets in OpenGL world.
- */
 void ThirdObjectManager::display () const {
     for (Object* object : activeObjects)
         object->display();

@@ -269,6 +269,7 @@ void Object::display () const {
         glPushMatrix();
     glTranslatef(modelViewMat.tx, modelViewMat.ty, modelViewMat.tz);
     glRotatef(modelViewMat.degree, 0.0f, 0.0f, 1.0f);
+    glScalef(modelViewMat.sx, modelViewMat.sy, 1.0f);
     if (figure != nullptr) {
         glColor4f(color.R, color.G, color.B, color.A);
         figure->draw();

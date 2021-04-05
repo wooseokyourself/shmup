@@ -27,11 +27,3 @@ void Ui::setValue (const uint8_t stage, const std::string additional, const int 
         popBackChild();
     }
 }
-
-void Ui::update () {
-    Object::update();
-}
-
-void Ui::display () const {
-    Object::display();
-}

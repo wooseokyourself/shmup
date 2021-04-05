@@ -35,7 +35,3 @@ void Planetary::update () {
     orbit->rotate(orbitAngle);
     Object::update();
 }
-
-void Planetary::diaplay () const {
-    Object::display();
-}

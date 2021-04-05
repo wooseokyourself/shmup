@@ -8,11 +8,6 @@ public:
     Heart ();
     void init (const TransformMatrix& mat, const GLfloat unit, const Rgba color);
 
-public:
-    virtual void handlingWhenOutOfBound () { }
-    virtual void update ();
-    virtual void display () const;
-
 private:
     Object* bottom; // Rect
     Object* left; // Circle

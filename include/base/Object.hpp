@@ -65,9 +65,9 @@ public: // Utilities
     bool isIn (const Point2D leftTop, const Point2D rightBottom) const;
     void move (const GLfloat degree);
     bool isCenterOutOfBound () const;
-
-public: // Virtual
     virtual void handlingWhenOutOfBound () { }
+
+public: // Called in Pre-order Traversal
     virtual void update ();
     virtual void display () const;
 
