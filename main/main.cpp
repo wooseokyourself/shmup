@@ -1,79 +1,65 @@
-#include "gameplay/GamePlay.hpp"
+#include <stdlib.h>
 
-using namespace std;
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
 
-int lastRenderTime = 0;
+static int width;
+static int height;
 
-static GamePlay gameplay;
-bool asyncKeyBuf[256];
-std::queue<unsigned char> discreteKeyBuf;
+static void display(void) {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
 
-/** @brief GLUT callback. */
-void display () {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-    gameplay.render();
-    glutSwapBuffers();
+    glViewport(0, 0, width/2, height/2);
+    glLoadIdentity();
+    gluLookAt(0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glutWireTeapot(1);
+
+    glViewport(width/2, 0, width/2, height/2);
+    glLoadIdentity();
+    gluLookAt(0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glutWireTeapot(1);
+
+    glViewport(0, height/2, width/2, height/2);
+    glLoadIdentity();
+    gluLookAt(0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+    glColor3f(1.0f, 0.0f, 1.0f);
+    glutWireTeapot(1);
+/*
+    glViewport(width/2, height/2, width/2, height/2);
+    glLoadIdentity();
+    gluLookAt(0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glutWireTeapot(1);
+*/
+    glFlush();
 }
 
-/** @brief GLUT callback. */
-void reshape (int width, int height) {
-    glViewport(0, 0, (GLsizei)width, (GLsizei)height);
+static void reshape(int w, int h) {
+    width = w;
+    height = h;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    GLfloat base = Window::WINDOW_HEIGHT < Window::WINDOW_WIDTH ? Window::WINDOW_HEIGHT : Window::WINDOW_WIDTH;
-    GLfloat widthset = Window::WINDOW_WIDTH / base;
-    GLfloat heightset = Window::WINDOW_HEIGHT / base;
-    glOrtho(-1.0f * widthset, 1.0f * widthset, -1.0f * heightset, 1.0f * heightset, -Window::MIN_DEPTH, -Window::MAX_DEPTH);    
-}
-
-/** @brief GLUT callback. Detect “c”, “f”, and “spaces” keys down. */
-void keyboardDown (unsigned char key, int x, int y) {
-    discreteKeyBuf.push(key);
-}
-
-/** @brief GLUT callback. Detect arrow keys down. */
-void specialKeyboardDown (int key, int x, int y) {
-    asyncKeyBuf[key] = true;
-}
-
-/** @brief GLUT callback. Detect arrow keys up. */
-void specialKeyboardUp (int key, int x, int y) {
-    asyncKeyBuf[key] = false;
-}
-
-/** @brief GLUT callback. */
-void updateFrame () {
-    const int NOW_TIME = glutGet(GLUT_ELAPSED_TIME);
-    if (NOW_TIME - lastRenderTime < TIME_PER_FRAME)
-        return;
-    gameplay.update(discreteKeyBuf, asyncKeyBuf);
-    glutPostRedisplay();
-    lastRenderTime = NOW_TIME;
+    glFrustum(-1.0, 1.0, -1.0, 1.0, 1.5, 20.0);
 }
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
-    glutInitWindowSize(Window::WINDOW_WIDTH, Window::WINDOW_HEIGHT);
-    glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (Window::WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (Window::WINDOW_HEIGHT / 2));
-    glutCreateWindow("Assn2");
-    
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glShadeModel(GL_SMOOTH);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(500, 500);
+    glutInitWindowPosition(100, 100);
+    glutCreateWindow(argv[0]);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glShadeModel(GL_FLAT);
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
-    glutIgnoreKeyRepeat(1);
-    glutKeyboardFunc(keyboardDown);
-    glutSpecialFunc(specialKeyboardDown);
-    glutSpecialUpFunc(specialKeyboardUp);
-    glutIdleFunc(updateFrame);
-
-    gameplay.startGame();
     glutMainLoop();
-
-    return 0;
+    return EXIT_SUCCESS;
 }
