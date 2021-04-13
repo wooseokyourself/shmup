@@ -266,7 +266,7 @@ void Object::display () const {
         glLoadIdentity();
     }
     else
-    glPushMatrix();
+        glPushMatrix();
     glTranslatef(modelViewMat.tx, modelViewMat.ty, modelViewMat.tz);
     glRotatef(modelViewMat.degree, 0.0f, 0.0f, 1.0f);
     glScalef(modelViewMat.sx, modelViewMat.sy, 1.0f);
