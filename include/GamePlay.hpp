@@ -22,13 +22,13 @@ public:
         player->setColor(0.75f, 0.75f, 0.75f, 1.0f);
         player->setTranslate(PLAYER_INIT_POS);
         player->setRotate(180.0f, 0.0f, 1.0f, 0.0f);
-        player->setScale(0.03, 0.03, 0.03);
+        player->setLongestSideTo(0.3);
         player->setSpeed(0.005);
         enemy->loadModel(ENEMY_MODEL);
         enemy->setColor(0.75f, 0.75f, 0.75f, 1.0f);
         enemy->setTranslate(ENEMY_INIT_POS);
         enemy->setRotate(0.0f, 0.0f, 1.0f, 0.0f);
-        enemy->setScale(0.03, 0.03, 0.03);
+        enemy->setLongestSideTo(0.3);
 
         root->pushChild(player);
         root->pushChild(enemy);

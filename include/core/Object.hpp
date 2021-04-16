@@ -8,6 +8,7 @@
 #include <core/GL/glew.h>
 #include <core/GL/freeglut.h>
 #include <core/glm/glm.hpp>
+#include <core/glm/gtx/string_cast.hpp>
 
 #include <assimp/cimport.h>
 #include <assimp/Importer.hpp>
@@ -29,7 +30,14 @@ public:
     }
     void loadModel (std::string path) {
         scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
-        if (!scene)
+        if (scene) {
+            glm::vec3 _min, _max;
+            calculate_bounding_box(&_min, &_max);
+            width = abs(_min.x - _max.x);
+            height = abs(_min.y - _max.y);
+            depth = abs(_min.z - _max.z);
+        }
+        else
             std::cout << "model load failed" << std::endl;
     }
     virtual void update () {
@@ -124,6 +132,12 @@ public: // Model-view matrix
     }
     glm::vec3 getScale () const {
         return scalef;
+    }
+    void setLongestSideTo (float len) {
+        float longest = max(width, height);
+        longest = max(longest, depth);
+        float scaleFactor = len / longest;
+        setScale(scaleFactor, scaleFactor, scaleFactor);
     }
 
 public: // Colors
@@ -294,7 +308,7 @@ private: // utilities
         f[2] = c;
         f[3] = d;
     }
-    void calculate_bounding_box(aiVector3D* min, aiVector3D* max)
+    void calculate_bounding_box(glm::vec3* min, glm::vec3* max)
     {
         aiMatrix4x4 trafo;
         aiIdentityMatrix4(&trafo);
@@ -304,8 +318,8 @@ private: // utilities
         calculate_bounding_box_for_node(scene->mRootNode,min,max,&trafo);
     }
     void calculate_bounding_box_for_node (const aiNode* nd,
-        aiVector3D* min,
-        aiVector3D* max,
+        glm::vec3* min,
+        glm::vec3* max,
         aiMatrix4x4* trafo
     ) {
         aiMatrix4x4 prev;
@@ -344,6 +358,9 @@ private: // Scene graph
 private: // Mesh
     const aiScene* scene;
     glm::vec4 color;
+    float width;
+    float height;
+    float depth;
 
 private: // Factors of model-view matrix
     glm::vec3 translatef;
