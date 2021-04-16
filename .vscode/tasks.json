@@ -13,6 +13,7 @@
                 "`pkg-config", "--cflags", "--libs", "glut`",
                 "`pkg-config", "--cflags", "--libs", "glm`",
 				"`pkg-config", "--cflags", "--libs", "glu`",
+				"`pkg-config", "--cflags", "--libs", "assimp`",
 				"-I./include",
 				"main/main.cpp",
 				"-o",

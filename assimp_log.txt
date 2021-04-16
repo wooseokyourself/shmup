@@ -1,0 +1,16 @@
+Info,  T0: Load bin/models/player.obj
+Info,  T0: Found a matching importer for this file format: Wavefront Object Importer.
+Info,  T0: Import root directory is 'bin/models/'
+Error, T0: OBJ: Unable to locate material file F 15.mtl
+Info,  T0: OBJ: Opening fallback material file bin/models/player.mtl
+Error, T0: OBJ: Unable to locate fallback material file bin/models/player.mtl
+Error, T0: OBJ: failed to locate material F_15C, creating new material
+Error, T0: OBJ: failed to locate material Glass, creating new material
+Info,  T0: Entering post processing pipeline
+Info,  T0: RemoveRedundantMatsProcess finished. Removed 1 redundant and 1 unused materials.
+Info,  T0: TriangulateProcess finished. All polygons have been triangulated.
+Info,  T0: Points: 0, Lines: 0, Triangles: 3, Polygons: 0 (Meshes, X = removed)
+Info,  T0: CalcTangentsProcess finished. Tangents have been calculated
+Info,  T0: JoinVerticesProcess finished | Verts in: 6068 out: 3518 | ~42.0237
+Info,  T0: Cache relevant are 3 meshes (2860 faces). Average output ACMR is 1.27273
+Info,  T0: Leaving post processing pipeline
