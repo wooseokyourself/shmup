@@ -47,7 +47,7 @@ private:
             }
 
             for (t = 0; t < mesh->mNumFaces; ++t) {
-                const C_STRUCT aiFace* face = &mesh->mFaces[t];
+                const aiFace* face = &mesh->mFaces[t];
                 GLenum face_mode;
 
                 switch(face->mNumIndices) {
@@ -137,6 +137,7 @@ void apply_material(const aiMaterial *mtl) {
 	else
 		fill_mode = GL_FILL;
 	glPolygonMode(GL_FRONT_AND_BACK, fill_mode);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	max = 1;
 	if((AI_SUCCESS == aiGetMaterialIntegerArray(mtl, AI_MATKEY_TWOSIDED, &two_sided, &max)) && two_sided)
