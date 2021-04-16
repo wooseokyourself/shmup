@@ -20,25 +20,18 @@
 #define min(a,b) a<b?a:b
 #define max(a,b) a>b?a:b
 
+glm::vec3 rotateYaxis (const float angle, const glm::vec3 p) {
+    const float t = getRadian(angle);
+    return glm::vec3(p.x * cos(t) - p.z * sin(t), p.y, p.x * sin(t) + p.z * cos(t));
+}
+
 class Object {
 public:
-    Object () : parent(nullptr), speed(0.0f), anglef(0.0f) {
+    Object () : parent(nullptr), renderBb(false), speed(0.0f), anglef(0.0f) {
         color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         translatef = glm::vec3(0.0f, 0.0f, 0.0f);
         rotatef = glm::vec3(0.0f, 0.0f, 0.0f);
         scalef = glm::vec3(1.0f, 1.0f, 1.0f);
-    }
-    void loadModel (std::string path) {
-        scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
-        if (scene) {
-            glm::vec3 _min, _max;
-            calculate_bounding_box(&_min, &_max);
-            width = abs(_min.x - _max.x);
-            height = abs(_min.y - _max.y);
-            depth = abs(_min.z - _max.z);
-        }
-        else
-            std::cout << "model load failed" << std::endl;
     }
     virtual void update () {
         for (Object* child : children)
@@ -52,6 +45,19 @@ public:
         if (scene) {
             glColor4f(color.r, color.g, color.b, color.a);
             drawMeshes(scene, scene->mRootNode);
+
+            if (renderBb) {
+                glDisable(GL_LIGHTING);
+                std::vector<int> indices = {0, 1, 1, 2, 2, 3, 3, 0,
+                                            4, 5, 5, 6, 6, 7, 7, 4,
+                                            0, 4, 1, 5, 2, 6, 3, 7};
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                glColor3f(1.0f, 0.0f, 1.0f);
+                glBegin(GL_LINE_STRIP);
+                for (int i = 0 ; i < indices.size() ; i ++)
+                    glVertex3f(bbVertices[indices[i]].x, bbVertices[indices[i]].y, bbVertices[indices[i]].z);
+                glEnd();
+            }
         }
         for (Object* child : children)
             child->draw();
@@ -133,7 +139,7 @@ public: // Model-view matrix
     glm::vec3 getScale () const {
         return scalef;
     }
-    void setLongestSideTo (float len) {
+    void setLongestSideTo (const float len) {
         float longest = max(width, height);
         longest = max(longest, depth);
         float scaleFactor = len / longest;
@@ -158,8 +164,58 @@ public: // Colors
     }
 
 public:
+    void loadModel (std::string path) {
+        scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+        if (scene) {
+            calculate_bounding_box();
+            width = abs(bbMin.x - bbMax.x);
+            height = abs(bbMin.y - bbMax.y);
+            depth = abs(bbMin.z - bbMax.z);
+            centerToLeftRatio = abs(bbMin.x) / width;
+            centerToBelowRatio = abs(bbMin.y) / height;
+            centerToFrontRatio = abs(bbMin.z) / depth;
+
+            bbVertices.clear();
+            bbVertices.push_back(glm::vec3(bbMin.x, bbMin.y, bbMax.z));
+            bbVertices.push_back(glm::vec3(bbMax.x, bbMin.y, bbMax.z));
+            bbVertices.push_back(glm::vec3(bbMax.x, bbMax.y, bbMax.z));
+            bbVertices.push_back(glm::vec3(bbMin.x, bbMax.y, bbMax.z));
+            bbVertices.push_back(glm::vec3(bbMin.x, bbMin.y, bbMin.z));
+            bbVertices.push_back(glm::vec3(bbMax.x, bbMin.y, bbMin.z));
+            bbVertices.push_back(glm::vec3(bbMax.x, bbMax.y, bbMin.z));
+            bbVertices.push_back(glm::vec3(bbMin.x, bbMax.y, bbMin.z));
+        }
+        else
+            std::cout << "model load failed" << std::endl;
+    }
     glm::vec3 getWorldPos () const {
         return translatef;
+    }
+    void setRenderingBoundingBox (bool flag) {
+        renderBb = flag;
+    }
+    std::vector<glm::vec3> getWorldBoundingBox () const { // 잉여, 아마 안 쓸듯
+        // glm::vec3 pos = getWorldPos();
+        glm::vec3 pos = rotateYaxis(anglef, glm::vec3(0.0f, 0.0f, 0.0f));
+        glm::vec3 center;
+        float nwidth = width * scalef.x, nheight = height * scalef.y, ndepth = depth * scalef.z; 
+        float halfWidth = nwidth / 2.0f, halfHeight = nheight / 2.0f, halfDepth = ndepth / 2.0f;
+        center.x = (-pos.x - centerToLeftRatio * nwidth) + halfWidth;
+        center.y = (-pos.y - centerToBelowRatio * nheight) + halfHeight;
+        center.z = (-pos.z - centerToFrontRatio * ndepth) + halfDepth;
+        center.x += translatef.x;
+        center.y += translatef.y;
+        center.z += translatef.z;
+        std::vector<glm::vec3> ret;
+        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x - halfWidth, center.y - halfHeight, center.z + halfDepth)));
+        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x + halfWidth, center.y - halfHeight, center.z + halfDepth)));
+        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x + halfWidth, center.y + halfHeight, center.z + halfDepth)));
+        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x - halfWidth, center.y + halfHeight, center.z + halfDepth)));
+        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x - halfWidth, center.y - halfHeight, center.z - halfDepth)));
+        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x + halfWidth, center.y - halfHeight, center.z - halfDepth)));
+        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x + halfWidth, center.y + halfHeight, center.z - halfDepth)));
+        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x - halfWidth, center.y + halfHeight, center.z - halfDepth)));
+        return ret;
     }
     void setSpeed (const float _speed) {
         speed = _speed;
@@ -232,7 +288,7 @@ private: // utilities
 
         glPopMatrix();
     }
-    void apply_material(const aiMaterial *mtl) {
+    void apply_material (const aiMaterial *mtl) {
         float c[4];
 
         GLenum fill_mode;
@@ -296,32 +352,28 @@ private: // utilities
         else
             glEnable(GL_CULL_FACE);
     }
-    void color4_to_float4(const aiColor4D *c, float f[4]) {
+    void color4_to_float4 (const aiColor4D *c, float f[4]) {
         f[0] = c->r;
         f[1] = c->g;
         f[2] = c->b;
         f[3] = c->a;
     }
-    void set_float4(float f[4], float a, float b, float c, float d) {
+    void set_float4 (float f[4], float a, float b, float c, float d) {
         f[0] = a;
         f[1] = b;
         f[2] = c;
         f[3] = d;
     }
-    void calculate_bounding_box(glm::vec3* min, glm::vec3* max)
+    void calculate_bounding_box ()
     {
         aiMatrix4x4 trafo;
         aiIdentityMatrix4(&trafo);
 
-        min->x = min->y = min->z =  1e10f;
-        max->x = max->y = max->z = -1e10f;
-        calculate_bounding_box_for_node(scene->mRootNode,min,max,&trafo);
+        bbMin.x = bbMin.y = bbMin.z =  1e10f;
+        bbMax.x = bbMax.y = bbMax.z = -1e10f;
+        calculate_bounding_box_for_node(scene->mRootNode, &trafo);
     }
-    void calculate_bounding_box_for_node (const aiNode* nd,
-        glm::vec3* min,
-        glm::vec3* max,
-        aiMatrix4x4* trafo
-    ) {
+    void calculate_bounding_box_for_node (const aiNode* nd, aiMatrix4x4* trafo ) {
         aiMatrix4x4 prev;
         unsigned int n = 0, t;
 
@@ -335,18 +387,18 @@ private: // utilities
                 aiVector3D tmp = mesh->mVertices[t];
                 aiTransformVecByMatrix4(&tmp,trafo);
 
-                min->x = min(min->x,tmp.x);
-                min->y = min(min->y,tmp.y);
-                min->z = min(min->z,tmp.z);
+                bbMin.x = min(bbMin.x,tmp.x);
+                bbMin.y = min(bbMin.y,tmp.y);
+                bbMin.z = min(bbMin.z,tmp.z);
 
-                max->x = max(max->x,tmp.x);
-                max->y = max(max->y,tmp.y);
-                max->z = max(max->z,tmp.z);
+                bbMax.x = max(bbMax.x,tmp.x);
+                bbMax.y = max(bbMax.y,tmp.y);
+                bbMax.z = max(bbMax.z,tmp.z);
             }
         }
 
         for (n = 0; n < nd->mNumChildren; ++n) {
-            calculate_bounding_box_for_node(nd->mChildren[n],min,max,trafo);
+            calculate_bounding_box_for_node(nd->mChildren[n], trafo);
         }
         *trafo = prev;
     }
@@ -358,9 +410,16 @@ private: // Scene graph
 private: // Mesh
     const aiScene* scene;
     glm::vec4 color;
+    bool renderBb;
+    glm::vec3 bbMin;
+    glm::vec3 bbMax;
+    std::vector<glm::vec3> bbVertices;
     float width;
     float height;
     float depth;
+    float centerToLeftRatio;
+    float centerToBelowRatio;
+    float centerToFrontRatio;
 
 private: // Factors of model-view matrix
     glm::vec3 translatef;

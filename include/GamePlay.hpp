@@ -5,33 +5,58 @@
 #include "Aircraft.hpp"
 #include "World.hpp"
 
-std::string PLAYER_MODEL = "assets/models/player.obj";
-std::string ENEMY_MODEL = "assets/models/player.obj";
+const int VIEWMODE_TPS = 0;
+const int VIEWMODE_FPS = 1;
+const int VIEWMODE_2D = 2;
 
-glm::vec3 PLAYER_INIT_POS(0.0f, WORLD_LIMIT_ABS * 0.1f, WORLD_LIMIT_ABS);
-glm::vec3 ENEMY_INIT_POS(0.0f, WORLD_LIMIT_ABS * 0.1f, -WORLD_LIMIT_ABS);
+const std::string PLAYER_MODEL = "assets/models/player.obj";
+const std::string ENEMY_MODEL = "assets/models/player.obj";
+
+const glm::vec3 PLAYER_INIT_POS(0.0f, WORLD_LIMIT_ABS * 0.1f, WORLD_LIMIT_ABS);
+const glm::vec3 ENEMY_INIT_POS(0.0f, WORLD_LIMIT_ABS * 0.1f, -WORLD_LIMIT_ABS);
+
+namespace AircraftSpeed {
+    const GLfloat FAST = 0.015;
+    const GLfloat NORMAL = 0.010;
+    const GLfloat SLOW = 0.005;
+};
+
+namespace BulletSpeed {
+    const GLfloat FAST = 0.015;
+    const GLfloat NORMAL = 0.010;
+    const GLfloat SLOW = 0.005;
+};
 
 class GamePlay {
 public:
-    GamePlay () {
+    GamePlay () : viewMode(0) {
         root = new Object;
         player = new Aircraft;
         enemy = new Aircraft;
-        
+        Object* bullet = new Object;
+        bullet->loadModel("assets/models/sphere.obj");
+        bullet->setColor(1.0f, 0.0f, 0.0f, 1.0f);
+        bullet->setTranslate(0.0f, 0.1f, 0.0f);
+        bullet->setLongestSideTo(0.01);
+
         player->loadModel(PLAYER_MODEL);
         player->setColor(0.75f, 0.75f, 0.75f, 1.0f);
         player->setTranslate(PLAYER_INIT_POS);
         player->setRotate(180.0f, 0.0f, 1.0f, 0.0f);
         player->setLongestSideTo(0.3);
-        player->setSpeed(0.005);
+        player->setSpeed(AircraftSpeed::FAST);
+
         enemy->loadModel(ENEMY_MODEL);
         enemy->setColor(0.75f, 0.75f, 0.75f, 1.0f);
         enemy->setTranslate(ENEMY_INIT_POS);
         enemy->setRotate(0.0f, 0.0f, 1.0f, 0.0f);
         enemy->setLongestSideTo(0.3);
+        enemy->setSpeed(AircraftSpeed::NORMAL);
+    
 
         root->pushChild(player);
         root->pushChild(enemy);
+        root->pushChild(bullet);
     }
 
     ~GamePlay () {
@@ -48,24 +73,29 @@ public:
         root->draw();
     }
 
-public: // Events
     void update (const bool* asyncKeyBuf, std::queue<unsigned char>& discreteKeyBuf) {
         handleAsyncKeyInput(asyncKeyBuf);
         handleDiscreteKeyInput(discreteKeyBuf);
 
         glm::vec3 playerT = player->getTranslate();
-        if (tpsMode) {
+        if (viewMode == VIEWMODE_TPS) {
             camPos = glm::vec3(playerT.x, playerT.y + 0.1f, playerT.z + 0.35f);
             at = glm::vec3(playerT.x, playerT.y, -AXIS_LIMIT_ABS);
             camUp = glm::vec3(0.0f, 1.0f, 0.0f);
         }
-        else {
+        else if (viewMode == VIEWMODE_FPS) {
             camPos = glm::vec3(playerT.x, playerT.y, playerT.z);
             at = glm::vec3(playerT.x, playerT.y, -AXIS_LIMIT_ABS);
             camUp = glm::vec3(0.0f, 1.0f, 0.0f);
         }
+        else {
+            camPos = glm::vec3(0.0f, WORLD_LIMIT_ABS * 2.0f, 0.0f);
+            at = glm::vec3(0.0f, 0.0f, 0.0f);
+            camUp = glm::vec3(0.0f, 0.0f, -1.0f);
+        }
     }
 
+private:
     void handleAsyncKeyInput (const bool* asyncKeyBuf) {
         const bool* buf = asyncKeyBuf;
         if (buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
@@ -85,7 +115,6 @@ public: // Events
         else if (buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && buf[GLUT_KEY_DOWN])
             player->move(225.0f);
     }
-
     void handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf) {
         while (!discreteKeyBuf.empty()) {
             unsigned char key = discreteKeyBuf.front();
@@ -121,20 +150,28 @@ public: // Events
                     if (!renderingMode) {
                         std::cout << "Rendering Mode On" << std::endl;
                         renderingMode = true;
+                        player->setRenderingBoundingBox(true);
+                        enemy->setRenderingBoundingBox(true);
                     }
                     else {
                         std::cout << "Rendering Mode Off" << std::endl;
                         renderingMode = false;
+                        player->setRenderingBoundingBox(false);
+                        enemy->setRenderingBoundingBox(false);
                     }
                     break;
                 case 'v':
-                    if (!tpsMode) {
+                    if (viewMode == VIEWMODE_2D) {
                         std::cout << "View Mode: TPS" << std::endl;
-                        tpsMode = true;
+                        viewMode = VIEWMODE_TPS;
+                    }
+                    else if (viewMode == VIEWMODE_TPS) {
+                        std::cout << "View Mode: FPS" << std::endl;
+                        viewMode = VIEWMODE_FPS;
                     }
                     else {
-                        std::cout << "View Mode: FPS" << std::endl;
-                        tpsMode = false;
+                        std::cout << "View Mode: 2D" << std::endl;
+                        viewMode = VIEWMODE_2D;
                     }
                     break;
             }
@@ -154,7 +191,7 @@ private: // Camera
 private: // Variables for game play
     bool allPassMode;
     bool allFailMode;
-    bool tpsMode; // 3인칭, 1인칭
+    int viewMode; // 3인칭, 1인칭
     bool renderingMode;
 };
 
