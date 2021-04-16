@@ -1,11 +1,12 @@
 #include "World.hpp"
 
 void drawGrid() {
+    glDisable(GL_LIGHTING);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     float z = -AXIS_LIMIT_ABS;
     bool flag = true;
     int vertexCount = 0;
-    glColor3f(0.3f, 0.3f, 0.3f);
+    glColor3f(0.5f, 0.5f, 0.5f);
     while (z <= AXIS_LIMIT_ABS) {
         float x = -AXIS_LIMIT_ABS;
         glBegin(GL_TRIANGLE_STRIP);

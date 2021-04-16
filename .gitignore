@@ -13,7 +13,6 @@ x64/Debug/
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
