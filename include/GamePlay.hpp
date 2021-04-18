@@ -2,67 +2,67 @@
 #define __GAMEPLAY__
 
 #include "core/Object.hpp"
-#include "Aircraft.hpp"
+#include "Constants.hpp"
 #include "World.hpp"
+#include "Aircraft.hpp"
+#include "StraightMovingObjectManager.hpp"
+#include "Ai.hpp"
 
-const int VIEWMODE_TPS = 0;
-const int VIEWMODE_FPS = 1;
-const int VIEWMODE_2D = 2;
-
-const std::string PLAYER_MODEL = "assets/models/player.obj";
-const std::string ENEMY_MODEL = "assets/models/player.obj";
-
-const glm::vec3 PLAYER_INIT_POS(0.0f, WORLD_LIMIT_ABS * 0.1f, WORLD_LIMIT_ABS);
-const glm::vec3 ENEMY_INIT_POS(0.0f, WORLD_LIMIT_ABS * 0.1f, -WORLD_LIMIT_ABS);
+using namespace std;
 
 namespace AircraftSpeed {
-    const GLfloat FAST = 0.015;
-    const GLfloat NORMAL = 0.010;
-    const GLfloat SLOW = 0.005;
+    const float FAST = 0.015;
+    const float NORMAL = 0.010;
+    const float SLOW = 0.005;
 };
 
 namespace BulletSpeed {
-    const GLfloat FAST = 0.015;
-    const GLfloat NORMAL = 0.010;
-    const GLfloat SLOW = 0.005;
+    const float FAST = 0.05;
+    const float NORMAL = 0.03;
+    const float SLOW = 0.01;
 };
+
+const int PLAYER_LIVES = 5;
+const int MAX_STAGE = 5;
 
 class GamePlay {
 public:
     GamePlay () : viewMode(0) {
+        stage = 1;
+        allPassMode = false;
+        allFailMode = false;
+        viewMode = VIEWMODE_TPS;
+        renderingMode = false;
+
         root = new Object;
         player = new Aircraft;
         enemy = new Aircraft;
-        Object* bullet = new Object;
-        bullet->loadModel("assets/models/sphere.obj");
-        bullet->setColor(1.0f, 0.0f, 0.0f, 1.0f);
-        bullet->setTranslate(0.0f, 0.1f, 0.0f);
-        bullet->setLongestSideTo(0.01);
+        playerBulletManager = new StraightMovingObjectManager(100, BULLET_MODEL, glm::vec3(0.0f, 0.0f, 1.0f));
+        enemyBulletManager = new StraightMovingObjectManager(100, BULLET_MODEL, glm::vec3(0.0f, 0.0f, 1.0f));
+        itemManager = new StraightMovingObjectManager(10, ITEM_MODEL, glm::vec3(0.0f, 0.0f, 1.0f));
 
         player->loadModel(PLAYER_MODEL);
-        player->setColor(0.75f, 0.75f, 0.75f, 1.0f);
-        player->setTranslate(PLAYER_INIT_POS);
-        player->setRotate(180.0f, 0.0f, 1.0f, 0.0f);
-        player->setLongestSideTo(0.3);
-        player->setSpeed(AircraftSpeed::FAST);
-
         enemy->loadModel(ENEMY_MODEL);
-        enemy->setColor(0.75f, 0.75f, 0.75f, 1.0f);
-        enemy->setTranslate(ENEMY_INIT_POS);
-        enemy->setRotate(0.0f, 0.0f, 1.0f, 0.0f);
-        enemy->setLongestSideTo(0.3);
-        enemy->setSpeed(AircraftSpeed::NORMAL);
     
-
         root->pushChild(player);
         root->pushChild(enemy);
-        root->pushChild(bullet);
+        root->pushChild(playerBulletManager);
+        root->pushChild(enemyBulletManager);
+        root->pushChild(itemManager);
     }
 
     ~GamePlay () {
         delete enemy;
         delete player; 
         delete root;
+    }
+
+    void start () {
+        player->init(PLAYER_INIT_POS, 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), PLAYER_COLOR, PLAYER_MAX_SIZE, AircraftSpeed::FAST, PLAYER_LIVES);
+        enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_COLOR, ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, 1);
+        enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE, ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
+
+        // planetary
     }
 
     void render () {
@@ -74,9 +74,9 @@ public:
     }
 
     void update (const bool* asyncKeyBuf, std::queue<unsigned char>& discreteKeyBuf) {
+        // Keyboard input handling
         handleAsyncKeyInput(asyncKeyBuf);
         handleDiscreteKeyInput(discreteKeyBuf);
-
         glm::vec3 playerT = player->getTranslate();
         if (viewMode == VIEWMODE_TPS) {
             camPos = glm::vec3(playerT.x, playerT.y + 0.1f, playerT.z + 0.35f);
@@ -93,27 +93,55 @@ public:
             at = glm::vec3(0.0f, 0.0f, 0.0f);
             camUp = glm::vec3(0.0f, 0.0f, -1.0f);
         }
+
+        // Update objects
+        root->update();
+
+        // Collision handling
+        if (!allPassMode && !allFailMode) {
+            handleHitNormal(playerBulletManager, enemy);
+            handleHitNormal(enemyBulletManager, player);
+        }
+        else if (allPassMode && !allFailMode) {
+            handleHitInstantKill(playerBulletManager, enemy);
+            handleHitDodge(enemyBulletManager, player);
+        }
+        else if (!allPassMode && allFailMode) {
+            handleHitInstantKill(enemyBulletManager, player);
+        }
+        handleGotItem(player);
+        
+        // Update gameplay
+        if (stage > MAX_STAGE)
+            win();
+        if (!enemy->isAlive() &&
+            (glutGet(GLUT_ELAPSED_TIME) - enemy->getLastDeactivatedTime() >= ENEMY_REGEN_INTERVAL_SECE * 1000)) {
+            enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_COLOR, ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, stage);
+            for (int i = 1 ; i < enemy->getLives() ; i ++)
+                enemy->addShotgunBullet();
+            enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE, ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
+        }
     }
 
 private:
     void handleAsyncKeyInput (const bool* asyncKeyBuf) {
         const bool* buf = asyncKeyBuf;
         if (buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
-            player->move(180.0f); // left
+            player->move(PLAYER_FRAME::LEFT);
         else if (!buf[GLUT_KEY_LEFT] && buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
-            player->move(90.0f); // up
+            player->move(PLAYER_FRAME::FRONT);
         else if (!buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
-            player->move(0.0f); // right
+            player->move(-PLAYER_FRAME::LEFT);
         else if (!buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && buf[GLUT_KEY_DOWN])
-            player->move(270.f); // down
+            player->move(-PLAYER_FRAME::FRONT);
         else if (buf[GLUT_KEY_LEFT] && buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
-            player->move(135.0f); 
+            player->move(PLAYER_FRAME::LEFT + PLAYER_FRAME::FRONT);
         else if (!buf[GLUT_KEY_LEFT] && buf[GLUT_KEY_UP] && buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
-            player->move(45.0f);
+            player->move(PLAYER_FRAME::FRONT - PLAYER_FRAME::LEFT);
         else if (!buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && buf[GLUT_KEY_RIGHT] && buf[GLUT_KEY_DOWN])
-            player->move(315.0f);
+            player->move(-PLAYER_FRAME::LEFT - PLAYER_FRAME::FRONT);
         else if (buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && buf[GLUT_KEY_DOWN])
-            player->move(225.0f);
+            player->move(PLAYER_FRAME::LEFT - PLAYER_FRAME::FRONT);
     }
     void handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf) {
         while (!discreteKeyBuf.empty()) {
@@ -122,7 +150,7 @@ private:
             switch (key) {
                 case ' ':
                     if (!allFailMode)
-                        // player->fire(playerBulletManager);
+                        player->fire(playerBulletManager, PLAYER_BULLET_MAX_SIZE, PLAYER_BULLET_COLOR, BulletSpeed::FAST);
                     break;
                 case 'c':
                     if (!allPassMode) {
@@ -150,14 +178,12 @@ private:
                     if (!renderingMode) {
                         std::cout << "Rendering Mode On" << std::endl;
                         renderingMode = true;
-                        player->setRenderingBoundingBox(true);
-                        enemy->setRenderingBoundingBox(true);
+                        root->setRenderingDebug(true);
                     }
                     else {
                         std::cout << "Rendering Mode Off" << std::endl;
                         renderingMode = false;
-                        player->setRenderingBoundingBox(false);
-                        enemy->setRenderingBoundingBox(false);
+                        root->setRenderingDebug(false);
                     }
                     break;
                 case 'v':
@@ -177,11 +203,75 @@ private:
             }
         }
     }
+    void handleHitNormal (StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
+        if (!target->isAlive())
+            return;
+        if (attackerBulletManager->deactivateObjectWhichIsIn(target)) {
+            std::cout << "hit" << std::endl;
+            if (target == player)
+                afterPlayerHit();
+            else
+                afterEnemyHit();
+        }
+    }
+    void handleHitInstantKill (StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
+        if (!target->isAlive())
+            return;
+        if (attackerBulletManager->deactivateObjectWhichIsIn(target)) {
+            while (target->isAlive())
+                target->loseLife();
+            if (target == player)
+                afterPlayerHit();
+            else
+                afterEnemyHit();
+        }
+    }
+    void handleHitDodge (StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
+        if (!target->isAlive())
+            return;
+        if (attackerBulletManager->deactivateObjectWhichIsIn(target)) { }
+    }
+    void handleGotItem (Aircraft* target) {
+        if (!target->isAlive())
+            return;
+        if (itemManager->deactivateObjectWhichIsIn(target))
+            target->addShotgunBullet();
+    }
+    void afterPlayerHit () {
+        player->loseLife();
+        if (!player->isAlive())
+            lose();
+        player->setRandomColor();
+    }
+    void afterEnemyHit () {
+        std::cout << "enemy hit!" << std::endl;
+        enemy->loseLife();
+        stage += 1;
+        if (!enemy->isAlive()) {
+            enemyAi.stop();
+            itemManager->activateObject(enemy->getTranslate(), enemy->getAngleStack(), enemy->getRotateAxisStack(), ITEM_MAX_SIZE, ITEM_COLOR, BulletSpeed::SLOW);
+        }
+    }
+
+private:
+    void win () {
+        std::cout << "Win!" << std::endl;
+        enemyAi.stop();
+        glutLeaveMainLoop();
+    }
+    void lose () {
+        std::cout << "Lose.." << std::endl;
+        enemyAi.stop();
+        glutLeaveMainLoop();
+    }
 
 private: // Scene graph
     Object* root;
-    Object* player;
-    Object* enemy;
+    Aircraft* player;
+    Aircraft* enemy;
+    StraightMovingObjectManager* playerBulletManager;
+    StraightMovingObjectManager* enemyBulletManager;
+    StraightMovingObjectManager* itemManager;
 
 private: // Camera
     glm::vec3 camPos;
@@ -189,6 +279,8 @@ private: // Camera
     glm::vec3 camUp;
 
 private: // Variables for game play
+    Ai enemyAi;
+    int stage;
     bool allPassMode;
     bool allFailMode;
     int viewMode; // 3인칭, 1인칭

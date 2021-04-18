@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
     glEnable(GL_NORMALIZE);
     glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
     
-
+    gameplay.start();
     glutMainLoop();
 
     return 0;

@@ -20,33 +20,33 @@
 #define min(a,b) a<b?a:b
 #define max(a,b) a>b?a:b
 
-glm::vec3 rotateYaxis (const float angle, const glm::vec3 p) {
-    const float t = getRadian(angle);
-    return glm::vec3(p.x * cos(t) - p.z * sin(t), p.y, p.x * sin(t) + p.z * cos(t));
-}
-
 class Object {
 public:
-    Object () : parent(nullptr), renderBb(false), speed(0.0f), anglef(0.0f) {
+    Object () : parent(nullptr), renderDebug(false), speed(0.0f), drawFlag(false) {
         color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         translatef = glm::vec3(0.0f, 0.0f, 0.0f);
-        rotatef = glm::vec3(0.0f, 0.0f, 0.0f);
         scalef = glm::vec3(1.0f, 1.0f, 1.0f);
+        modelViewMat = glm::mat4(1.0f);
     }
     virtual void update () {
+        modelViewMat = glm::translate(glm::mat4(1.0f), translatef);
+        for (int i = rotateAxisStack.size() - 1 ; i >= 0 ; i --)
+            modelViewMat = modelViewMat * glm::rotate(glm::mat4(1.0f), getRadian(angleStack[i]), rotateAxisStack[i]);
+        modelViewMat = modelViewMat * glm::scale(glm::mat4(1.0f), scalef); 
         for (Object* child : children)
             child->update();
     }
     virtual void draw () {
         glPushMatrix();
         glTranslatef(translatef.x, translatef.y, translatef.z);
-        glRotatef(anglef, rotatef.x, rotatef.y, rotatef.z);
+        for (int i = rotateAxisStack.size() - 1 ; i >= 0 ; i --)
+            glRotatef(angleStack[i], rotateAxisStack[i].x, rotateAxisStack[i].y, rotateAxisStack[i].z);
         glScalef(scalef.x, scalef.y, scalef.z);
-        if (scene) {
+        if (scene && drawFlag) {
             glColor4f(color.r, color.g, color.b, color.a);
             drawMeshes(scene, scene->mRootNode);
 
-            if (renderBb) {
+            if (renderDebug && bbVertices.size() == 8) {
                 glDisable(GL_LIGHTING);
                 std::vector<int> indices = {0, 1, 1, 2, 2, 3, 3, 0,
                                             4, 5, 5, 6, 6, 7, 7, 4,
@@ -56,6 +56,24 @@ public:
                 glBegin(GL_LINE_STRIP);
                 for (int i = 0 ; i < indices.size() ; i ++)
                     glVertex3f(bbVertices[indices[i]].x, bbVertices[indices[i]].y, bbVertices[indices[i]].z);
+                glEnd();
+
+                glColor3f(1.0f, 0.0f, 0.0f);
+                glBegin(GL_LINE_LOOP);
+                glVertex3f(0.0f, 0.0f, 0.0f);
+                glVertex3f(10.0f, 0.0f, 0.0f);
+                glEnd();
+
+                glColor3f(0.0f, 1.0f, 0.0f);
+                glBegin(GL_LINE_LOOP);
+                glVertex3f(0.0f, 0.0f, 0.0f);
+                glVertex3f(0.0f, 10.0f, 0.0f);
+                glEnd();
+
+                glColor3f(0.0f, 0.0f, 1.0f);
+                glBegin(GL_LINE_LOOP);
+                glVertex3f(0.0f, 0.0f, 0.0f);
+                glVertex3f(0.0f, 0.0f, 10.0f);
                 glEnd();
             }
         }
@@ -71,12 +89,12 @@ public: // Scene graph
         return child;
     }
 
-public: // Model-view matrix
-    void pasteModelViewMatrix (const Object& ref) {
+public: // Model-view matrix factors
+    void pasteModelViewMat (const Object& ref) {
         translatef = ref.translatef;
-        rotatef = ref.rotatef;
+        rotateAxisStack = ref.rotateAxisStack;
+        angleStack = ref.angleStack;
         scalef = ref.scalef;
-        anglef = ref.anglef;
     }   
     void translate (const float x, const float y, const float z) {
         translatef.x += x;
@@ -88,8 +106,17 @@ public: // Model-view matrix
         translatef.y += vec.y;
         translatef.z += vec.z;
     }
-    void rotate (const float angle) {
-        anglef += angle;
+    void rotate (const float angle, const float x, const float y, const float z) {
+        if (angle != 0.0f) {
+            rotateAxisStack.push_back(glm::vec3(x, y, z));
+            angleStack.push_back(angle);
+        }
+    }
+    void rotate (const float angle, const glm::vec3 axis) {
+        if (angle != 0.0f) {
+            rotateAxisStack.push_back(axis);
+            angleStack.push_back(angle);
+        }
     }
     void scale (const float x, const float y, const float z) {
         scalef.x += x;
@@ -110,14 +137,24 @@ public: // Model-view matrix
         translatef = _vec;
     }
     void setRotate (const float _angle, const float _x, const float _y, const float _z) {
-        anglef = _angle;
-        rotatef.x = _x;
-        rotatef.y = _y;
-        rotatef.z = _z;
+        rotateAxisStack.clear();
+        angleStack.clear();
+        if (_angle != 0) {
+            rotateAxisStack.push_back(glm::vec3(_x, _y, _z));
+            angleStack.push_back(_angle);
+        }
     }
-    void setRotate (const float _angle, const glm::vec3 _vec) {
-        anglef = _angle;
-        rotatef = _vec;
+    void setRotate (const float _angle, const glm::vec3 _axis) {
+        rotateAxisStack.clear();
+        angleStack.clear();
+        if (_angle != 0.0f) {
+            rotateAxisStack.push_back(_axis);
+            angleStack.push_back(_angle);
+        }
+    }
+    void setRotateStack (const std::vector<float> _angleStack, const std::vector<glm::vec3> _rotateAxisStack) {
+        angleStack = _angleStack;
+        rotateAxisStack = _rotateAxisStack;
     }
     void setScale (const float _x, const float _y, const float _z) {
         scalef.x = _x;
@@ -130,11 +167,11 @@ public: // Model-view matrix
     glm::vec3 getTranslate () const {
         return translatef;
     }
-    float getAngle () const {
-        return anglef;
+    std::vector<float> getAngleStack () const {
+        return angleStack;
     }
-    glm::vec3 getRotate () const {
-        return rotatef;
+    std::vector<glm::vec3> getRotateAxisStack () const {
+        return rotateAxisStack;
     }
     glm::vec3 getScale () const {
         return scalef;
@@ -146,12 +183,26 @@ public: // Model-view matrix
         setScale(scaleFactor, scaleFactor, scaleFactor);
     }
 
+public: // Utilities
+    void setDraw (bool flag) {
+        drawFlag = flag;
+    }
+    glm::mat4 getModelViewMat () const {
+        return modelViewMat;
+    }
+    glm::vec3 getNagativeZaxisDirection () const {
+        return modelViewMat[2]; // third column
+    }
+
 public: // Colors
     void setColor (const float r, const float g, const float b, const float a) {
         color.r = r;
         color.g = g;
         color.b = b;
         color.a = a;
+    }
+    void setColor (const glm::vec4 _color) {
+        color = _color;
     }
     void setRandomColor () {
         color = glm::vec4(static_cast <float> (rand()) / static_cast <float> (RAND_MAX),
@@ -171,9 +222,6 @@ public:
             width = abs(bbMin.x - bbMax.x);
             height = abs(bbMin.y - bbMax.y);
             depth = abs(bbMin.z - bbMax.z);
-            centerToLeftRatio = abs(bbMin.x) / width;
-            centerToBelowRatio = abs(bbMin.y) / height;
-            centerToFrontRatio = abs(bbMin.z) / depth;
 
             bbVertices.clear();
             bbVertices.push_back(glm::vec3(bbMin.x, bbMin.y, bbMax.z));
@@ -191,31 +239,10 @@ public:
     glm::vec3 getWorldPos () const {
         return translatef;
     }
-    void setRenderingBoundingBox (bool flag) {
-        renderBb = flag;
-    }
-    std::vector<glm::vec3> getWorldBoundingBox () const { // 잉여, 아마 안 쓸듯
-        // glm::vec3 pos = getWorldPos();
-        glm::vec3 pos = rotateYaxis(anglef, glm::vec3(0.0f, 0.0f, 0.0f));
-        glm::vec3 center;
-        float nwidth = width * scalef.x, nheight = height * scalef.y, ndepth = depth * scalef.z; 
-        float halfWidth = nwidth / 2.0f, halfHeight = nheight / 2.0f, halfDepth = ndepth / 2.0f;
-        center.x = (-pos.x - centerToLeftRatio * nwidth) + halfWidth;
-        center.y = (-pos.y - centerToBelowRatio * nheight) + halfHeight;
-        center.z = (-pos.z - centerToFrontRatio * ndepth) + halfDepth;
-        center.x += translatef.x;
-        center.y += translatef.y;
-        center.z += translatef.z;
-        std::vector<glm::vec3> ret;
-        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x - halfWidth, center.y - halfHeight, center.z + halfDepth)));
-        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x + halfWidth, center.y - halfHeight, center.z + halfDepth)));
-        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x + halfWidth, center.y + halfHeight, center.z + halfDepth)));
-        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x - halfWidth, center.y + halfHeight, center.z + halfDepth)));
-        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x - halfWidth, center.y - halfHeight, center.z - halfDepth)));
-        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x + halfWidth, center.y - halfHeight, center.z - halfDepth)));
-        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x + halfWidth, center.y + halfHeight, center.z - halfDepth)));
-        ret.push_back(rotateYaxis(anglef, glm::vec3(center.x - halfWidth, center.y + halfHeight, center.z - halfDepth)));
-        return ret;
+    void setRenderingDebug (bool flag) {
+        renderDebug = flag;
+        for (Object* child : children)
+            child->setRenderingDebug(flag);
     }
     void setSpeed (const float _speed) {
         speed = _speed;
@@ -223,13 +250,35 @@ public:
     float getSpeed () const {
         return speed;
     }
-    void move (const float angle) {
-        GLfloat rad = getRadian(anglef + angle);
-        GLfloat x = -speed * cos(rad);
-        GLfloat z = speed * sin(rad);
-        translate(x, 0.0f, z);
+    void move (const glm::vec3 directionInModelFrame) {
+        glm::vec4 unit = modelViewMat * glm::vec4(directionInModelFrame, 0);
+        translate(glm::vec3(unit / glm::length(glm::vec3(unit)) * speed));
     }
-
+    bool isIn (const glm::vec3 p) const {
+        glm::vec3 worldVecA = glm::vec3(modelViewMat * glm::vec4(bbMin, 1));
+        glm::vec3 worldVecB = glm::vec3(modelViewMat * glm::vec4(bbMax, 1));
+    
+        /*
+        std::cout << "p: " << glm::to_string(p) << std::endl;
+        std::cout << "a: " << glm::to_string(worldVecA) << std::endl;
+        std::cout << "b: " << glm::to_string(worldVecB) << std::endl;
+        */
+       
+        return (
+                (worldVecA.x <= p.x && worldVecA.z <= p.z && worldVecB.x >= p.x && worldVecB.z >= p.z) ||
+                (worldVecA.x >= p.x && worldVecA.z >= p.z && worldVecB.x <= p.x && worldVecB.z <= p.z)
+            ) && (
+                (worldVecA.y <= p.y && worldVecB.y >= p.y) || (worldVecA.y >= p.y && worldVecB.y <= p.y)
+            );
+    }
+    bool isCenterOutOfWorld (const float axisLimitAbs) {
+        glm::vec3 p = getWorldPos();
+        return (
+            p.x < -axisLimitAbs || p.x > axisLimitAbs ||
+            p.y < -axisLimitAbs || p.y > axisLimitAbs ||
+            p.z < -axisLimitAbs || p.z > axisLimitAbs
+        ); 
+    }
 
 private: // utilities
     void drawMeshes (const aiScene* sc, const aiNode* nd) {
@@ -364,8 +413,7 @@ private: // utilities
         f[2] = c;
         f[3] = d;
     }
-    void calculate_bounding_box ()
-    {
+    void calculate_bounding_box () {
         aiMatrix4x4 trafo;
         aiIdentityMatrix4(&trafo);
 
@@ -410,24 +458,23 @@ private: // Scene graph
 private: // Mesh
     const aiScene* scene;
     glm::vec4 color;
-    bool renderBb;
+    bool renderDebug;
     glm::vec3 bbMin;
     glm::vec3 bbMax;
     std::vector<glm::vec3> bbVertices;
     float width;
     float height;
     float depth;
-    float centerToLeftRatio;
-    float centerToBelowRatio;
-    float centerToFrontRatio;
 
 private: // Factors of model-view matrix
     glm::vec3 translatef;
-    glm::vec3 rotatef;
     glm::vec3 scalef;
-    float anglef;
+    std::vector<glm::vec3> rotateAxisStack;
+    std::vector<float> angleStack;
+    glm::mat4 modelViewMat;
 
 private: // Other properties
+    bool drawFlag;
     float speed;
 };
 

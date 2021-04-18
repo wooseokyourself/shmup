@@ -3,7 +3,6 @@
 
 #include <core/GL/glew.h>
 #include <core/GL/freeglut.h>
-// #include <GL/glu.h>
 #include <core/glm/glm.hpp>
 
 const float AXIS_LIMIT_ABS = 3.0f; // 표현되는 축의 범위를 [-3.0,3.0] 으로 정의
