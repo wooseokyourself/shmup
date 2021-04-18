@@ -6,6 +6,7 @@
 #include "World.hpp"
 #include "Aircraft.hpp"
 #include "StraightMovingObjectManager.hpp"
+#include "Planetary.hpp"
 #include "Ai.hpp"
 
 using namespace std;
@@ -40,10 +41,12 @@ public:
         playerBulletManager = new StraightMovingObjectManager(100, BULLET_MODEL, glm::vec3(0.0f, 0.0f, 1.0f));
         enemyBulletManager = new StraightMovingObjectManager(100, BULLET_MODEL, glm::vec3(0.0f, 0.0f, 1.0f));
         itemManager = new StraightMovingObjectManager(10, ITEM_MODEL, glm::vec3(0.0f, 0.0f, 1.0f));
+        planetaryA = new Planetary("assets/models/earth.obj", "assets/models/moon.obj", "assets/models/satellite.obj");
 
         player->loadModel(PLAYER_MODEL);
         enemy->loadModel(ENEMY_MODEL);
     
+        root->pushChild(planetaryA);
         root->pushChild(player);
         root->pushChild(enemy);
         root->pushChild(playerBulletManager);
@@ -58,18 +61,17 @@ public:
     }
 
     void start () {
+        planetaryA->init(glm::vec3(-0.5f, 0.4f, -2.0f), 0.8f);
         player->init(PLAYER_INIT_POS, 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), PLAYER_COLOR, PLAYER_MAX_SIZE, AircraftSpeed::FAST, PLAYER_LIVES);
         enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_COLOR, ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, 1);
         enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE, ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
-
-        // planetary
     }
 
     void render () {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         gluLookAt(camPos.x, camPos.y, camPos.z, at.x, at.y, at.z, camUp.x, camUp.y, camUp.z);
-        drawGrid();
+        drawWorld();
         root->draw();
     }
 
@@ -77,22 +79,28 @@ public:
         // Keyboard input handling
         handleAsyncKeyInput(asyncKeyBuf);
         handleDiscreteKeyInput(discreteKeyBuf);
-        glm::vec3 playerT = player->getTranslate();
-        if (viewMode == VIEWMODE_TPS) {
-            camPos = glm::vec3(playerT.x, playerT.y + 0.1f, playerT.z + 0.35f);
-            at = glm::vec3(playerT.x, playerT.y, -AXIS_LIMIT_ABS);
-            camUp = glm::vec3(0.0f, 1.0f, 0.0f);
-        }
-        else if (viewMode == VIEWMODE_FPS) {
-            camPos = glm::vec3(playerT.x, playerT.y, playerT.z);
-            at = glm::vec3(playerT.x, playerT.y, -AXIS_LIMIT_ABS);
-            camUp = glm::vec3(0.0f, 1.0f, 0.0f);
-        }
-        else {
+        if (viewMode == VIEWMODE_2D)  {
             camPos = glm::vec3(0.0f, WORLD_LIMIT_ABS * 2.0f, 0.0f);
             at = glm::vec3(0.0f, 0.0f, 0.0f);
             camUp = glm::vec3(0.0f, 0.0f, -1.0f);
+            player->setDraw(true);
         }
+        else {
+            glm::vec3 playerPos = player->getWorldPos();
+            glm::vec3 playerFrontVec = player->getFrontVec();
+            glm::vec3 playerUpVec = player->getUpVec();
+            if (viewMode == VIEWMODE_TPS) {
+                camPos = glm::vec3(playerPos + (-playerFrontVec * 7.0f + playerUpVec * 3.5f));
+                player->setDraw(true);
+            }
+            else if (viewMode == VIEWMODE_FPS) {
+                camPos = glm::vec3(playerPos.x, playerPos.y, playerPos.z);
+                player->setDraw(false);
+            }
+            at = playerPos + playerFrontVec;;
+            camUp = glm::vec3(playerUpVec);
+        }
+        
 
         // Update objects
         root->update();
@@ -272,6 +280,7 @@ private: // Scene graph
     StraightMovingObjectManager* playerBulletManager;
     StraightMovingObjectManager* enemyBulletManager;
     StraightMovingObjectManager* itemManager;
+    Planetary* planetaryA;
 
 private: // Camera
     glm::vec3 camPos;

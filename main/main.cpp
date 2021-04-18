@@ -6,8 +6,8 @@
 
 using namespace std;
 
-const float WINDOW_WIDTH = 800.0f;
-const float WINDOW_HEIGHT = 800.0f;
+const float WINDOW_WIDTH = 1280.0f;
+const float WINDOW_HEIGHT = 720.0f;
 
 int lastRenderTime = 0;
 bool asyncKeyBuf[256];
@@ -30,7 +30,7 @@ void reshape (int width, int height) {
     GLfloat base = WINDOW_HEIGHT < WINDOW_WIDTH ? WINDOW_HEIGHT : WINDOW_WIDTH;
     GLfloat widthset = WINDOW_WIDTH / base;
     GLfloat heightset = WINDOW_HEIGHT / base;
-    gluPerspective(60, WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 1000.0f);  
+    gluPerspective(75, WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 1000.0f);  
 }
 
 void keyboardDown (unsigned char key, int x, int y) {

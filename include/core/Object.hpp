@@ -190,7 +190,10 @@ public: // Utilities
     glm::mat4 getModelViewMat () const {
         return modelViewMat;
     }
-    glm::vec3 getNagativeZaxisDirection () const {
+    glm::vec3 getUpVec () const {
+        return modelViewMat[1]; // second column
+    }
+    glm::vec3 getFrontVec () const {
         return modelViewMat[2]; // third column
     }
 

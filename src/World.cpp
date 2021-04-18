@@ -1,6 +1,6 @@
 #include "World.hpp"
 
-void drawGrid() {
+void drawWorld() {
     glDisable(GL_LIGHTING);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     float z = -AXIS_LIMIT_ABS;
