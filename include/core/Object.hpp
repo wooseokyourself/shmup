@@ -25,23 +25,27 @@ public:
     Object () : parent(nullptr), renderDebug(false), speed(0.0f), drawFlag(false) {
         color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         translatef = glm::vec3(0.0f, 0.0f, 0.0f);
-        scalef = glm::vec3(1.0f, 1.0f, 1.0f);
+        scalef = 1.0f;
+        inheritedScalef = 1.0f;
         modelViewMat = glm::mat4(1.0f);
     }
     virtual void update () {
         modelViewMat = glm::translate(glm::mat4(1.0f), translatef);
         for (int i = rotateAxisStack.size() - 1 ; i >= 0 ; i --)
-            modelViewMat = modelViewMat * glm::rotate(glm::mat4(1.0f), getRadian(angleStack[i]), rotateAxisStack[i]);
-        modelViewMat = modelViewMat * glm::scale(glm::mat4(1.0f), scalef); 
-        for (Object* child : children)
+            modelViewMat = glm::rotate(modelViewMat, getRadian(angleStack[i]), rotateAxisStack[i]);
+        modelViewMat = glm::scale(modelViewMat, glm::vec3(scalef, scalef, scalef)); 
+        for (Object* child : children) {
+            child->inheritedScalef = inheritedScalef * scalef;
             child->update();
+        }
     }
     virtual void draw () {
         glPushMatrix();
         glTranslatef(translatef.x, translatef.y, translatef.z);
+        glScalef(scalef, scalef, scalef);
         for (int i = rotateAxisStack.size() - 1 ; i >= 0 ; i --)
             glRotatef(angleStack[i], rotateAxisStack[i].x, rotateAxisStack[i].y, rotateAxisStack[i].z);
-        glScalef(scalef.x, scalef.y, scalef.z);
+        
         if (scene && drawFlag) {
             glColor4f(color.r, color.g, color.b, color.a);
             drawMeshes(scene, scene->mRootNode);
@@ -88,23 +92,31 @@ public: // Scene graph
         children.push_back(child);
         return child;
     }
-
+    std::list<Object*>& getChildren () {
+        return children;
+    }
+    Object* getParent () {
+        return parent;
+    }
+    
 public: // Model-view matrix factors
-    void pasteModelViewMat (const Object& ref) {
-        translatef = ref.translatef;
-        rotateAxisStack = ref.rotateAxisStack;
-        angleStack = ref.angleStack;
-        scalef = ref.scalef;
-    }   
     void translate (const float x, const float y, const float z) {
-        translatef.x += x;
-        translatef.y += y;
-        translatef.z += z;
+        translatef.x += x / inheritedScalef;
+        translatef.y += y / inheritedScalef;
+        translatef.z += z / inheritedScalef;
     }
     void translate (const glm::vec3 vec) {
-        translatef.x += vec.x;
-        translatef.y += vec.y;
-        translatef.z += vec.z;
+        translatef.x += vec.x / inheritedScalef;
+        translatef.y += vec.y / inheritedScalef;
+        translatef.z += vec.z / inheritedScalef;
+    }
+    void setTranslate (const float _x, const float _y, const float _z) {
+        translatef.x = _x / inheritedScalef;
+        translatef.y = _y / inheritedScalef;
+        translatef.z = _z / inheritedScalef;
+    }
+    void setTranslate (const glm::vec3 _vec) {
+        translatef = _vec / inheritedScalef;
     }
     void rotate (const float angle, const float x, const float y, const float z) {
         if (angle != 0.0f) {
@@ -117,24 +129,6 @@ public: // Model-view matrix factors
             rotateAxisStack.push_back(axis);
             angleStack.push_back(angle);
         }
-    }
-    void scale (const float x, const float y, const float z) {
-        scalef.x += x;
-        scalef.y += y;
-        scalef.z += z;
-    }
-    void scale (const glm::vec3 vec) {
-        scalef.x += vec.x;
-        scalef.y += vec.y;
-        scalef.z += vec.z;
-    }
-    void setTranslate (const float _x, const float _y, const float _z) {
-        translatef.x = _x;
-        translatef.y = _y;
-        translatef.z = _z;
-    }
-    void setTranslate (const glm::vec3 _vec) {
-        translatef = _vec;
     }
     void setRotate (const float _angle, const float _x, const float _y, const float _z) {
         rotateAxisStack.clear();
@@ -156,14 +150,6 @@ public: // Model-view matrix factors
         angleStack = _angleStack;
         rotateAxisStack = _rotateAxisStack;
     }
-    void setScale (const float _x, const float _y, const float _z) {
-        scalef.x = _x;
-        scalef.y = _y;
-        scalef.z = _z;
-    }
-    void setScale (const glm::vec3 _vec) {
-        scalef = _vec;
-    }
     glm::vec3 getTranslate () const {
         return translatef;
     }
@@ -173,14 +159,9 @@ public: // Model-view matrix factors
     std::vector<glm::vec3> getRotateAxisStack () const {
         return rotateAxisStack;
     }
-    glm::vec3 getScale () const {
-        return scalef;
-    }
     void setLongestSideTo (const float len) {
-        float longest = max(width, height);
-        longest = max(longest, depth);
-        float scaleFactor = len / longest;
-        setScale(scaleFactor, scaleFactor, scaleFactor);
+        scalef = (len / longestSide) / inheritedScalef;
+        update();
     }
 
 public: // Utilities
@@ -225,6 +206,8 @@ public:
             width = abs(bbMin.x - bbMax.x);
             height = abs(bbMin.y - bbMax.y);
             depth = abs(bbMin.z - bbMax.z);
+            longestSide = max(width, height);
+            longestSide = max(longestSide, depth);
 
             bbVertices.clear();
             bbVertices.push_back(glm::vec3(bbMin.x, bbMin.y, bbMax.z));
@@ -468,10 +451,12 @@ private: // Mesh
     float width;
     float height;
     float depth;
+    float longestSide; // one of width, height, and depth
 
 private: // Factors of model-view matrix
     glm::vec3 translatef;
-    glm::vec3 scalef;
+    float scalef;
+    float inheritedScalef;
     std::vector<glm::vec3> rotateAxisStack;
     std::vector<float> angleStack;
     glm::mat4 modelViewMat;

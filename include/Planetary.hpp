@@ -30,8 +30,8 @@ public:
         delete c;
     }
     void init (const glm::vec3 pos, const float maxSize) {
-        float bSize = maxSize * 10.0f;
-        float cSize = bSize * 5.0f;
+        float bSize = maxSize / 3.0f;
+        float cSize = bSize / 3.0f;
         
         setTranslate(pos);
         a->setLongestSideTo(maxSize);
@@ -39,8 +39,8 @@ public:
         c->setLongestSideTo(cSize);
 
         a->setTranslate(0.0f, 0.0f, 0.0f);
-        b->setTranslate(0.0f, bSize * 2.0f, 0.0f);
-        c->setTranslate(0.0f, 0.0f, cSize * 2.0f);
+        b->setTranslate(0.0f, maxSize, 0.0f);
+        c->setTranslate(0.0f, 0.0f, bSize);
 
         a->setRotate(aAngle, aRotateAxis);
         b->setRotate(bAngle, bRotateAxis);

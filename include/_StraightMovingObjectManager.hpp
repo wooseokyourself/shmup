@@ -13,8 +13,10 @@ class StraightMovingObjectManager : public Object {
 public:
     StraightMovingObjectManager (const int maxPool, const std::string objectModelPath, const glm::vec3 _objectFront) {
         for (int i = 0 ; i < maxPool ; i ++) {
+            Object* geometric = new Object;
             Object* object = new Object;
             object->loadModel(objectModelPath); // 직선운동 와중에 자전하기위함
+            geometric->pushChild(object);
             pool.push(object);
             pushChild(object);
         }
@@ -35,12 +37,13 @@ public:
     virtual void update () {
         std::stack<Object*> deactivating;
         for (Object* object : activatedObjects) {
-            object->update();
-            if (object->isCenterOutOfWorld(AXIS_LIMIT_ABS)) {
+            Object* geometric = object->getParent();
+            geometric->update();
+            if (geometric->isCenterOutOfWorld(AXIS_LIMIT_ABS)) {
                 deactivating.push(object);
                 continue;
             }
-            object->move(objectFront);
+            geometric->move(objectFront);
         }
         while (!deactivating.empty()) {
             Object* object = deactivating.top();
@@ -52,25 +55,28 @@ public:
     }
     virtual void draw () {
         for (Object* object : activatedObjects)
-            object->draw();
+            object->getParent()->draw();
     }
     void activateObject (const glm::vec3 translate,
-                         const std::vector<float> angleStack,
-                         const std::vector<glm::vec3> rotateAxisStack, 
+                         const float rotateAngle,
+                         const glm::vec3 rotateAxis, 
                          const float maxSide, 
                          const glm::vec4 color, 
                          const GLfloat speed) {
+        std::cout << "activateObject start" << std::endl;
         if (pool.empty())
             return;
         Object* object = pool.top();
+        Object* geometric = object->getParent();
         pool.pop();
         activatedObjects.push_back(object);
-        object->setTranslate(translate);
-        object->setRotateStack(angleStack, rotateAxisStack);
+        geometric->setTranslate(translate);
+        geometric->setRotate(rotateAngle, rotateAxis);
+        geometric->setSpeed(speed);
         object->setLongestSideTo(maxSide);
         object->setColor(color);
-        object->setSpeed(speed);
         object->setDraw(true);
+        std::cout << "activateObject end" << std::endl;
     }
     size_t getActivatedObjectsNumber () const {
         return activatedObjects.size();

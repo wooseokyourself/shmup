@@ -22,12 +22,16 @@ namespace PLAYER_FRAME {
 
 const glm::vec3 PLAYER_INIT_POS(0.0f, WORLD_LIMIT_ABS * 0.1f, WORLD_LIMIT_ABS);
 const glm::vec3 ENEMY_INIT_POS(0.0f, WORLD_LIMIT_ABS * 0.1f, -WORLD_LIMIT_ABS);
+const glm::vec3 PLANETARY_A_POS(-WORLD_LIMIT_ABS * 1.3f, WORLD_LIMIT_ABS * 0.7f, -WORLD_LIMIT_ABS * 2.0f);
+const glm::vec3 PLANETARY_B_POS(WORLD_LIMIT_ABS * 0.8f, WORLD_LIMIT_ABS * 0.4f, -WORLD_LIMIT_ABS * 0.7f);
 
 const float PLAYER_MAX_SIZE = 0.3;
 const float ENEMY_MAX_SIZE = 0.3;
 const float PLAYER_BULLET_MAX_SIZE = 0.03;
 const float ENEMY_BULLET_MAX_SIZE = 0.03;
 const float ITEM_MAX_SIZE = 0.1;
+const float PLANETARY_A_MAX_SIZE = 0.5f;
+const float PLANETARY_B_MAX_SIZE = 0.3f;
 
 const glm::vec4 PLAYER_COLOR(0.75f, 0.75f, 0.75f, 1.0f);
 const glm::vec4 ENEMY_COLOR(1.0f, 0.25f, 0.25f, 1.0f);
