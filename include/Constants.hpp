@@ -5,6 +5,21 @@
 #include <core/glm/glm.hpp>
 #include "World.hpp"
 
+const float WINDOW_WIDTH = 1280.0f;
+const float WINDOW_HEIGHT = 720.0f;
+
+const float AXIS_LIMIT_ABS = 6.0f;
+const float WORLD_LIMIT_ABS = 2.0f;
+const int TILE_N = 90; // 전체 타일의 수는 TILE_N ^ 2
+const float TILE_LEN = (AXIS_LIMIT_ABS * 2.0f) / (float)TILE_N;
+
+const float UI_MIN_X = -1.0f; 
+const float UI_MAX_X = 1.0f;
+const float UI_MIN_Y = AXIS_LIMIT_ABS;
+const float UI_MAX_Y = AXIS_LIMIT_ABS + 1.0f;
+const float UI_MIN_Z = -1.0f;
+const float UI_MAX_Z = 1.0f;
+
 const int VIEWMODE_TPS = 0;
 const int VIEWMODE_FPS = 1;
 const int VIEWMODE_2D = 2;

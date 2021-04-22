@@ -6,9 +6,6 @@
 
 using namespace std;
 
-const float WINDOW_WIDTH = 1280.0f;
-const float WINDOW_HEIGHT = 720.0f;
-
 int lastRenderTime = 0;
 bool asyncKeyBuf[256];
 std::queue<unsigned char> discreteKeyBuf;

@@ -8,6 +8,7 @@
 #include "StraightMovingObjectManager.hpp"
 #include "Planetary.hpp"
 #include "Ai.hpp"
+#include "Ui.hpp"
 
 using namespace std;
 
@@ -36,6 +37,7 @@ public:
         renderingMode = false;
 
         root = new Object;
+        ui = new Ui;
         player = new Aircraft;
         enemy = new Aircraft;
         playerBulletManager = new StraightMovingObjectManager(100, BULLET_MODEL, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -46,7 +48,7 @@ public:
 
         player->loadModel(PLAYER_MODEL);
         enemy->loadModel(ENEMY_MODEL);
-    
+
         root->pushChild(planetaryA);
         root->pushChild(planetaryB);
         root->pushChild(player);
@@ -55,6 +57,7 @@ public:
         root->pushChild(enemyBulletManager);
         root->pushChild(itemManager);
 
+        cout << "ui: " << ui << endl;
         cout << "planetaryA: " << planetaryA << endl;
         cout << "planetaryB: " << planetaryB << endl;
         cout << "player: " << player << endl;
@@ -84,6 +87,11 @@ public:
         gluLookAt(camPos.x, camPos.y, camPos.z, at.x, at.y, at.z, camUp.x, camUp.y, camUp.z);
         drawWorld();
         root->draw();
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        gluLookAt(0.0f, UI_MAX_Y, 0.0f, 0.0f, UI_MIN_Y, 0.0f, 0.0f, 0.0f, -1.0f);
+        ui->draw();
     }
 
     void update (const bool* asyncKeyBuf, std::queue<unsigned char>& discreteKeyBuf) {
@@ -286,6 +294,7 @@ private:
 
 private: // Scene graph
     Object* root;
+    Ui* ui;
     Aircraft* player;
     Aircraft* enemy;
     StraightMovingObjectManager* playerBulletManager;
