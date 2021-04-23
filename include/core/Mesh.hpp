@@ -24,43 +24,18 @@ public:
     Mesh () : wireframe(true) {
         color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
     }
-    void draw () {
-        if (scene) {
-            glEnable(GL_LIGHTING);
-            glColor4f(color.r, color.g, color.b, color.a);
-            drawMeshes(scene->mRootNode);
-
-            if (wireframe && bbVertices.size() == 8) {
-                glDisable(GL_LIGHTING);
-                std::vector<int> indices = {0, 1, 1, 2, 2, 3, 3, 0,
-                                            4, 5, 5, 6, 6, 7, 7, 4,
-                                            0, 4, 1, 5, 2, 6, 3, 7};
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                glColor3f(1.0f, 0.0f, 1.0f);
-                glBegin(GL_LINE_STRIP);
-                for (int i = 0 ; i < indices.size() ; i ++)
-                    glVertex3f(bbVertices[indices[i]].x, bbVertices[indices[i]].y, bbVertices[indices[i]].z);
-                glEnd();
-
-                glColor3f(1.0f, 0.0f, 0.0f);
-                glBegin(GL_LINE_LOOP);
-                glVertex3f(0.0f, 0.0f, 0.0f);
-                glVertex3f(10.0f, 0.0f, 0.0f);
-                glEnd();
-
-                glColor3f(0.0f, 1.0f, 0.0f);
-                glBegin(GL_LINE_LOOP);
-                glVertex3f(0.0f, 0.0f, 0.0f);
-                glVertex3f(0.0f, 10.0f, 0.0f);
-                glEnd();
-
-                glColor3f(0.0f, 0.0f, 1.0f);
-                glBegin(GL_LINE_LOOP);
-                glVertex3f(0.0f, 0.0f, 0.0f);
-                glVertex3f(0.0f, 0.0f, 10.0f);
-                glEnd();
-            }
+    void draw () const {
+        if (scene == nullptr)
+            return;
+        glEnable(GL_LIGHTING);
+        if (wireframe) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            drawBoundingBox();
         }
+        else
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glColor4f(color.r, color.g, color.b, color.a);
+        drawMeshes(scene->mRootNode);
     }
     bool loadModel (std::string path) {
         scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
@@ -117,14 +92,9 @@ public:
     }
 
 private:
-    void drawMeshes (const aiNode* node) {
-        aiMatrix4x4 m = node->mTransformation;
-        aiTransposeMatrix4(&m);
-        glPushMatrix();
-        glMultMatrixf((float*)&m);
+    void drawMeshes (const aiNode* node) const {
         for (int i = 0 ; i < node->mNumMeshes; i ++) {
             const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
             for (int j = 0 ; j < mesh->mNumFaces ; j ++) {
                 const aiFace* face = &mesh->mFaces[j];
                 switch(face->mNumIndices) {
@@ -152,7 +122,38 @@ private:
         }
         for (int i = 0 ; i < node->mNumChildren ; i ++)
             drawMeshes(node->mChildren[i]);
-        glPopMatrix();
+    }
+    void drawBoundingBox () const {
+        if (bbVertices.size() != 8)
+            return;
+        glDisable(GL_LIGHTING);
+        std::vector<int> indices = {0, 1, 1, 2, 2, 3, 3, 0,
+                                    4, 5, 5, 6, 6, 7, 7, 4,
+                                    0, 4, 1, 5, 2, 6, 3, 7};
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glColor3f(1.0f, 0.0f, 1.0f);
+        glBegin(GL_LINE_STRIP);
+        for (int i = 0 ; i < indices.size() ; i ++)
+            glVertex3f(bbVertices[indices[i]].x, bbVertices[indices[i]].y, bbVertices[indices[i]].z);
+        glEnd();
+
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(10.0f, 0.0f, 0.0f);
+        glEnd();
+
+        glColor3f(0.0f, 1.0f, 0.0f);
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(0.0f, 10.0f, 0.0f);
+        glEnd();
+
+        glColor3f(0.0f, 0.0f, 1.0f);
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(0.0f, 0.0f, 10.0f);
+        glEnd();
     }
     void calculateBoundingBox () {
         aiMatrix4x4 mat;
