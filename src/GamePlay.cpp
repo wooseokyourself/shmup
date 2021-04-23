@@ -127,6 +127,7 @@ void GamePlay::handleAsyncKeyInput (const bool* asyncKeyBuf) {
     else if (buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && buf[GLUT_KEY_DOWN])
         player->move(PLAYER_FRAME::LEFT - PLAYER_FRAME::FRONT);
 }
+
 void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf) {
     while (!discreteKeyBuf.empty()) {
         unsigned char key = discreteKeyBuf.front();
@@ -178,6 +179,7 @@ void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf
         }
     }
 }
+
 void GamePlay::setViewTPS () {
     glm::vec3 playerPos = player->getWorldPos();
     glm::vec3 playerFrontVec = player->getFrontVec();
@@ -187,6 +189,7 @@ void GamePlay::setViewTPS () {
     camUp = glm::vec3(playerUpVec);
     player->setDraw(true);
 }
+
 void GamePlay::setViewFPS () {
     glm::vec3 playerPos = player->getWorldPos();
     glm::vec3 playerFrontVec = player->getFrontVec();
@@ -196,12 +199,14 @@ void GamePlay::setViewFPS () {
     camUp = glm::vec3(playerUpVec);
     player->setDraw(false);
 }
+
 void GamePlay::setView2D () {
     camPos = glm::vec3(0.0f, WORLD_LIMIT_ABS * 2.0f, 0.0f);
     at = glm::vec3(0.0f, 0.0f, 0.0f);
     camUp = glm::vec3(0.0f, 0.0f, -1.0f);
     player->setDraw(true);
 }
+
 void GamePlay::handleHitNormal (StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
     if (!target->isAlive())
         return;
@@ -212,6 +217,7 @@ void GamePlay::handleHitNormal (StraightMovingObjectManager* attackerBulletManag
             afterEnemyHit();
     }
 }
+
 void GamePlay::handleHitInstantKill (StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
     if (!target->isAlive())
         return;
@@ -224,23 +230,27 @@ void GamePlay::handleHitInstantKill (StraightMovingObjectManager* attackerBullet
             afterEnemyHit();
     }
 }
+
 void GamePlay::handleHitDodge (StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
     if (!target->isAlive())
         return;
     if (attackerBulletManager->deactivateObjectWhichIsIn(target)) { }
 }
+
 void GamePlay::handleGotItem (Aircraft* target) {
     if (!target->isAlive())
         return;
     if (itemManager->deactivateObjectWhichIsIn(target))
         target->addShotgunBullet();
 }
+
 void GamePlay::afterPlayerHit () {
     player->loseLife();
     if (!player->isAlive())
         lose();
     player->setRandomColor();
 }
+
 void GamePlay::afterEnemyHit () {
     enemy->loseLife();
     stage += 1;
@@ -255,6 +265,7 @@ void GamePlay::win () {
     enemyAi.stop();
     glutLeaveMainLoop();
 }
+
 void GamePlay::lose () {
     std::cout << "Lose.." << std::endl;
     enemyAi.stop();
