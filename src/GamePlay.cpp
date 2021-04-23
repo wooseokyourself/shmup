@@ -192,11 +192,9 @@ void GamePlay::setViewTPS () {
 
 void GamePlay::setViewFPS () {
     glm::vec3 playerPos = player->getWorldPos();
-    glm::vec3 playerFrontVec = player->getFrontVec();
-    glm::vec3 playerUpVec = player->getUpVec();
-    camPos = glm::vec3(playerPos.x, playerPos.y, playerPos.z);
-    at = playerPos + playerFrontVec * glm::vec3(AXIS_LIMIT_ABS);
-    camUp = glm::vec3(playerUpVec);
+    camPos = playerPos;
+    at = playerPos + player->getFrontVec() * glm::vec3(AXIS_LIMIT_ABS);
+    camUp = player->getUpVec();
     player->setDraw(false);
 }
 
