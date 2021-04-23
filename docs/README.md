@@ -90,3 +90,12 @@
 <img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839161-57f85500-a455-11eb-882e-4ece20daba58.png">    
 <img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839169-59c21880-a455-11eb-8ea7-0bdfc852d563.png">    
 <img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839175-5a5aaf00-a455-11eb-814c-0fb30d210253.png">
+
+# Resources
+
+[The Open Asset Import Library (assimp)](https://github.com/assimp/assimp)   
+[Player Aircraft Model (“assets/models/player.obj”)](https://www.cgtrader.com/free-3d-models/aircraft/jet/f-15-c-eagle)   
+[Enemy Aircraft Model (“assets/models/ebm314.obj”)](https://www.cgtrader.com/free-3d-models/aircraft/military/emb-314-super-tucano)   
+[Ammo Crate Model (“assets/models/ammo_crate.obj”)](https://www.cgtrader.com/free-3d-models/military/other/ammo-crate-pbr-lowpoly)   
+[Heart Model (“assets/models/love.obj”)](https://www.cgtrader.com/free-3d-models/character/anatomy/love-low-poly)   
+[Sphere Model (“assets/models/sphere.obj”)](https://www.cgtrader.com/free-3d-models/space/other/sphere-de6c0ee5-444a-4b26-afd3-37b4880601a0)   
