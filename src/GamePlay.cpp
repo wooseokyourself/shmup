@@ -4,7 +4,7 @@ GamePlay::GamePlay () : viewMode(0) {
     stage = 1;
     gameMode = GAMEMODE_NONE;
     viewMode = VIEWMODE_TPS;
-    renderingMode = false;
+    renderingMode = true;
 
     perspectiveSceneRoot = new Object;
     player = new Aircraft;

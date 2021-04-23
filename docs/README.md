@@ -86,7 +86,7 @@
 ```
 
 # Example Screen
-<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839150-5464ce00-a455-11eb-87b2-f4eb15498bc2.png">    
+<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115849759-29cc4280-a460-11eb-8426-9ac54d2dab0d.png">    
 <img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839161-57f85500-a455-11eb-882e-4ece20daba58.png">    
 <img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839169-59c21880-a455-11eb-8ea7-0bdfc852d563.png">    
 <img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839175-5a5aaf00-a455-11eb-814c-0fb30d210253.png">

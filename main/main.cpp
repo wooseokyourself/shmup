@@ -20,6 +20,9 @@ void display () {
     GLfloat widthset = WINDOW_WIDTH / base;
     GLfloat heightset = WINDOW_HEIGHT / base;
 
+    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(75, WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 1000.0f);  
@@ -79,14 +82,13 @@ int main(int argc, char** argv) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glShadeModel(GL_SMOOTH);
-    glEnable(GL_DEPTH_TEST);    
-    glDepthFunc(GL_LEQUAL);
     glutIgnoreKeyRepeat(1);
     glutKeyboardFunc(keyboardDown);
     glutSpecialFunc(specialKeyboardDown);
     glutSpecialUpFunc(specialKeyboardUp);
     glutIdleFunc(updateFrame);
 
+    glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);

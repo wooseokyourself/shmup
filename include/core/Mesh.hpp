@@ -21,13 +21,14 @@
 
 class Mesh {
 public:
-    Mesh () : wireframe(false) {
+    Mesh () : wireframe(true) {
         color = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
     }
     void draw () {
         if (scene) {
+            glEnable(GL_LIGHTING);
             glColor4f(color.r, color.g, color.b, color.a);
-            drawMeshes(scene, scene->mRootNode);
+            drawMeshes(scene->mRootNode);
 
             if (wireframe && bbVertices.size() == 8) {
                 glDisable(GL_LIGHTING);
@@ -64,7 +65,7 @@ public:
     bool loadModel (std::string path) {
         scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
         if (scene) {
-            calculate_bounding_box();
+            calculateBoundingBox();
             width = abs(bbMin.x - bbMax.x);
             height = abs(bbMin.y - bbMax.y);
             depth = abs(bbMin.z - bbMax.z);
@@ -116,127 +117,69 @@ public:
     }
 
 private:
-    void drawMeshes (const aiScene* sc, const aiNode* nd) {
-        unsigned int i;
-        unsigned int n = 0, t;
-        aiMatrix4x4 m = nd->mTransformation;
-
-        /* update transform */
+    void drawMeshes (const aiNode* node) {
+        aiMatrix4x4 m = node->mTransformation;
         aiTransposeMatrix4(&m);
         glPushMatrix();
         glMultMatrixf((float*)&m);
-
-        /* draw all meshes assigned to this node */
-        for (; n < nd->mNumMeshes; ++n) {
-            const aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
-
-            apply_material(sc->mMaterials[mesh->mMaterialIndex]);
-
-            if(mesh->mNormals == NULL) {
-                glDisable(GL_LIGHTING);
-            } else {
-                glEnable(GL_LIGHTING);
-            }
-
-            for (t = 0; t < mesh->mNumFaces; ++t) {
-                const aiFace* face = &mesh->mFaces[t];
-                GLenum face_mode;
-
+        for (int i = 0 ; i < node->mNumMeshes; i ++) {
+            const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+            glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+            for (int j = 0 ; j < mesh->mNumFaces ; j ++) {
+                const aiFace* face = &mesh->mFaces[j];
                 switch(face->mNumIndices) {
-                    case 1: face_mode = GL_POINTS; break;
-                    case 2: face_mode = GL_LINES; break;
-                    case 3: face_mode = GL_TRIANGLES; break;
-                    default: face_mode = GL_POLYGON; break;
+                    case 1: 
+                        glBegin(GL_POINTS);
+                        break;
+                    case 2: 
+                        glBegin(GL_LINES);
+                        break;
+                    case 3: 
+                        glBegin(GL_TRIANGLES);
+                        break;
+                    default: 
+                        glBegin(GL_POLYGON);
+                        break;
                 }
-
-                glBegin(face_mode);
-
-                for(i = 0; i < face->mNumIndices; i++) {
-                    int index = face->mIndices[i];
-                    if(mesh->mColors[0] != NULL)
-                        glColor4fv((GLfloat*)&mesh->mColors[0][index]);
+                for(int k = 0 ; k < face->mNumIndices ; k ++) {
+                    int idx = face->mIndices[k];
                     if(mesh->mNormals != NULL)
-                        glNormal3fv(&mesh->mNormals[index].x);
-                    glVertex3fv(&mesh->mVertices[index].x);
+                        glNormal3fv(&mesh->mNormals[idx].x);
+                    glVertex3fv(&mesh->mVertices[idx].x);
                 }
-
                 glEnd();
             }
-
         }
-
-        /* draw all children */
-        for (n = 0; n < nd->mNumChildren; ++n) {
-            drawMeshes(sc, nd->mChildren[n]);
-        }
-
+        for (int i = 0 ; i < node->mNumChildren ; i ++)
+            drawMeshes(node->mChildren[i]);
         glPopMatrix();
     }
-    void apply_material (const aiMaterial *mtl) {
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, glm::value_ptr(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f)));
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, glm::value_ptr(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)));
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, glm::value_ptr(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f)));
-        glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, glm::value_ptr(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)));
-
-        unsigned int max = 1;
-        float shininess, strength;
-        int ret1 = aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max);
-        if (ret1 == AI_SUCCESS) {
-            max = 1;
-            int ret2 = aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS_STRENGTH, &strength, &max);
-            if (ret2 == AI_SUCCESS)
-                glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess * strength);
-            else
-                glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
-        }
-        else {
-            glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.0f);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, glm::value_ptr(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f)));
-        }
-        glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
-
-        max = 1;
-        int two_sided;
-        if ((AI_SUCCESS == aiGetMaterialIntegerArray(mtl, AI_MATKEY_TWOSIDED, &two_sided, &max)) && two_sided)
-            glDisable(GL_CULL_FACE);
-        else
-            glEnable(GL_CULL_FACE);
-    }
-    void calculate_bounding_box () {
-        aiMatrix4x4 trafo;
-        aiIdentityMatrix4(&trafo);
+    void calculateBoundingBox () {
+        aiMatrix4x4 mat;
+        aiIdentityMatrix4(&mat);
         bbMin.x = bbMin.y = bbMin.z = 1e10f;
         bbMax.x = bbMax.y = bbMax.z = -1e10f;
-        calculate_bounding_box_for_node(scene->mRootNode, &trafo);
+        calculateBoundingBoxForNode(scene->mRootNode, &mat);
     }
-    void calculate_bounding_box_for_node (const aiNode* nd, aiMatrix4x4* trafo ) {
-        aiMatrix4x4 prev;
-        unsigned int n = 0, t;
-
-        prev = *trafo;
-        aiMultiplyMatrix4(trafo,&nd->mTransformation);
-
-        for (; n < nd->mNumMeshes; ++n) {
-            const aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
-            for (t = 0; t < mesh->mNumVertices; ++t) {
-
-                aiVector3D tmp = mesh->mVertices[t];
-                aiTransformVecByMatrix4(&tmp,trafo);
-
-                bbMin.x = min(bbMin.x,tmp.x);
-                bbMin.y = min(bbMin.y,tmp.y);
-                bbMin.z = min(bbMin.z,tmp.z);
-
-                bbMax.x = max(bbMax.x,tmp.x);
-                bbMax.y = max(bbMax.y,tmp.y);
-                bbMax.z = max(bbMax.z,tmp.z);
+    void calculateBoundingBoxForNode (const aiNode* node, aiMatrix4x4* mat) {
+        aiMatrix4x4 prevMat = *mat;
+        aiMultiplyMatrix4(mat, &node->mTransformation);
+        for (int i = 0 ; i < node->mNumMeshes ; i ++) {
+            const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+            for (int j = 0 ; j < mesh->mNumVertices ; j ++) {
+                aiVector3D tmp = mesh->mVertices[j];
+                aiTransformVecByMatrix4(&tmp, mat);
+                bbMin.x = min(bbMin.x, tmp.x);
+                bbMin.y = min(bbMin.y, tmp.y);
+                bbMin.z = min(bbMin.z, tmp.z);
+                bbMax.x = max(bbMax.x, tmp.x);
+                bbMax.y = max(bbMax.y, tmp.y);
+                bbMax.z = max(bbMax.z, tmp.z);
             }
         }
-
-        for (n = 0; n < nd->mNumChildren; ++n) {
-            calculate_bounding_box_for_node(nd->mChildren[n], trafo);
-        }
-        *trafo = prev;
+        for (int i = 0 ; i < node->mNumChildren ; i ++)
+            calculateBoundingBoxForNode(node->mChildren[i], mat);
+        *mat = prevMat;
     }
 
 private:
