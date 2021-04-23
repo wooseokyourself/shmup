@@ -15,19 +15,35 @@ static GamePlay gameplay;
 /** @brief GLUT callback. */
 void display () {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    gameplay.render();
+
+    GLfloat base = WINDOW_HEIGHT < WINDOW_WIDTH ? WINDOW_HEIGHT : WINDOW_WIDTH;
+    GLfloat widthset = WINDOW_WIDTH / base;
+    GLfloat heightset = WINDOW_HEIGHT / base;
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(75, WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 1000.0f);  
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gameplay.renderPerspectiveScene();
+
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glDepthMask(GL_FALSE);
+    glDisable(GL_DEPTH_TEST);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-1.0f * widthset, 1.0f * widthset, -1.0f * heightset, 1.0f * heightset, 0.0f, UI_CAM_Z - UI_Z);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gameplay.renderOrthoScene();
+
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     glutSwapBuffers();
 }
 
 /** @brief GLUT callback. */
 void reshape (int width, int height) {
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    GLfloat base = WINDOW_HEIGHT < WINDOW_WIDTH ? WINDOW_HEIGHT : WINDOW_WIDTH;
-    GLfloat widthset = WINDOW_WIDTH / base;
-    GLfloat heightset = WINDOW_HEIGHT / base;
-    gluPerspective(75, WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 1000.0f);  
+
 }
 
 void keyboardDown (unsigned char key, int x, int y) {

@@ -5,24 +5,39 @@
 #include <core/glm/glm.hpp>
 #include "World.hpp"
 
+namespace AircraftSpeed {
+    const float FAST = 0.015;
+    const float NORMAL = 0.010;
+    const float SLOW = 0.005;
+};
+
+namespace BulletSpeed {
+    const float FAST = 0.05;
+    const float NORMAL = 0.03;
+    const float SLOW = 0.01;
+};
+
+const int PLAYER_LIVES = 3;
+const int MAX_STAGE = 5;
+
 const float WINDOW_WIDTH = 1280.0f;
 const float WINDOW_HEIGHT = 720.0f;
+const float WINDOW_FACTOR = 1000.0f;
 
 const float AXIS_LIMIT_ABS = 6.0f;
 const float WORLD_LIMIT_ABS = 2.0f;
 const int TILE_N = 90; // 전체 타일의 수는 TILE_N ^ 2
 const float TILE_LEN = (AXIS_LIMIT_ABS * 2.0f) / (float)TILE_N;
 
-const float UI_MIN_X = -1.0f; 
-const float UI_MAX_X = 1.0f;
-const float UI_MIN_Y = AXIS_LIMIT_ABS;
-const float UI_MAX_Y = AXIS_LIMIT_ABS + 1.0f;
-const float UI_MIN_Z = -1.0f;
-const float UI_MAX_Z = 1.0f;
+const float UI_MIN_X = -(WINDOW_WIDTH / WINDOW_FACTOR); 
+const float UI_MAX_X = WINDOW_WIDTH / WINDOW_FACTOR;
+const float UI_Y = AXIS_LIMIT_ABS;
+const float UI_Y_HALF_ABS = 1.0f;
+const float UI_Z = -1.0f;
 
-const int VIEWMODE_TPS = 0;
-const int VIEWMODE_FPS = 1;
-const int VIEWMODE_2D = 2;
+const float UI_CAM_X = 0.0f;
+const float UI_CAM_Y = UI_Y;
+const float UI_CAM_Z = 1.0f;
 
 const std::string PLAYER_MODEL = "assets/models/player.obj";
 const std::string ENEMY_MODEL = "assets/models/ebm314.obj";
@@ -55,5 +70,17 @@ const glm::vec4 ENEMY_BULLET_COLOR(1.0f, 0.88f, 0.0f, 1.0f);
 const glm::vec4 ITEM_COLOR(1.0f, 0.5f, 0.5f, 1.0f);
 
 const int ENEMY_REGEN_INTERVAL_SECE = 3;
+
+enum gameMode {
+    GAMEMODE_NONE,
+    GAMEMODE_ALL_PASS,
+    GAMEMODE_ALL_FAIL
+};
+
+enum viewMode { 
+    VIEWMODE_TPS,
+    VIEWMODE_FPS,
+    VIEWMODE_2D
+};
 
 #endif
