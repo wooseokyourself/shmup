@@ -6,7 +6,7 @@ GamePlay::GamePlay () : viewMode(0) {
     viewMode = VIEWMODE_TPS;
     renderingMode = true;
 
-    perspectiveSceneRoot = new Object;
+    perspectiveSceneRoot = new World;
     player = new Aircraft;
     enemy = new Aircraft;
     playerBulletManager = new StraightMovingObjectManager(100, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
@@ -52,7 +52,6 @@ void GamePlay::start () {
 
 void GamePlay::renderPerspectiveScene () {
     gluLookAt(camPos.x, camPos.y, camPos.z, at.x, at.y, at.z, camUp.x, camUp.y, camUp.z);
-    drawWorld();
     perspectiveSceneRoot->draw();
 }
 

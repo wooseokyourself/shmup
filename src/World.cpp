@@ -1,6 +1,6 @@
 #include "World.hpp"
 
-void drawWorld() {
+void World::draw() {
     glDisable(GL_LIGHTING);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     float z = -AXIS_LIMIT_ABS;
@@ -13,9 +13,8 @@ void drawWorld() {
         while (x <= AXIS_LIMIT_ABS) {
             glVertex3f(x, 0.0f, z);
             vertexCount ++;
-            if (flag) { // 밑으로
+            if (flag) // 밑으로
                 z += TILE_LEN;
-            }
             else { // 위로
                 x += TILE_LEN;
                 z -= TILE_LEN;
@@ -51,4 +50,6 @@ void drawWorld() {
     glVertex3f(TILE_LEN * float(offset), 0.0f, TILE_LEN * float(offset));
     glVertex3f(TILE_LEN * float(offset), 0.0f, -TILE_LEN * float(offset));
     glEnd();
+
+    Object::draw();
 }

@@ -43,7 +43,7 @@ private:
     void lose ();
 
 private: // Perspective
-    Object* perspectiveSceneRoot;
+    World* perspectiveSceneRoot;
     Aircraft* player;
     Aircraft* enemy;
     StraightMovingObjectManager* playerBulletManager;
