@@ -44,11 +44,6 @@ void display () {
     glutSwapBuffers();
 }
 
-/** @brief GLUT callback. */
-void reshape (int width, int height) {
-
-}
-
 void keyboardDown (unsigned char key, int x, int y) {
     discreteKeyBuf.push(key);
 }
@@ -75,7 +70,6 @@ int main(int argc, char** argv) {
     glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (WINDOW_HEIGHT / 2));
     glutCreateWindow("Assn3-1");
     glutDisplayFunc(display);
-    glutReshapeFunc(reshape);
 
     
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
