@@ -1,24 +1,21 @@
-# How to Run
+1. How to Run
 
-## Windows (x64)
-### Requirements
-+ Visual Studio 2019 for C++ Desktop
+1.1. Requirements: Visual Studio 2019 for C++ Desktop
 
-### Compile and Run
-1. Double click file ```shmup.vcxproj``` to open the project in Visual Studio 2019.
-2. Click ```Build --> Build Solution``` , or press ```F7```
-3. Click ```Debug --> Run without Debug``` , or press ```Ctrl + F5```
+1.2. Compile and Run
+1.2.1. Double click file shmup.vcxproj to open the project in Visual Studio 2019.
+1.2.2. Click Build --> Build Solution , or press F7
+1.2.3. Click Debug --> Run without Debug , or press Ctrl + F5
 
-# Instructions
-+ ``` ←↑→↓ ```: Move player.
-+ ``` Space Bar ```: Fire a bullet.
-+ ``` c ```: The player becomes invincible, and the enemy dies in one shot.
-+ ``` f ```: Players cannot fire bullets, and the game is over as soon as an enemy bullet is hit.
-+ ``` r ```: On/Off wireframe rendering.   
-+ ``` v ```: Change viewing mode. TPS, FPS, and 2D are supported.
+2. Instructions
+- ←↑→↓: Move player.
+- Space Bar: Fire a bullet.
+- c: The player becomes invincible, and the enemy dies in one shot.
+- f: Players cannot fire bullets, and the game is over as soon as an enemy bullet is hit.
+- r: On/Off wireframe rendering.   
+- v: Change viewing mode. TPS, FPS, and 2D are supported.
 
-# Files
-```shell
+3. Files
 .
 ├── docs
 │   ├── README.md
@@ -83,10 +80,3 @@
 ├── shmup.vcxproj.filters
 └── shmup.vcxproj.user
     # Visual Studio project.
-```
-
-# Example Screen
-<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839150-5464ce00-a455-11eb-87b2-f4eb15498bc2.png">    
-<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839161-57f85500-a455-11eb-882e-4ece20daba58.png">    
-<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839169-59c21880-a455-11eb-8ea7-0bdfc852d563.png">    
-<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839175-5a5aaf00-a455-11eb-814c-0fb30d210253.png">
