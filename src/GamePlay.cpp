@@ -9,16 +9,16 @@ GamePlay::GamePlay () : viewMode(0) {
     perspectiveSceneRoot = new Object;
     player = new Aircraft;
     enemy = new Aircraft;
-    playerBulletManager = new StraightMovingObjectManager(100, BULLET_MODEL, glm::vec3(0.0f, 0.0f, 1.0f));
-    enemyBulletManager = new StraightMovingObjectManager(100, BULLET_MODEL, glm::vec3(0.0f, 0.0f, 1.0f));
-    itemManager = new StraightMovingObjectManager(10, ITEM_MODEL, glm::vec3(0.0f, 0.0f, 1.0f));
+    playerBulletManager = new StraightMovingObjectManager(100, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
+    enemyBulletManager = new StraightMovingObjectManager(100, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
+    itemManager = new StraightMovingObjectManager(10, "assets/models/ammo_crate.obj", glm::vec3(0.0f, 0.0f, 1.0f));
     planetaryA = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
     planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
 
     hud = new Hud;
 
-    player->loadModel(PLAYER_MODEL);
-    enemy->loadModel(ENEMY_MODEL);
+    player->loadModel("assets/models/player.obj");
+    enemy->loadModel("assets/models/ebm314.obj");
 
     perspectiveSceneRoot->pushChild(planetaryA);
     perspectiveSceneRoot->pushChild(planetaryB);

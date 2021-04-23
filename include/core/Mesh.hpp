@@ -9,10 +9,10 @@
 #include <core/glm/gtc/type_ptr.hpp>
 #include <core/glm/gtx/string_cast.hpp>
 
-#include <assimp/cimport.h>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include <core/assimp/cimport.h>
+#include <core/assimp/Importer.hpp>
+#include <core/assimp/scene.h>
+#include <core/assimp/postprocess.h>
 
 #include "core/Utility.hpp"
 

@@ -39,11 +39,6 @@ const float UI_CAM_X = 0.0f;
 const float UI_CAM_Y = UI_Y;
 const float UI_CAM_Z = 1.0f;
 
-const std::string PLAYER_MODEL = "assets/models/player.obj";
-const std::string ENEMY_MODEL = "assets/models/ebm314.obj";
-const std::string BULLET_MODEL = "assets/models/sphere.obj";
-const std::string ITEM_MODEL = "assets/models/ammo_crate.obj";
-
 namespace PLAYER_FRAME {
     const glm::vec3 UP(0.0f, 1.0f, 0.0f);
     const glm::vec3 LEFT(1.0f, 0.0f, 0.0f);
