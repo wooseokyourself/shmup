@@ -251,8 +251,8 @@ void GamePlay::afterPlayerHit () {
 
 void GamePlay::afterEnemyHit () {
     enemy->loseLife();
-    stage += 1;
     if (!enemy->isAlive()) {
+        stage += 1;
         enemyAi.stop();
         itemManager->activateObject(enemy->getTranslate(), enemy->getAngleStack(), enemy->getRotateAxisStack(), ITEM_MAX_SIZE, ITEM_COLOR, BulletSpeed::SLOW);
     }
