@@ -90,6 +90,8 @@
         "fstream": "cpp",
         "future": "cpp",
         "valarray": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "semaphore": "cpp",
+        "*.prev": "cpp"
     }
 }
