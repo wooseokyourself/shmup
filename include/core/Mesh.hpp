@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <list>
 
 #include <core/GL/glew.h>
 #include <core/GL/freeglut.h>
@@ -22,23 +23,24 @@ struct vertex {
 
 class Mesh {
 public:
-    void pushBackVertex (const vertex& v) {
-        vertices.push_back(v);
+    Mesh (const std::vector<vertex> vertices, const std::vector<unsigned int> indices) : parent(nullptr) {
+        // this->vertices = vertices;
+        this->indices = indices;
+        // setupMesh 를 여기에 코딩
     }
-    void pushBackIndex (const unsigned int i) {
-        indices.push_back(i);
+    void pushChild (Mesh* child) {
+        child->parent = this;
+        children.push_back(child);
     }
     void setBoundingBox (const std::vector<glm::vec3>& bbVertices) {
         // 여기서 bounding box를 활용하여 메시를 그리려면 어떻게?
     }
 
-private:
-    void setupMesh() {
+private: // 계층구조
+    Mesh* parent;
+    std::list<Mesh*> children;
 
-    }
-
 private:
-    std::vector<vertex> vertices;
     std::vector<unsigned int> indices;
 
 private:

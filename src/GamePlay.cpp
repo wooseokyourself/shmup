@@ -51,7 +51,8 @@ void GamePlay::start () {
 }
 
 void GamePlay::renderPerspectiveScene () {
-    gluLookAt(camPos.x, camPos.y, camPos.z, at.x, at.y, at.z, camUp.x, camUp.y, camUp.z);
+    // gluLookAt(camPos.x, camPos.y, camPos.z, at.x, at.y, at.z, camUp.x, camUp.y, camUp.z);
+    
     perspectiveSceneRoot->draw();
 }
 
@@ -181,27 +182,30 @@ void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf
 }
 
 void GamePlay::setViewTPS () {
-    glm::vec3 playerPos = player->getWorldPos();
-    glm::vec3 playerFrontVec = player->getFrontVec();
-    glm::vec3 playerUpVec = player->getUpVec();
-    camPos = glm::vec3(playerPos + (-playerFrontVec * 7.0f + playerUpVec * 3.5f));
-    at = playerPos + playerFrontVec * glm::vec3(AXIS_LIMIT_ABS);
-    camUp = glm::vec3(playerUpVec);
+    const glm::vec3 playerPos = player->getWorldPos();
+    const glm::vec3 playerFrontVec = player->getFrontVec();
+    const glm::vec3 playerUpVec = player->getUpVec();
+    const glm::vec3 camPos = glm::vec3(playerPos + (-playerFrontVec * 7.0f + playerUpVec * 3.5f));
+    const glm::vec3 at = playerPos + playerFrontVec * glm::vec3(AXIS_LIMIT_ABS);
+    const glm::vec3 camUp = glm::vec3(playerUpVec);
+    cam.set(camPos, at, camUp);
     player->setDraw(true);
 }
 
 void GamePlay::setViewFPS () {
     glm::vec3 playerPos = player->getWorldPos();
-    camPos = playerPos;
-    at = playerPos + player->getFrontVec() * glm::vec3(AXIS_LIMIT_ABS);
-    camUp = player->getUpVec();
+    const glm::vec3 camPos = playerPos;
+    const glm::vec3 at = playerPos + player->getFrontVec() * glm::vec3(AXIS_LIMIT_ABS);
+    const glm::vec3 camUp = player->getUpVec();
+    cam.set(camPos, at, camUp);
     player->setDraw(false);
 }
 
 void GamePlay::setView2D () {
-    camPos = glm::vec3(0.0f, WORLD_LIMIT_ABS * 2.0f, 0.0f);
-    at = glm::vec3(0.0f, 0.0f, 0.0f);
-    camUp = glm::vec3(0.0f, 0.0f, -1.0f);
+    const glm::vec3 camPos = glm::vec3(0.0f, WORLD_LIMIT_ABS * 2.0f, 0.0f);
+    const glm::vec3 at = glm::vec3(0.0f, 0.0f, 0.0f);
+    const glm::vec3 camUp = glm::vec3(0.0f, 0.0f, -1.0f);
+    cam.set(camPos, at, camUp);
     player->setDraw(true);
 }
 

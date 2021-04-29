@@ -5,6 +5,7 @@
 #include <vector>
 #include <queue>
 
+#include "core/Camera.hpp"
 #include "core/Object.hpp"
 #include "Constants.hpp"
 #include "World.hpp"
@@ -56,9 +57,7 @@ private: // Ortho
     Hud* hud;
 
 private: // Camera
-    glm::vec3 camPos;
-    glm::vec3 at;
-    glm::vec3 camUp;
+    Camera cam;
 
 private: // Variables for game play
     Ai enemyAi;

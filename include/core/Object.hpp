@@ -159,6 +159,9 @@ public: // Utilities
 
 private:
     void assimpToMesh (aiNode* node, aiScene* scene) {
+        // aiNode 가 Mesh에 매핑되도록 구현, Mesh도 그래프 형태임
+        
+
         for (int i = 0 ; i < node->mNumMeshes ; i ++) { // Mesh iteration, size: aiNode::mNumMeshes
             const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
             for (int j = 0 ; j < mesh->mNumFaces ; j ++) { // Face iteration, size: aiMesh::mNumFaces
@@ -192,7 +195,11 @@ private:
             }
         }
         for (int i = 0 ; i < node->mNumChildren ; i ++)
-            drawMeshes(node->mChildren[i]);
+            assimpToMesh(node->mChildren[i], scene);
+    }
+    Mesh* aiNodeToMesh (aiNode* node) {
+        
+        Mesh* mesh = new Mesh();
     }
     void getBoundingBox (const aiScene* scene) {
         aiMatrix4x4 mat;
@@ -248,7 +255,7 @@ private: // Scene graph
     std::list<Object*> children;
 
 private: // Mesh
-    Mesh mesh;
+    Mesh* mesh;
     float longestSide;
 
 private: // Model-view matrix
