@@ -23,24 +23,23 @@ struct vertex {
 
 class Mesh {
 public:
-    Mesh (const std::vector<vertex> vertices, const std::vector<unsigned int> indices) : parent(nullptr) {
-        // this->vertices = vertices;
+    Mesh (const std::vector<vertex> vertices, const std::vector<unsigned int> indices) {
+        this->vertices = vertices;
         this->indices = indices;
         // setupMesh 를 여기에 코딩
-    }
-    void pushChild (Mesh* child) {
-        child->parent = this;
-        children.push_back(child);
     }
     void setBoundingBox (const std::vector<glm::vec3>& bbVertices) {
         // 여기서 bounding box를 활용하여 메시를 그리려면 어떻게?
     }
-
-private: // 계층구조
-    Mesh* parent;
-    std::list<Mesh*> children;
+    void pushVertex (const vertex& v) {
+        vertices.push_back(v);
+    }
+    void pushIndex (const unsigned int i) {
+        indices.push_back(i);
+    }
 
 private:
+    std::vector<vertex> vertices;
     std::vector<unsigned int> indices;
 
 private:

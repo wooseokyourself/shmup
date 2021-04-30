@@ -38,7 +38,7 @@ public:
 
 public:
     void loadModel (const std::string& path) {
-        const aiScene* scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+        const aiScene* scene = aiImportFile(path.c_str(), aiProcess_Triangulate | aiProcessPreset_TargetRealtime_MaxQuality);
         if (scene) {
             assimpToMesh(scene->mRootNode, scene);
             std::vector<glm::vec3> bb = getBoundingBox(scene);
@@ -159,46 +159,36 @@ public: // Utilities
 
 private:
     void assimpToMesh (aiNode* node, aiScene* scene) {
-        // aiNode 가 Mesh에 매핑되도록 구현, Mesh도 그래프 형태임
-        
-
-        for (int i = 0 ; i < node->mNumMeshes ; i ++) { // Mesh iteration, size: aiNode::mNumMeshes
-            const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            for (int j = 0 ; j < mesh->mNumFaces ; j ++) { // Face iteration, size: aiMesh::mNumFaces
-                const aiFace* face = &mesh->mFaces[j];
-                /* // 여기서 drawing mode 는 어디에 저장?
-                switch(face->mNumIndices) {
-                    case 1: 
-                        glBegin(GL_POINTS);
-                        break;
-                    case 2: 
-                        glBegin(GL_LINES);
-                        break;
-                    case 3: 
-                        glBegin(GL_TRIANGLES);
-                        break;
-                    default: 
-                        glBegin(GL_POLYGON);
-                        break;
+        /**
+         * loadModel 에서 aiProcess_Triangulate 옵션으로 모델을 불러오기 떄문에 
+         * 모든 primitive는 삼각형으로 재구성된다. 그러므로 glDrawArray에서 primitive 종류를
+         * 신경써줄 필요가 없다. (모두 GL_TRIANGLES 로 통일)
+         * 
+         */
+        const unsigned int* meshIdx = node->mMeshes;
+        for (int i = 0 ; i < node->mNumMeshes ; i ++) { 
+            const aiMesh* mesh = scene->mMeshes[meshIdx[i]];
+            std::vector<vertex> vertices;
+            std::vector<indices> indices;
+            for (int j = 0 ; j < mesh->mNumVertices ; j ++) {
+                vertex v;
+                const glm::vec3 pos = glm::vec3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z);
+                v.position = pos;
+                if (mesh->HasNormals()) {
+                    const glm::vec3 normal = glm::vec3(mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z);
+                    v.normal = normal;
                 }
-                */
-                for(int k = 0 ; k < face->mNumIndices ; k ++) { // Vertices iteration, size: aiFace::mNumIndices
-                    int idx = face->mIndices[k];
-                    if(mesh->mNormals != NULL)
-                    const aiVector3D& pos = mesh->mVertices[idx];
-                    const aiVector3D& norm = mesh->mNormals[idx];
-                    const glm::vec3 position = (pos.x, pos.y, pos.z);
-                    const glm::vec3 normal = (norm.x, norm.y, norm.z);
-                    this->mesh.pushBackVertex(vertex(position, normal));
-                }
-                glEnd();
+                vertices.push_back(v);
+                
+                // ... 다음은 indices 구하기
             }
+            meshes.push_back(Mesh(vertices, indices));
         }
         for (int i = 0 ; i < node->mNumChildren ; i ++)
             assimpToMesh(node->mChildren[i], scene);
     }
     Mesh* aiNodeToMesh (aiNode* node) {
-        
+
         Mesh* mesh = new Mesh();
     }
     void getBoundingBox (const aiScene* scene) {
@@ -255,7 +245,7 @@ private: // Scene graph
     std::list<Object*> children;
 
 private: // Mesh
-    Mesh* mesh;
+    std::vector<Mesh> meshes;
     float longestSide;
 
 private: // Model-view matrix
