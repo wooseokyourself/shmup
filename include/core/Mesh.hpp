@@ -7,7 +7,8 @@
 
 #include <core/GL/glew.h>
 #include <core/GL/freeglut.h>
-#include <core/glm/glm.hpp>
+#include <core/glm/vec3.hpp>
+#include <core/glm/mat4x4.hpp>
 #include <core/glm/gtc/type_ptr.hpp>
 #include <core/glm/gtx/string_cast.hpp>
 

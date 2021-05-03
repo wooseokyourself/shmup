@@ -1,5 +1,5 @@
-#ifndef __OBJECT__
-#define __OBJECT__
+#ifndef __OBJECTPREV__
+#define __OBJECTPREV__
 
 #include <iostream>
 #include <string>
