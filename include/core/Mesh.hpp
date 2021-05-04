@@ -16,11 +16,15 @@ struct vertex {
     glm::vec3 normal;
 };
 
+#include <iostream>
+using namespace std;
+
 class Mesh {
 public:
     Mesh (const std::vector<vertex> vertices, const std::vector<unsigned int> indices) {
         this->vertices = vertices;
         this->indices = indices;
+        cout << "mesh created: vertices=" << vertices.size() << ", indices=" << indices.size() << endl;
         
         // create buffers/arrays
         glGenVertexArrays(1, &VAO);

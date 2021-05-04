@@ -19,31 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="include\core\Mesh.hpp" />
     <ClCompile Include="main\main.cpp" />
-    <ClCompile Include="src\Ai.cpp" />
-    <ClCompile Include="src\Aircraft.cpp" />
-    <ClCompile Include="src\GamePlay.cpp" />
-    <ClCompile Include="src\Hud.cpp" />
-    <ClCompile Include="src\Planetary.cpp" />
-    <ClCompile Include="src\StraightMovingObjectManager.cpp" />
-    <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Ai.hpp" />
-    <ClInclude Include="include\Aircraft.hpp" />
-    <ClInclude Include="include\Constants.hpp" />
     <ClInclude Include="include\core\Camera.hpp" />
-    <ClInclude Include="include\core\Mesh.hpp.prev" />
+    <ClInclude Include="include\core\Mesh.hpp" />
     <ClInclude Include="include\core\Object.hpp" />
     <ClInclude Include="include\core\SceneGraph.hpp" />
     <ClInclude Include="include\core\Shader.hpp" />
     <ClInclude Include="include\core\Utility.hpp" />
-    <ClInclude Include="include\GamePlay.hpp" />
-    <ClInclude Include="include\Hud.hpp" />
-    <ClInclude Include="include\Planetary.hpp" />
-    <ClInclude Include="include\StraightMovingObjectManager.hpp" />
-    <ClInclude Include="include\World.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\fragment.frag" />

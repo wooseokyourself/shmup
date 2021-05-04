@@ -48,7 +48,6 @@ public:
     virtual void display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat) {
         const glm::mat4 ctm = this->modelViewMat * prevMat;
         if (shader && drawFlag) {
-            cout << "draw" << endl;
             unsigned int uni = glGetUniformLocation(shader->ID, "transform");
             glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(lookAt * ctm));
             uni = glGetUniformLocation(shader->ID, "projection");

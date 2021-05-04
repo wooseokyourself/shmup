@@ -1,0 +1,79 @@
+#include <cstdio>
+#include <iostream>
+#include <vector>
+#include <queue>
+
+#include "core/Object.hpp"
+
+using namespace std;
+
+int lastRenderTime = 0;
+
+Object* airplane;
+
+/** @brief GLUT callback. */
+void display () {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDepthMask(GL_FALSE);
+    glDisable(GL_DEPTH_TEST);
+    glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f);
+    glm::vec3 camPos(0.0f, 5.0f, 0.0f), at(0.0f, 0.0f, 0.0f), up(0.0f, 0.0f, -1.0f);
+    glm::mat4 lookAt = glm::lookAt(camPos, at, up);
+
+    glutSwapBuffers();
+}
+
+/** @brief GLUT callback. */
+void reshape (int width, int height) {
+
+}
+
+void updateFrame () {
+    const int NOW_TIME = glutGet(GLUT_ELAPSED_TIME);
+    glutPostRedisplay();
+    lastRenderTime = NOW_TIME;
+}
+
+int main(int argc, char** argv) {
+    const int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 800;
+    cout << "main start" << endl;
+    glutInit(&argc, argv);
+    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (WINDOW_HEIGHT / 2));
+    glutCreateWindow("Assn3-2");
+
+
+    GLenum err = glewInit();
+    std::cout << err << std::endl;
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
+
+    printf("%s\n", glGetString(GL_VERSION));
+    printf("%s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+    airplane = new Object;
+    airplane->loadModel("assets/models/player.obj");
+    airplane->loadShader("shader/vertex.vert", "shader/fragment.frag");
+    airplane->setDraw(true);
+    airplane->setColor(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    
+    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glShadeModel(GL_SMOOTH);
+    glutIgnoreKeyRepeat(1);
+    glutIdleFunc(updateFrame);
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
+    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+    glEnable(GL_NORMALIZE);
+    glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+
+    glutMainLoop();
+
+    return 0;
+}

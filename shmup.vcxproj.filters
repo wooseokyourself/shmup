@@ -45,59 +45,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main\main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ai.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Aircraft.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GamePlay.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hud.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Planetary.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\StraightMovingObjectManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="src\World.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="include\core\Mesh.hpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\Ai.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Aircraft.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Constants.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GamePlay.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Hud.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Planetary.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="include\StraightMovingObjectManager.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="include\World.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="include\core\Object.hpp">
       <Filter>헤더 파일\core</Filter>
     </ClInclude>
@@ -113,7 +60,7 @@
     <ClInclude Include="include\core\SceneGraph.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\Mesh.hpp.prev">
+    <ClInclude Include="include\core\Mesh.hpp">
       <Filter>헤더 파일\core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -124,5 +71,10 @@
     <None Include="shader\vertex.vert">
       <Filter>shader</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main\main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

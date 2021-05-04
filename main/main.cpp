@@ -3,84 +3,77 @@
 #include <vector>
 #include <queue>
 
-#include "GamePlay.hpp"
+#include "core/Object.hpp"
 
 using namespace std;
 
 int lastRenderTime = 0;
-bool asyncKeyBuf[256];
-std::queue<unsigned char> discreteKeyBuf;
 
-GamePlay* gameplay;
+const int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 800;
 
-/** @brief GLUT callback. */
-void display () {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    gameplay->renderPerspectiveScene();
-    gameplay->renderOrthoScene();
-    // glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-    glutSwapBuffers();
+float vertices[] = {
+     0.5f,  0.5f, 0.0f,  // 우측 상단
+     0.5f, -0.5f, 0.0f,  // 우측 하단
+    -0.5f, -0.5f, 0.0f,  // 좌측 하단
+    -0.5f,  0.5f, 0.0f   // 좌측 상단
+};
+unsigned int indices[] = {  // 0부터 시작한다는 것을 명심하세요!
+    0, 1, 3,   // 첫 번째 삼각형
+    1, 2, 3    // 두 번째 삼각형
+};
+
+Shader* shader;
+unsigned int VAO, VBO, EBO;
+
+void reshape(int width, int height) {
+
 }
 
-/** @brief GLUT callback. */
-void reshape (int width, int height) {
-
-}
-
-void keyboardDown (unsigned char key, int x, int y) {
-    discreteKeyBuf.push(key);
-}
-
-void specialKeyboardDown (int key, int x, int y) {
-    asyncKeyBuf[key] = true;
-}
-
-void specialKeyboardUp (int key, int x, int y) {
-    asyncKeyBuf[key] = false;
-}
-
-void updateFrame () {
+void updateFrame() {
     const int NOW_TIME = glutGet(GLUT_ELAPSED_TIME);
-    gameplay->update(asyncKeyBuf, discreteKeyBuf);
     glutPostRedisplay();
     lastRenderTime = NOW_TIME;
 }
 
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDepthMask(GL_FALSE);
+    glDisable(GL_DEPTH_TEST);
+    glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f);
+    glm::vec3 camPos(0.0f, 5.0f, 0.0f), at(0.0f, 0.0f, 0.0f), up(0.0f, 0.0f, -1.0f);
+    glm::mat4 lookAt = glm::lookAt(camPos, at, up);
+
+    shader->use();
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
+    glutSwapBuffers();
+}
+
 int main(int argc, char** argv) {
-    cout << "main start" << endl;
     glutInit(&argc, argv);
     glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (WINDOW_HEIGHT / 2));
+    glutInitWindowPosition((glutGet(GLUT_SCREEN_WIDTH) / 2) - (WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (WINDOW_HEIGHT / 2));
     glutCreateWindow("Assn3-2");
 
-#ifdef __APPLE__
-    glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
-#else
+
     GLenum err = glewInit();
     std::cout << err << std::endl;
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
-#endif
+
     printf("%s\n", glGetString(GL_VERSION));
     printf("%s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-
-    gameplay = new GamePlay;
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
 
-    cout << "main 1" << endl;
-    
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glShadeModel(GL_SMOOTH);
     glutIgnoreKeyRepeat(1);
-    glutKeyboardFunc(keyboardDown);
-    glutSpecialFunc(specialKeyboardDown);
-    glutSpecialUpFunc(specialKeyboardUp);
     glutIdleFunc(updateFrame);
-
-    cout << "main 2" << endl;
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -88,10 +81,26 @@ int main(int argc, char** argv) {
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
     glEnable(GL_NORMALIZE);
     glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-    
-    cout << "main 3" << endl;
 
-    gameplay->start();
+    // shader 설정
+    shader = new Shader("shader/vertex.vert", "shader/fragment.frag");
+    
+    // VAO 활성화
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    // VBO 셋팅 (VAO에 저장)
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // EBO 셋팅 (VAO에 저장)
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
     glutMainLoop();
 
     return 0;
