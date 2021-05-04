@@ -40,12 +40,6 @@ void display () {
     glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1000.0f, 1000.0f);
     glm::mat4 cam = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     object->display(projection, cam, glm::mat4(1.0f));
-    // object->display();
-
-    //shader->use();
-    //glBindVertexArray(VAO);
-    //glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
-    //glBindVertexArray(0);
 
     glutSwapBuffers();
 }
@@ -120,27 +114,6 @@ int main(int argc, char** argv) {
     object->setDraw(true);
     object->setColor(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
     object->setLongestSideTo(0.5f);
-
-
-    // shader 설정
-    shader = new Shader("shader/test.vert", "shader/fragment.frag");
-
-    // VAO 활성화
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    // VBO 셋팅 (VAO에 저장)
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // EBO 셋팅 (VAO에 저장)
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
 
     // gameplay->start();
     glutMainLoop();
