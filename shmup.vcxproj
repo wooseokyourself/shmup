@@ -21,13 +21,6 @@
   <ItemGroup>
     <ClCompile Include="include\core\Mesh.hpp" />
     <ClCompile Include="main\main.cpp" />
-    <ClCompile Include="src\Ai.cpp" />
-    <ClCompile Include="src\Aircraft.cpp" />
-    <ClCompile Include="src\GamePlay.cpp" />
-    <ClCompile Include="src\Hud.cpp" />
-    <ClCompile Include="src\Planetary.cpp" />
-    <ClCompile Include="src\StraightMovingObjectManager.cpp" />
-    <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Ai.hpp" />

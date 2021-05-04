@@ -11,14 +11,42 @@ int lastRenderTime = 0;
 bool asyncKeyBuf[256];
 std::queue<unsigned char> discreteKeyBuf;
 
-GamePlay* gameplay;
+// GamePlay* gameplay;
+
+float vertices[] = {
+     0.5f,  0.5f, 0.0f,  // 우측 상단
+     0.5f, -0.5f, 0.0f,  // 우측 하단
+    -0.5f, -0.5f, 0.0f,  // 좌측 하단
+    -0.5f,  0.5f, 0.0f   // 좌측 상단
+};
+unsigned int indices[] = {  // 0부터 시작한다는 것을 명심하세요!
+    0, 1, 3,   // 첫 번째 삼각형
+    1, 2, 3    // 두 번째 삼각형
+};
+Shader* shader;
+Object* object;
+unsigned int VAO, VBO, EBO;
 
 /** @brief GLUT callback. */
 void display () {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    gameplay->renderPerspectiveScene();
-    gameplay->renderOrthoScene();
-    // glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    // gameplay->renderPerspectiveScene();
+    // gameplay->renderOrthoScene();
+    // glm::mat4 projection = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 1000.0f);
+
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glDepthMask(GL_FALSE);
+    glDisable(GL_DEPTH_TEST);
+    glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1000.0f, 1000.0f);
+    glm::mat4 cam = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    object->display(projection, cam, glm::mat4(1.0f));
+    // object->display();
+
+    //shader->use();
+    //glBindVertexArray(VAO);
+    //glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+    //glBindVertexArray(0);
+
     glutSwapBuffers();
 }
 
@@ -41,13 +69,12 @@ void specialKeyboardUp (int key, int x, int y) {
 
 void updateFrame () {
     const int NOW_TIME = glutGet(GLUT_ELAPSED_TIME);
-    gameplay->update(asyncKeyBuf, discreteKeyBuf);
+    // gameplay->update(asyncKeyBuf, discreteKeyBuf);
     glutPostRedisplay();
     lastRenderTime = NOW_TIME;
 }
 
 int main(int argc, char** argv) {
-    cout << "main start" << endl;
     glutInit(&argc, argv);
     glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (WINDOW_HEIGHT / 2));
@@ -63,12 +90,9 @@ int main(int argc, char** argv) {
     printf("%s\n", glGetString(GL_VERSION));
     printf("%s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-
-    gameplay = new GamePlay;
+    // gameplay = new GamePlay;
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
-
-    cout << "main 1" << endl;
     
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     glEnable(GL_BLEND);
@@ -80,18 +104,45 @@ int main(int argc, char** argv) {
     glutSpecialUpFunc(specialKeyboardUp);
     glutIdleFunc(updateFrame);
 
-    cout << "main 2" << endl;
-
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
     glEnable(GL_NORMALIZE);
     glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-    
-    cout << "main 3" << endl;
 
-    gameplay->start();
+    object = new Object;
+    std::string p;
+    std::cout << "model: " << std::endl;
+    std::cin >> p;
+    object->loadModel("assets/models/" + p);
+    object->loadShader("shader/vertex.vert", "shader/fragment.frag");
+    object->setDraw(true);
+    object->setColor(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+    object->setLongestSideTo(0.5f);
+
+
+    // shader 설정
+    shader = new Shader("shader/test.vert", "shader/fragment.frag");
+
+    // VAO 활성화
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    // VBO 셋팅 (VAO에 저장)
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // EBO 셋팅 (VAO에 저장)
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+
+    // gameplay->start();
     glutMainLoop();
 
     return 0;

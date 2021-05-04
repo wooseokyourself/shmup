@@ -20,7 +20,6 @@ using namespace std;
 class Object {
 public:
     Object () : parent(nullptr), speed(0.0f), drawFlag(false) {
-        cout << " object constructor start" << endl;
         shader = nullptr;
         translatef = glm::vec3(0.0f, 0.0f, 0.0f);
         scalef = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -30,7 +29,6 @@ public:
         bbMin = glm::vec3(0.0f);
         color = glm::vec4(1.0f);
         longestSide = 0.0f;
-        cout << " object constructor end" << endl;
     }
     ~Object () {
         delete shader;
@@ -48,18 +46,27 @@ public:
     virtual void display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat) {
         const glm::mat4 ctm = this->modelViewMat * prevMat;
         if (shader && drawFlag) {
-            cout << "draw" << endl;
             unsigned int uni = glGetUniformLocation(shader->ID, "transform");
             glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(lookAt * ctm));
             uni = glGetUniformLocation(shader->ID, "projection");
             glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(projection));
             uni = glGetUniformLocation(shader->ID, "color");
-            glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(color));
+            glUniform4fv(uni, 1, glm::value_ptr(color));
+            shader->use();
             for (Mesh mesh : meshes)
-                mesh.draw(shader);
+                mesh.draw();
         }
         for (Object* child : children)
             child->display(projection, lookAt, ctm);
+    }
+    virtual void display () {
+        if (shader && drawFlag) {
+            shader->use();
+            for (Mesh mesh : meshes)
+                mesh.draw();
+        }
+        for (Object* child : children)
+            child->display();
     }
 
 public: // Scene graph
@@ -122,15 +129,16 @@ public: // Utilities
         shader = new Shader(vertPath, fragPath);
     }
     void loadModel (const std::string& path) {
-        const aiScene* scene = aiImportFile(path.c_str(), aiProcess_Triangulate | aiProcessPreset_TargetRealtime_MaxQuality);
-        if (scene) {
-            assimpToMesh(scene->mRootNode, scene);
-            calcBoundingBox(scene);
+        Assimp::Importer import;
+        const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+
+        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+        {
+            cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
+            return;
         }
-        else {
-            std::cout << "ERROR::OBJECT::READ_MODEL_FAILED" << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        assimpToMesh(scene->mRootNode, scene);
+        calcBoundingBox(scene);
     }
     void setDraw (bool flag) {
         drawFlag = flag;
@@ -221,19 +229,30 @@ private:
                 vertex v;
                 const glm::vec3 pos = glm::vec3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z);
                 v.position = pos;
-                if (mesh->HasNormals()) {
-                    const glm::vec3 normal = glm::vec3(mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z);
-                    v.normal = normal;
-                }
                 vertices.push_back(v);
-                
             }
+            /*
             for (int j = 0 ; j < mesh->mNumFaces ; j ++) { // Indices
                 const aiFace face = mesh->mFaces[j];
                 for (int k = 0 ; k < face.mNumIndices ; k ++)
-                    indices.push_back(face.mIndices[j]);        
+                    indices.push_back(face.mIndices[k]);        
+            }*/
+            for (size_t k = 0; k < mesh->mNumFaces; ++k)
+            {
+                if (mesh->mFaces->mNumIndices == 3)
+                {
+                    // kth face!
+                    indices.push_back(mesh->mFaces[k].mIndices[0]);
+                    indices.push_back(mesh->mFaces[k].mIndices[1]);
+                    indices.push_back(mesh->mFaces[k].mIndices[2]);
+                }
+                else
+                {
+                    std::cout << "wierd number of indices to a face: " << mesh->mFaces->mNumIndices << std::endl;
+                }
             }
             meshes.push_back(Mesh(vertices, indices));
+            std::cout << "meshes size: " << meshes.size() << std::endl;
         }
         for (int i = 0 ; i < node->mNumChildren ; i ++)
             assimpToMesh(node->mChildren[i], scene);

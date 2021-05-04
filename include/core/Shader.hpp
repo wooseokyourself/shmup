@@ -35,7 +35,6 @@ public:
 
 private:
     unsigned int readAndCompileShader (const std::string& shaderPath, const unsigned int type) const {
-        cout << "    Shader readAndCompile start: " << shaderPath << endl;
         // Read source code
         std::string _shaderCode;
         std::ifstream shaderFile;
@@ -65,7 +64,6 @@ private:
             std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
             exit(EXIT_FAILURE);
         }
-        cout << "    Shader readAndCompile end" << endl;
         return shader;
     }
 
