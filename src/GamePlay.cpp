@@ -1,6 +1,8 @@
 #include "GamePlay.hpp"
 
 GamePlay::GamePlay () : viewMode(0) {
+    cout << "start gameplay constructor" << endl;
+
     stage = 1;
     gameMode = GAMEMODE_NONE;
     viewMode = VIEWMODE_TPS;
@@ -9,56 +11,77 @@ GamePlay::GamePlay () : viewMode(0) {
     perspectiveSceneRoot = new World;
     player = new Aircraft;
     enemy = new Aircraft;
-    playerBulletManager = new StraightMovingObjectManager(100, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
-    enemyBulletManager = new StraightMovingObjectManager(100, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
-    itemManager = new StraightMovingObjectManager(10, "assets/models/ammo_crate.obj", glm::vec3(0.0f, 0.0f, 1.0f));
-    planetaryA = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
-    planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
+    playerBulletManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 100, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
+    enemyBulletManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 100, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
+    itemManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 10, "assets/models/ammo_crate.obj", glm::vec3(0.0f, 0.0f, 1.0f));
+    // planetaryA = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
+    // planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
 
-    hud = new Hud;
+    // hud = new Hud;
+
+    cout << "allocated done" << endl;
+
+    player->loadShader("shader/vertex.vert", "shader/fragment.frag");
+    enemy->loadShader("shader/vertex.vert", "shader/fragment.frag");
+    // planetaryA->loadShader("shader/vertex.vert", "shader/fragment.frag");
+    // planetaryB->loadShader("shader/vertex.vert", "shader/fragment.frag");
 
     player->loadModel("assets/models/player.obj");
     enemy->loadModel("assets/models/ebm314.obj");
 
-    perspectiveSceneRoot->pushChild(planetaryA);
-    perspectiveSceneRoot->pushChild(planetaryB);
+    cout << "shader loading done" << endl;
+
+    // perspectiveSceneRoot->pushChild(planetaryA);
+    // perspectiveSceneRoot->pushChild(planetaryB);
     perspectiveSceneRoot->pushChild(player);
     perspectiveSceneRoot->pushChild(enemy);
     perspectiveSceneRoot->pushChild(playerBulletManager);
     perspectiveSceneRoot->pushChild(enemyBulletManager);
     perspectiveSceneRoot->pushChild(itemManager);
+
+    const float base = WINDOW_HEIGHT < WINDOW_WIDTH ? WINDOW_HEIGHT : WINDOW_WIDTH;
+    const float widthset = WINDOW_WIDTH / base;
+    const float heightset = WINDOW_HEIGHT / base;
+    perspectiveMat = glm::perspective(glm::radians(75.0f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 1000.0f);
+    orthoMat = glm::ortho(-1.0f * widthset, 1.0f * widthset, -1.0f * heightset, 1.0f * heightset, 0.0f, UI_CAM_Z - UI_Z);
+    orthoCam.setEyeVec(glm::vec3(UI_CAM_X, UI_CAM_Y, UI_CAM_Z));
+    orthoCam.setAtVec(glm::vec3(UI_CAM_X, UI_CAM_Y, UI_Z));
+    orthoCam.setUpVec(glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 GamePlay::~GamePlay () {
-    delete planetaryB;
-    delete planetaryA;
+    // delete planetaryB;
+    // delete planetaryA;
     delete itemManager;
     delete enemyBulletManager;
     delete playerBulletManager;
     delete enemy;
     delete player;
     delete perspectiveSceneRoot;
-    delete hud;
+    // delete hud;
 }
 
 void GamePlay::start () {
-    hud->init(PLAYER_LIVES);
-    planetaryA->init(PLANETARY_A_POS, PLANETARY_A_MAX_SIZE);
-    planetaryB->init(PLANETARY_B_POS, PLANETARY_B_MAX_SIZE);
+    // hud->init(PLAYER_LIVES);
+    // planetaryA->init(PLANETARY_A_POS, PLANETARY_A_MAX_SIZE);
+    // planetaryB->init(PLANETARY_B_POS, PLANETARY_B_MAX_SIZE);
     player->init(PLAYER_INIT_POS, 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), PLAYER_COLOR, PLAYER_MAX_SIZE, AircraftSpeed::FAST, PLAYER_LIVES);
     enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_COLOR, ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, 1);
     enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE, ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
 }
 
 void GamePlay::renderPerspectiveScene () {
-    // gluLookAt(camPos.x, camPos.y, camPos.z, at.x, at.y, at.z, camUp.x, camUp.y, camUp.z);
-    
-    perspectiveSceneRoot->draw();
+    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    perspectiveSceneRoot->display(perspectiveMat, perspectiveCam.getMat(), glm::mat4(1.0f));
 }
 
 void GamePlay::renderOrthoScene () {
-    gluLookAt(UI_CAM_X, UI_CAM_Y, UI_CAM_Z, UI_CAM_X, UI_CAM_Y, UI_Z, 0.0f, 1.0f, 0.0f);
-    hud->draw();
+    // glClear(GL_DEPTH_BUFFER_BIT);
+    // glDepthMask(GL_FALSE);
+    // glDisable(GL_DEPTH_TEST);
+    // hud->display(orthoMat, orthoCam.getMat(), glm::mat4(1.0f));
 }
 
 void GamePlay::update (const bool* asyncKeyBuf, std::queue<unsigned char>& discreteKeyBuf) {
@@ -93,7 +116,7 @@ void GamePlay::update (const bool* asyncKeyBuf, std::queue<unsigned char>& discr
             enemy->addShotgunBullet();
         enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE, ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
     }
-    hud->setValue(stage, viewMode, renderingMode, gameMode, player->getLives());
+    // hud->setValue(stage, viewMode, renderingMode, gameMode, player->getLives());
 
     // Update view
     switch (viewMode) {
@@ -158,12 +181,12 @@ void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf
                 if (!renderingMode) {
                     renderingMode = true;
                     perspectiveSceneRoot->setWireframe(true);
-                    hud->setWireframe(true);
+                    // hud->setWireframe(true);
                 }
                 else {
                     renderingMode = false;
                     perspectiveSceneRoot->setWireframe(false);
-                    hud->setWireframe(false);
+                    // hud->setWireframe(false);
                 }
                 break;
             case 'v':
@@ -188,7 +211,7 @@ void GamePlay::setViewTPS () {
     const glm::vec3 camPos = glm::vec3(playerPos + (-playerFrontVec * 7.0f + playerUpVec * 3.5f));
     const glm::vec3 at = playerPos + playerFrontVec * glm::vec3(AXIS_LIMIT_ABS);
     const glm::vec3 camUp = glm::vec3(playerUpVec);
-    cam.set(camPos, at, camUp);
+    perspectiveCam.set(camPos, at, camUp);
     player->setDraw(true);
 }
 
@@ -197,7 +220,7 @@ void GamePlay::setViewFPS () {
     const glm::vec3 camPos = playerPos;
     const glm::vec3 at = playerPos + player->getFrontVec() * glm::vec3(AXIS_LIMIT_ABS);
     const glm::vec3 camUp = player->getUpVec();
-    cam.set(camPos, at, camUp);
+    perspectiveCam.set(camPos, at, camUp);
     player->setDraw(false);
 }
 
@@ -205,7 +228,7 @@ void GamePlay::setView2D () {
     const glm::vec3 camPos = glm::vec3(0.0f, WORLD_LIMIT_ABS * 2.0f, 0.0f);
     const glm::vec3 at = glm::vec3(0.0f, 0.0f, 0.0f);
     const glm::vec3 camUp = glm::vec3(0.0f, 0.0f, -1.0f);
-    cam.set(camPos, at, camUp);
+    perspectiveCam.set(camPos, at, camUp);
     player->setDraw(true);
 }
 
@@ -265,11 +288,11 @@ void GamePlay::afterEnemyHit () {
 void GamePlay::win () {
     std::cout << "Win!" << std::endl;
     enemyAi.stop();
-    glutLeaveMainLoop();
+    glutDestroyWindow(glutGetWindow());
 }
 
 void GamePlay::lose () {
     std::cout << "Lose.." << std::endl;
     enemyAi.stop();
-    glutLeaveMainLoop();
+    glutDestroyWindow(glutGetWindow());
 }

@@ -6,7 +6,7 @@
 
 class World : public Object {
 public:
-    virtual void draw ();
+    void draw ();
 };
 
 #endif

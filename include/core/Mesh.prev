@@ -1,5 +1,5 @@
-#ifndef __MESH__
-#define __MESH__
+#ifndef __MESHPREV__
+#define __MESHPREV__
 
 #include <string>
 

@@ -50,6 +50,4 @@ void World::draw() {
     glVertex3f(TILE_LEN * float(offset), 0.0f, TILE_LEN * float(offset));
     glVertex3f(TILE_LEN * float(offset), 0.0f, -TILE_LEN * float(offset));
     glEnd();
-
-    Object::draw();
 }

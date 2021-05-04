@@ -18,8 +18,6 @@
 				"src/Ai.cpp",
 				"src/Aircraft.cpp",
 				"src/GamePlay.cpp",
-				"src/Hud.cpp",
-				"src/Planetary.cpp",
 				"src/StraightMovingObjectManager.cpp",
 				"src/World.cpp",
 				"main/main.cpp",

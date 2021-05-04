@@ -1,8 +1,9 @@
 #include "StraightMovingObjectManager.hpp"
 
-StraightMovingObjectManager::StraightMovingObjectManager (const int maxPool, const std::string objectModelPath, const glm::vec3 _objectFront) {
+StraightMovingObjectManager::StraightMovingObjectManager (const std::string& vertPath, const std::string& fragPath, const int maxPool, const std::string objectModelPath, const glm::vec3 _objectFront) {
     for (int i = 0 ; i < maxPool ; i ++) {
         Object* object = new Object;
+        object->loadShader(vertPath, fragPath);
         object->loadModel(objectModelPath); // 직선운동 와중에 자전하기위함
         pool.push(object);
         pushChild(object);
@@ -42,9 +43,9 @@ void StraightMovingObjectManager::update () {
     }
 }
 
-void StraightMovingObjectManager::draw () {
+void StraightMovingObjectManager::display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat) {
     for (Object* object : activatedObjects)
-        object->draw();
+        object->display(projection, lookAt, prevMat);
 }
 
 void StraightMovingObjectManager::activateObject (const glm::vec3 translate,

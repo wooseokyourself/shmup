@@ -6,7 +6,7 @@
 
 class Planetary : public Object {
 public:
-    Planetary (const std::string aModelPath, const std::string bModelPath, const std::string cModelPath);
+    Planetary (const std::string& vertPath, const std::string& fragPath, const std::string aModelPath, const std::string bModelPath, const std::string cModelPath);
     ~Planetary ();
     virtual void update ();
     void init (const glm::vec3 pos, const float maxSize);

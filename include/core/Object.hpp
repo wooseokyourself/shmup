@@ -12,15 +12,24 @@
 #include <core/assimp/scene.h>
 #include <core/assimp/postprocess.h>
 
+#include "core/Utility.hpp"
 #include "core/Mesh.hpp"
+
+using namespace std;
 
 class Object {
 public:
     Object () : parent(nullptr), speed(0.0f), drawFlag(false) {
+        cout << " object constructor start" << endl;
+        shader = nullptr;
         translatef = glm::vec3(0.0f, 0.0f, 0.0f);
         scalef = glm::vec3(1.0f, 1.0f, 1.0f);
-        inheritedScalef = 1.0f;
+        inheritedScalef = glm::vec3(1.0f, 1.0f, 1.0f);
         modelViewMat = glm::mat4(1.0f);
+        cout << " object constructor end" << endl;
+    }
+    ~Object () {
+        delete shader;
     }
     virtual void update () {
         modelViewMat = glm::translate(glm::mat4(1.0f), translatef);
@@ -32,21 +41,20 @@ public:
             child->update();
         }
     }
-    virtual void display () {
-        // 여기에서 쉐이더를 통한... 그리기..
-    }
-
-public:
-    void loadModel (const std::string& path) {
-        const aiScene* scene = aiImportFile(path.c_str(), aiProcess_Triangulate | aiProcessPreset_TargetRealtime_MaxQuality);
-        if (scene) {
-            assimpToMesh(scene->mRootNode, scene);
-            std::vector<glm::vec3> bb = getBoundingBox(scene);
+    virtual void display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat) {
+        const glm::mat4 ctm = this->modelViewMat * prevMat;
+        if (shader && drawFlag) {
+            unsigned int uni = glGetUniformLocation(shader->ID, "transform");
+            glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(lookAt * ctm));
+            uni = glGetUniformLocation(shader->ID, "projection");
+            glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(projection));
+            uni = glGetUniformLocation(shader->ID, "color");
+            glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(color));
+            for (Mesh mesh : meshes)
+                mesh.draw(shader);
         }
-        else {
-            std::cout << "ERROR::OBJECT::READ_MODEL_FAILED" << std::endl;
-            exit(EXIT_FAILURE);
-        }
+        for (Object* child : children)
+            child->display(projection, lookAt, ctm);
     }
 
 public: // Scene graph
@@ -66,7 +74,7 @@ public: // Transformations
     void translate (const glm::vec3 factors) {
         translatef += factors / inheritedScalef;
     }
-    void setTranslate (const glm::vec3 factors} {
+    void setTranslate (const glm::vec3 factors) {
         translatef = factors / inheritedScalef;
     }
     void rotate (const float angle, const glm::vec3 axis) {
@@ -91,11 +99,36 @@ public: // Transformations
         scalef += factors;
     }
     void setLongestSideTo (const float len) {
-        scalef.x = scalef.y = scalef.z = (len / longestSide) / inheritedScalef;
+        scalef = (len / longestSide) / inheritedScalef;
         update();
+    }
+    std::vector<float> getAngleStack () const {
+        return angleStack;
+    }
+    std::vector<glm::vec3> getRotateAxisStack () const {
+        return rotateAxisStack;
+    }
+    glm::vec3 getTranslate () const {
+        return translatef;
     }
 
 public: // Utilities
+    void loadShader (const std::string& vertPath, const std::string& fragPath) {
+        cout << "  object loadShader start" << endl;
+        shader = new Shader(vertPath, fragPath);
+        cout << "  object loadShader end" << endl;
+    }
+    void loadModel (const std::string& path) {
+        const aiScene* scene = aiImportFile(path.c_str(), aiProcess_Triangulate | aiProcessPreset_TargetRealtime_MaxQuality);
+        if (scene) {
+            assimpToMesh(scene->mRootNode, scene);
+            calcBoundingBox(scene);
+        }
+        else {
+            std::cout << "ERROR::OBJECT::READ_MODEL_FAILED" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
     void setDraw (bool flag) {
         drawFlag = flag;
         for (Object* child : children)
@@ -132,8 +165,8 @@ public: // Utilities
         translate(glm::vec3(unit / glm::length(glm::vec3(unit)) * speed));
     }
     bool isIn (const glm::vec3 p) const {
-        glm::vec3 worldVecA = glm::vec3(modelViewMat * glm::vec4(mesh.getBoundingBoxMin(), 1));
-        glm::vec3 worldVecB = glm::vec3(modelViewMat * glm::vec4(mesh.getBoundingBoxMax(), 1));
+        glm::vec3 worldVecA = glm::vec3(modelViewMat * glm::vec4(bbMin, 1));
+        glm::vec3 worldVecB = glm::vec3(modelViewMat * glm::vec4(bbMax, 1));
     
         /*
         std::cout << "p: " << glm::to_string(p) << std::endl;
@@ -157,8 +190,19 @@ public: // Utilities
         ); 
     }
 
+public: // Colors
+    void setColor (const glm::vec4 _color) {
+        color = _color;
+    }
+    void setRandomColor () {
+        color = glm::vec4(randomRealNumber(0.0f, 1.0f), randomRealNumber(0.0f, 1.0f), randomRealNumber(0.0f, 1.0f), 1.0f);
+    }
+    glm::vec4 getColor () const {
+        return color;
+    }
+
 private:
-    void assimpToMesh (aiNode* node, aiScene* scene) {
+    void assimpToMesh (aiNode* node, const aiScene* scene) {
         /**
          * loadModel 에서 aiProcess_Triangulate 옵션으로 모델을 불러오기 떄문에 
          * 모든 primitive는 삼각형으로 재구성된다. 그러므로 glDrawArray에서 primitive 종류를
@@ -169,8 +213,8 @@ private:
         for (int i = 0 ; i < node->mNumMeshes ; i ++) { 
             const aiMesh* mesh = scene->mMeshes[meshIdx[i]];
             std::vector<vertex> vertices;
-            std::vector<indices> indices;
-            for (int j = 0 ; j < mesh->mNumVertices ; j ++) {
+            std::vector<unsigned int> indices;
+            for (int j = 0 ; j < mesh->mNumVertices ; j ++) { // Vertices
                 vertex v;
                 const glm::vec3 pos = glm::vec3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z);
                 v.position = pos;
@@ -180,21 +224,19 @@ private:
                 }
                 vertices.push_back(v);
                 
-                // ... 다음은 indices 구하기
+            }
+            for (int j = 0 ; j < mesh->mNumFaces ; j ++) { // Indices
+                const aiFace face = mesh->mFaces[j];
+                for (int k = 0 ; k < face.mNumIndices ; k ++)
+                    indices.push_back(face.mIndices[j]);        
             }
             meshes.push_back(Mesh(vertices, indices));
         }
         for (int i = 0 ; i < node->mNumChildren ; i ++)
             assimpToMesh(node->mChildren[i], scene);
     }
-    Mesh* aiNodeToMesh (aiNode* node) {
-
-        Mesh* mesh = new Mesh();
-    }
-    void getBoundingBox (const aiScene* scene) {
+    void calcBoundingBox (const aiScene* scene) {
         aiMatrix4x4 mat;
-        glm::vec3 bbMin, bbMax;
-        std::vector<glm::vec3> bbVertices;
         aiIdentityMatrix4(&mat);
         bbMin.x = bbMin.y = bbMin.z = 1e10f;
         bbMax.x = bbMax.y = bbMax.z = -1e10f;
@@ -216,8 +258,6 @@ private:
         bbVertices.push_back(glm::vec3(bbMax.x, bbMin.y, bbMin.z));
         bbVertices.push_back(glm::vec3(bbMax.x, bbMax.y, bbMin.z));
         bbVertices.push_back(glm::vec3(bbMin.x, bbMax.y, bbMin.z));
-
-        return bbVertices;
     }
     void calculateBoundingBoxForNode (const aiScene* scene, const aiNode* node, aiMatrix4x4* mat, glm::vec3& bbMin, glm::vec3& bbMax) {
         aiMatrix4x4 prevMat = *mat;
@@ -244,19 +284,26 @@ private: // Scene graph
     Object* parent;
     std::list<Object*> children;
 
+private:
+    Shader* shader;
+
 private: // Mesh
     std::vector<Mesh> meshes;
     float longestSide;
+    glm::vec3 bbMin;
+    glm::vec3 bbMax;
+    std::vector<glm::vec3> bbVertices;
 
 private: // Model-view matrix
     glm::mat4x4 modelViewMat;
     glm::vec3 translatef;
     glm::vec3 scalef;
-    float inheritedScalef;
+    glm::vec3 inheritedScalef;
     std::vector<glm::vec3> rotateAxisStack;
     std::vector<float> angleStack;
 
 private: // Other properties
+    glm::vec4 color;
     bool drawFlag;
     float speed;
 };

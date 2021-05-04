@@ -6,7 +6,7 @@
 
 class Camera {
 public:
-    Camera {
+    Camera () {
         eye = glm::vec3(0.0f, 0.0f, 0.0f);
         at = glm::vec3(0.0f, 0.0f, 0.0f);
         up = glm::vec3(0.0f, 1.0f, 0.0f);

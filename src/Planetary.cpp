@@ -1,9 +1,9 @@
 #include "Planetary.hpp"
 
-Planetary::Planetary (const std::string aModelPath, const std::string bModelPath, const std::string cModelPath) {
-    a = new Object;
-    b = new Object;
-    c = new Object;
+Planetary::Planetary (const std::string& vertPath, const std::string& fragPath, const std::string aModelPath, const std::string bModelPath, const std::string cModelPath) {
+    a = new Object(vertPath, fragPath);
+    b = new Object(vertPath, fragPath);
+    c = new Object(vertPath, fragPath);
     
     a->loadModel(aModelPath);
     b->loadModel(bModelPath);

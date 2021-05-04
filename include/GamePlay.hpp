@@ -11,7 +11,7 @@
 #include "World.hpp"
 #include "Aircraft.hpp"
 #include "StraightMovingObjectManager.hpp"
-#include "Planetary.hpp"
+// #include "Planetary.hpp"
 #include "Ai.hpp"
 #include "Hud.hpp"
 
@@ -50,14 +50,17 @@ private: // Perspective
     StraightMovingObjectManager* playerBulletManager;
     StraightMovingObjectManager* enemyBulletManager;
     StraightMovingObjectManager* itemManager;
-    Planetary* planetaryA;
-    Planetary* planetaryB;
+    // Planetary* planetaryA;
+    // Planetary* planetaryB;
+
+    Camera perspectiveCam;
+    glm::mat4 perspectiveMat;
 
 private: // Ortho
-    Hud* hud;
+    // Hud* hud;
 
-private: // Camera
-    Camera cam;
+    Camera orthoCam;
+    glm::mat4 orthoMat;
 
 private: // Variables for game play
     Ai enemyAi;

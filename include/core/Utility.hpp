@@ -4,6 +4,21 @@
 #include <random>
 #include <map>
 
+#ifdef __APPLE__
+#   define GL_SILENCE_DEPRECATION
+#   include <OpenGL/glext.h>
+#   include <OpenGL/gl3.h>
+// #   include <GL/freeglut.h>
+#   include <GLUT/glut.h>
+#else
+#   include <core/GL/glew.h>
+#   include <core/GL/freeglut.h>
+#endif
+
+#include <core/glm/glm.hpp>
+#include <core/glm/gtc/type_ptr.hpp>
+#include <core/glm/gtx/string_cast.hpp>
+
 inline float getRadian (const float degree) {
     return degree * 3.141592653589793f / 180.0f;
 }

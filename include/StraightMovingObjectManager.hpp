@@ -11,10 +11,10 @@ class Item;
 
 class StraightMovingObjectManager : public Object {
 public:
-    StraightMovingObjectManager (const int maxPool, const std::string objectModelPath, const glm::vec3 _objectFront);
+    StraightMovingObjectManager (const std::string& vertPath, const std::string& fragPath, const int maxPool, const std::string objectModelPath, const glm::vec3 _objectFront);
     ~StraightMovingObjectManager ();
     virtual void update ();
-    virtual void draw ();
+    virtual void display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat);
     void activateObject (const glm::vec3 translate,
                          const std::vector<float> angleStack,
                          const std::vector<glm::vec3> rotateAxisStack, 
