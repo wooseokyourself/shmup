@@ -14,13 +14,11 @@ using namespace std;
 class Shader {
 public:
     Shader (const std::string& vertexShaderPath, const std::string& fragmentShaderPath) {
-        cout << "   Shader constructor start" << endl;
         unsigned int vertexShader = readAndCompileShader(vertexShaderPath, GL_VERTEX_SHADER);
         unsigned int fragmentShader = readAndCompileShader(fragmentShaderPath, GL_FRAGMENT_SHADER);
         ID = linkShaders(vertexShader, fragmentShader);
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
-        cout << "   Shader constructor end" << endl;
     }
     void use () {
         glUseProgram(ID);
@@ -43,12 +41,9 @@ private:
         std::ifstream shaderFile;
         shaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
         try {
-            cout << "     Shader readAndCompile 1" << endl;
             shaderFile.open(shaderPath);
-            cout << "     Shader readAndCompile 2" << endl;
             std::stringstream shaderStream;
             shaderStream << shaderFile.rdbuf();
-            cout << "     Shader readAndCompile 3" << endl;
             shaderFile.close();
             _shaderCode = shaderStream.str();
         }
@@ -61,15 +56,10 @@ private:
         int success;
         char infoLog[512];
         const char* shaderCode = _shaderCode.c_str();
-        cout << "     Shader readAndCompile 4" << endl;
         unsigned int shader = glCreateShader(type);
-        cout << "     Shader readAndCompile 5" << endl;
         glShaderSource(shader, 1, &shaderCode, NULL);
-        cout << "     Shader readAndCompile 6" << endl;
         glCompileShader(shader);
-        cout << "     Shader readAndCompile 7" << endl;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-        cout << "     Shader readAndCompile 8" << endl;
         if (!success) {
             glGetShaderInfoLog(shader, 512, NULL, infoLog);
             std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;

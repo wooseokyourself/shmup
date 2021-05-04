@@ -11,9 +11,12 @@ GamePlay::GamePlay () : viewMode(0) {
     perspectiveSceneRoot = new World;
     player = new Aircraft;
     enemy = new Aircraft;
-    playerBulletManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 100, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
-    enemyBulletManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 100, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
-    itemManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 10, "assets/models/ammo_crate.obj", glm::vec3(0.0f, 0.0f, 1.0f));
+    playerBulletManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 1, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
+    cout << " playerBulletManager allocated done" << endl;
+    enemyBulletManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 1, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
+    cout << " enemyBulletManager allocated done" << endl;
+    itemManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 1, "assets/models/ammo_crate.obj", glm::vec3(0.0f, 0.0f, 1.0f));
+    cout << " itemManager allocated done" << endl;
     // planetaryA = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
     // planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
 

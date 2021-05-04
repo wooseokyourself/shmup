@@ -26,6 +26,10 @@ public:
         scalef = glm::vec3(1.0f, 1.0f, 1.0f);
         inheritedScalef = glm::vec3(1.0f, 1.0f, 1.0f);
         modelViewMat = glm::mat4(1.0f);
+        bbMax = glm::vec3(0.0f);
+        bbMin = glm::vec3(0.0f);
+        color = glm::vec4(1.0f);
+        longestSide = 0.0f;
         cout << " object constructor end" << endl;
     }
     ~Object () {
@@ -44,6 +48,7 @@ public:
     virtual void display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat) {
         const glm::mat4 ctm = this->modelViewMat * prevMat;
         if (shader && drawFlag) {
+            cout << "draw" << endl;
             unsigned int uni = glGetUniformLocation(shader->ID, "transform");
             glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(lookAt * ctm));
             uni = glGetUniformLocation(shader->ID, "projection");
@@ -114,9 +119,7 @@ public: // Transformations
 
 public: // Utilities
     void loadShader (const std::string& vertPath, const std::string& fragPath) {
-        cout << "  object loadShader start" << endl;
         shader = new Shader(vertPath, fragPath);
-        cout << "  object loadShader end" << endl;
     }
     void loadModel (const std::string& path) {
         const aiScene* scene = aiImportFile(path.c_str(), aiProcess_Triangulate | aiProcessPreset_TargetRealtime_MaxQuality);

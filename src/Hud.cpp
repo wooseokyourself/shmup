@@ -1,18 +1,18 @@
 #include "Hud.hpp"
 
-void Hud::draw () {
+void Hud::display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat) {
     drawText();
     for (Object* heart : heartPtrs)
-        heart->draw();
+        heart->display(projection, lookAt, prevMat);
 }
 
 void Hud::init (const int playerLives) {
     for (int i = 0 ; i < playerLives ; i ++) {
         Object* heart = new Object;
         heart->loadModel("assets/models/love.obj");
-        heart->setColor(1.0f, 0.0f, 0.0f, 1.0f);
+        heart->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
         heart->setLongestSideTo(0.1f);
-        heart->setTranslate(UI_MIN_X + (i * UI_MAX_X * 0.12), UI_Y - (UI_Y_HALF_ABS * 0.9f), UI_Z);
+        heart->setTranslate(glm::vec3(UI_MIN_X + (i * UI_MAX_X * 0.12), UI_Y - (UI_Y_HALF_ABS * 0.9f), UI_Z));
         heart->setDraw(true);
         heartPtrs.push_back(heart);
     }

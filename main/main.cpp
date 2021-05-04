@@ -49,17 +49,20 @@ void updateFrame () {
 int main(int argc, char** argv) {
     cout << "main start" << endl;
     glutInit(&argc, argv);
+    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (WINDOW_HEIGHT / 2));
+    glutCreateWindow("Assn3-2");
+
 #ifdef __APPLE__
-    printf("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
     glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
 #else
     GLenum err = glewInit();
     std::cout << err << std::endl;
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
 #endif
-    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (WINDOW_HEIGHT / 2));
-    glutCreateWindow("Assn3-2");
+    printf("%s\n", glGetString(GL_VERSION));
+    printf("%s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
 
     gameplay = new GamePlay;
     glutDisplayFunc(display);

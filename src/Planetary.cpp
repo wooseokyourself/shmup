@@ -1,9 +1,9 @@
 #include "Planetary.hpp"
 
 Planetary::Planetary (const std::string& vertPath, const std::string& fragPath, const std::string aModelPath, const std::string bModelPath, const std::string cModelPath) {
-    a = new Object(vertPath, fragPath);
-    b = new Object(vertPath, fragPath);
-    c = new Object(vertPath, fragPath);
+    a = new Object;
+    b = new Object;
+    c = new Object;
     
     a->loadModel(aModelPath);
     b->loadModel(bModelPath);
@@ -40,9 +40,9 @@ void Planetary::init (const glm::vec3 pos, const float maxSize) {
     b->setLongestSideTo(bSize);
     c->setLongestSideTo(cSize);
 
-    a->setTranslate(0.0f, 0.0f, 0.0f);
-    b->setTranslate(0.0f, maxSize, 0.0f);
-    c->setTranslate(0.0f, 0.0f, bSize);
+    a->setTranslate(glm::vec3(0.0f, 0.0f, 0.0f));
+    b->setTranslate(glm::vec3(0.0f, maxSize, 0.0f));
+    c->setTranslate(glm::vec3(0.0f, 0.0f, bSize));
 
     a->setRotate(aAngle, aRotateAxis);
     b->setRotate(bAngle, bRotateAxis);

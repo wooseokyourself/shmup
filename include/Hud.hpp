@@ -6,7 +6,7 @@
 
 class Hud : public Object {
 public:
-    virtual void draw ();
+    virtual void display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat);
     void init (const int playerLives);
     void setValue (const uint8_t stage, const int viewMode, bool renderingMode, const int gameMode, const int playerLives);
     void setWireframe (bool flag); // override to Object::setWireframe()

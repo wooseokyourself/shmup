@@ -12,7 +12,7 @@
 #   include <GLUT/glut.h>
 #else
 #   include <core/GL/glew.h>
-#   include <core/GL/freeglut.h>
+#   include <core/GL/glut.h>
 #endif
 
 #include <core/glm/glm.hpp>
