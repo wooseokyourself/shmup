@@ -13,38 +13,29 @@ std::queue<unsigned char> discreteKeyBuf;
 
 // GamePlay* gameplay;
 
-float vertices[] = {
-     0.5f,  0.5f, 0.0f,  // 우측 상단
-     0.5f, -0.5f, 0.0f,  // 우측 하단
-    -0.5f, -0.5f, 0.0f,  // 좌측 하단
-    -0.5f,  0.5f, 0.0f   // 좌측 상단
-};
-unsigned int indices[] = {  // 0부터 시작한다는 것을 명심하세요!
-    0, 1, 3,   // 첫 번째 삼각형
-    1, 2, 3    // 두 번째 삼각형
-};
 Shader* shader;
 Object* object;
 unsigned int VAO, VBO, EBO;
 
-/** @brief GLUT callback. */
 void display () {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // gameplay->renderPerspectiveScene();
     // gameplay->renderOrthoScene();
-    // glm::mat4 projection = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 1000.0f);
 
+    /*
     glClear(GL_DEPTH_BUFFER_BIT);
     glDepthMask(GL_FALSE);
     glDisable(GL_DEPTH_TEST);
     glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1000.0f, 1000.0f);
-    glm::mat4 cam = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    */
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glm::mat4 projection = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 1000.0f);
+    glm::mat4 cam = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     object->display(projection, cam, glm::mat4(1.0f));
 
     glutSwapBuffers();
 }
 
-/** @brief GLUT callback. */
 void reshape (int width, int height) {
 
 }
