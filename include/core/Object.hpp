@@ -128,10 +128,12 @@ public: // Utilities
     void loadShader (const std::string& vertPath, const std::string& fragPath) {
         shader = new Shader(vertPath, fragPath);
     }
+    void setShader(Shader* loadedShader) {
+        shader = loadedShader;
+    }
     void loadModel (const std::string& path) {
         Assimp::Importer import;
         const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         {
             cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
@@ -231,28 +233,17 @@ private:
                 v.position = pos;
                 vertices.push_back(v);
             }
-            /*
-            for (int j = 0 ; j < mesh->mNumFaces ; j ++) { // Indices
-                const aiFace face = mesh->mFaces[j];
-                for (int k = 0 ; k < face.mNumIndices ; k ++)
-                    indices.push_back(face.mIndices[k]);        
-            }*/
-            for (size_t k = 0; k < mesh->mNumFaces; ++k)
-            {
-                if (mesh->mFaces->mNumIndices == 3)
-                {
-                    // kth face!
-                    indices.push_back(mesh->mFaces[k].mIndices[0]);
-                    indices.push_back(mesh->mFaces[k].mIndices[1]);
-                    indices.push_back(mesh->mFaces[k].mIndices[2]);
+            for (int j = 0 ; j < mesh->mNumFaces ; j ++) {
+                if (mesh->mFaces->mNumIndices == 3) {
+                    indices.push_back(mesh->mFaces[j].mIndices[0]);
+                    indices.push_back(mesh->mFaces[j].mIndices[1]);
+                    indices.push_back(mesh->mFaces[j].mIndices[2]);
                 }
-                else
-                {
-                    std::cout << "wierd number of indices to a face: " << mesh->mFaces->mNumIndices << std::endl;
+                else {
+                    std::cout << "WARNING::ASSIMP::NON_TRIANGLE_FACE: " << mesh->mFaces->mNumIndices << std::endl;
                 }
             }
             meshes.push_back(Mesh(vertices, indices));
-            std::cout << "meshes size: " << meshes.size() << std::endl;
         }
         for (int i = 0 ; i < node->mNumChildren ; i ++)
             assimpToMesh(node->mChildren[i], scene);
@@ -302,12 +293,12 @@ private:
         *mat = prevMat;
     }
 
+protected:
+    Shader* shader;
+
 private: // Scene graph
     Object* parent;
     std::list<Object*> children;
-
-private:
-    Shader* shader;
 
 private: // Mesh
     std::vector<Mesh> meshes;

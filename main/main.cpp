@@ -11,7 +11,7 @@ int lastRenderTime = 0;
 bool asyncKeyBuf[256];
 std::queue<unsigned char> discreteKeyBuf;
 
-// GamePlay* gameplay;
+GamePlay* gameplay;
 
 Shader* shader;
 Object* object;
@@ -19,20 +19,8 @@ unsigned int VAO, VBO, EBO;
 
 void display () {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // gameplay->renderPerspectiveScene();
-    // gameplay->renderOrthoScene();
-
-    /*
-    glClear(GL_DEPTH_BUFFER_BIT);
-    glDepthMask(GL_FALSE);
-    glDisable(GL_DEPTH_TEST);
-    glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1000.0f, 1000.0f);
-    */
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glm::mat4 projection = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 1000.0f);
-    glm::mat4 cam = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    object->display(projection, cam, glm::mat4(1.0f));
-
+    gameplay->renderPerspectiveScene();
+    gameplay->renderOrthoScene();
     glutSwapBuffers();
 }
 
@@ -54,7 +42,9 @@ void specialKeyboardUp (int key, int x, int y) {
 
 void updateFrame () {
     const int NOW_TIME = glutGet(GLUT_ELAPSED_TIME);
-    // gameplay->update(asyncKeyBuf, discreteKeyBuf);
+    if (NOW_TIME - lastRenderTime < TIME_PER_FRAME)
+        return;
+    gameplay->update(asyncKeyBuf, discreteKeyBuf);
     glutPostRedisplay();
     lastRenderTime = NOW_TIME;
 }
@@ -75,7 +65,7 @@ int main(int argc, char** argv) {
     printf("%s\n", glGetString(GL_VERSION));
     printf("%s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-    // gameplay = new GamePlay;
+    gameplay = new GamePlay;
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     
@@ -96,17 +86,7 @@ int main(int argc, char** argv) {
     glEnable(GL_NORMALIZE);
     glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
 
-    object = new Object;
-    std::string p;
-    std::cout << "model: " << std::endl;
-    std::cin >> p;
-    object->loadModel("assets/models/" + p);
-    object->loadShader("shader/vertex.vert", "shader/fragment.frag");
-    object->setDraw(true);
-    object->setColor(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
-    object->setLongestSideTo(0.5f);
-
-    // gameplay->start();
+    gameplay->start();
     glutMainLoop();
 
     return 0;

@@ -1,8 +1,6 @@
 #include "GamePlay.hpp"
 
 GamePlay::GamePlay () : viewMode(0) {
-    cout << "start gameplay constructor" << endl;
-
     stage = 1;
     gameMode = GAMEMODE_NONE;
     viewMode = VIEWMODE_TPS;
@@ -11,12 +9,9 @@ GamePlay::GamePlay () : viewMode(0) {
     perspectiveSceneRoot = new World;
     player = new Aircraft;
     enemy = new Aircraft;
-    playerBulletManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 1, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
-    cout << " playerBulletManager allocated done" << endl;
-    enemyBulletManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 1, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
-    cout << " enemyBulletManager allocated done" << endl;
+    playerBulletManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 10, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
+    enemyBulletManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 10, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
     itemManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 1, "assets/models/ammo_crate.obj", glm::vec3(0.0f, 0.0f, 1.0f));
-    cout << " itemManager allocated done" << endl;
     // planetaryA = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
     // planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
 
@@ -45,11 +40,9 @@ GamePlay::GamePlay () : viewMode(0) {
     const float base = WINDOW_HEIGHT < WINDOW_WIDTH ? WINDOW_HEIGHT : WINDOW_WIDTH;
     const float widthset = WINDOW_WIDTH / base;
     const float heightset = WINDOW_HEIGHT / base;
-    perspectiveMat = glm::perspective(glm::radians(75.0f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 1000.0f);
-    orthoMat = glm::ortho(-1.0f * widthset, 1.0f * widthset, -1.0f * heightset, 1.0f * heightset, 0.0f, UI_CAM_Z - UI_Z);
-    orthoCam.setEyeVec(glm::vec3(UI_CAM_X, UI_CAM_Y, UI_CAM_Z));
-    orthoCam.setAtVec(glm::vec3(UI_CAM_X, UI_CAM_Y, UI_Z));
-    orthoCam.setUpVec(glm::vec3(0.0f, 1.0f, 0.0f));
+    perspectiveProjection = glm::perspective(glm::radians(75.0f), WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 1000.0f);
+    orthoProjection = glm::ortho(-1.0f * widthset, 1.0f * widthset, -1.0f * heightset, 1.0f * heightset, 0.0f, UI_CAM_Z - UI_Z);
+    orthoLookAt = glm::lookAt(glm::vec3(UI_CAM_X, UI_CAM_Y, UI_CAM_Z), glm::vec3(UI_CAM_X, UI_CAM_Y, UI_Z), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 GamePlay::~GamePlay () {
@@ -77,14 +70,18 @@ void GamePlay::renderPerspectiveScene () {
     glDepthMask(GL_TRUE);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
-    perspectiveSceneRoot->display(perspectiveMat, perspectiveCam.getMat(), glm::mat4(1.0f));
+    if (renderingMode)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    else
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    perspectiveSceneRoot->display(perspectiveProjection, perspectiveLookAt, glm::mat4(1.0f));
 }
 
 void GamePlay::renderOrthoScene () {
     // glClear(GL_DEPTH_BUFFER_BIT);
     // glDepthMask(GL_FALSE);
     // glDisable(GL_DEPTH_TEST);
-    // hud->display(orthoMat, orthoCam.getMat(), glm::mat4(1.0f));
+    // hud->display(orthoProjection, orthoLookAt, glm::mat4(1.0f));
 }
 
 void GamePlay::update (const bool* asyncKeyBuf, std::queue<unsigned char>& discreteKeyBuf) {
@@ -183,13 +180,9 @@ void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf
             case 'r':
                 if (!renderingMode) {
                     renderingMode = true;
-                    perspectiveSceneRoot->setWireframe(true);
-                    // hud->setWireframe(true);
                 }
                 else {
                     renderingMode = false;
-                    perspectiveSceneRoot->setWireframe(false);
-                    // hud->setWireframe(false);
                 }
                 break;
             case 'v':
@@ -214,7 +207,7 @@ void GamePlay::setViewTPS () {
     const glm::vec3 camPos = glm::vec3(playerPos + (-playerFrontVec * 7.0f + playerUpVec * 3.5f));
     const glm::vec3 at = playerPos + playerFrontVec * glm::vec3(AXIS_LIMIT_ABS);
     const glm::vec3 camUp = glm::vec3(playerUpVec);
-    perspectiveCam.set(camPos, at, camUp);
+    perspectiveLookAt = glm::lookAt(camPos, at, camUp);
     player->setDraw(true);
 }
 
@@ -223,7 +216,7 @@ void GamePlay::setViewFPS () {
     const glm::vec3 camPos = playerPos;
     const glm::vec3 at = playerPos + player->getFrontVec() * glm::vec3(AXIS_LIMIT_ABS);
     const glm::vec3 camUp = player->getUpVec();
-    perspectiveCam.set(camPos, at, camUp);
+    perspectiveLookAt = glm::lookAt(camPos, at, camUp);
     player->setDraw(false);
 }
 
@@ -231,7 +224,7 @@ void GamePlay::setView2D () {
     const glm::vec3 camPos = glm::vec3(0.0f, WORLD_LIMIT_ABS * 2.0f, 0.0f);
     const glm::vec3 at = glm::vec3(0.0f, 0.0f, 0.0f);
     const glm::vec3 camUp = glm::vec3(0.0f, 0.0f, -1.0f);
-    perspectiveCam.set(camPos, at, camUp);
+    perspectiveLookAt = glm::lookAt(camPos, at, camUp);
     player->setDraw(true);
 }
 

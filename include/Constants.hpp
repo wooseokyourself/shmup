@@ -5,6 +5,9 @@
 #include <core/glm/glm.hpp>
 #include "World.hpp"
 
+const int FPS = 60;
+const int TIME_PER_FRAME = 1000 / FPS;
+
 namespace AircraftSpeed {
     const float FAST = 0.015;
     const float NORMAL = 0.010;

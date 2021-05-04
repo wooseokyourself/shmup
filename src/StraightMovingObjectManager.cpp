@@ -1,10 +1,11 @@
 #include "StraightMovingObjectManager.hpp"
 
 StraightMovingObjectManager::StraightMovingObjectManager (const std::string& vertPath, const std::string& fragPath, const int maxPool, const std::string objectModelPath, const glm::vec3 _objectFront) {
+    loadShader(vertPath, fragPath);
     for (int i = 0 ; i < maxPool ; i ++) {
         Object* object = new Object;
-        object->loadShader(vertPath, fragPath);
-        object->loadModel(objectModelPath); // 직선운동 와중에 자전하기위함
+        object->setShader(shader);
+        object->loadModel(objectModelPath);
         pool.push(object);
         pushChild(object);
     }

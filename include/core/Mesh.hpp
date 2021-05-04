@@ -11,9 +11,6 @@
 #define min(a,b) a<b?a:b
 #define max(a,b) a>b?a:b
 
-#include <iostream>
-using namespace std;
-
 struct vertex {
     glm::vec3 position;
 };
@@ -44,16 +41,6 @@ public:
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
-        /*
-        cout << "vertices" << endl;
-        for (int i = 0; i < vertices.size(); i++)
-            cout << glm::to_string(vertices[i].position) << ", ";
-        cout << endl;
-        cout << "indices" << endl;
-        for (int i = 0; i < indices.size(); i++)
-            cout << indices[i] << ", ";
-        cout << endl;
-        */
     }   
 
 private:

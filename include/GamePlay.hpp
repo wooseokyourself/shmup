@@ -53,14 +53,14 @@ private: // Perspective
     // Planetary* planetaryA;
     // Planetary* planetaryB;
 
-    Camera perspectiveCam;
-    glm::mat4 perspectiveMat;
+    glm::mat4 perspectiveLookAt;
+    glm::mat4 perspectiveProjection;
 
 private: // Ortho
     // Hud* hud;
 
-    Camera orthoCam;
-    glm::mat4 orthoMat;
+    glm::mat4 orthoLookAt;
+    glm::mat4 orthoProjection;
 
 private: // Variables for game play
     Ai enemyAi;
