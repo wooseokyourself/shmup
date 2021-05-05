@@ -19,6 +19,7 @@ GamePlay::GamePlay () : viewMode(0) {
 
     cout << "allocated done" << endl;
 
+    perspectiveSceneRoot->loadShader("shader/vertex.vert", "shader/fragment.frag");
     player->loadShader("shader/vertex.vert", "shader/fragment.frag");
     enemy->loadShader("shader/vertex.vert", "shader/fragment.frag");
     playerBulletManager->loadShader("shader/vertex.vert", "shader/fragment.frag");

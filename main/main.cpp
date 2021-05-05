@@ -13,10 +13,6 @@ std::queue<unsigned char> discreteKeyBuf;
 
 GamePlay* gameplay;
 
-Shader* shader;
-Object* object;
-unsigned int VAO, VBO, EBO;
-
 void display () {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     gameplay->renderPerspectiveScene();

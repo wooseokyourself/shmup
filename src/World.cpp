@@ -1,18 +1,22 @@
 #include "World.hpp"
 
-void World::draw() {
-    glDisable(GL_LIGHTING);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+World::World() {
+    setColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    std::vector<vertex> vertices;
+    std::vector<unsigned int> indices;
+    std::vector<unsigned int> lastLineIdx;
     float z = -AXIS_LIMIT_ABS;
     bool flag = true;
-    int vertexCount = 0;
-    glColor3f(0.5f, 0.5f, 0.5f);
+    unsigned int vertexCount = 0;
     while (z <= AXIS_LIMIT_ABS) {
         float x = -AXIS_LIMIT_ABS;
-        glBegin(GL_TRIANGLE_STRIP);
         while (x <= AXIS_LIMIT_ABS) {
-            glVertex3f(x, 0.0f, z);
-            vertexCount ++;
+            vertex v;
+            v.position.x = x;
+            v.position.y = 0.0f;
+            v.position.z = z;
+            vertices.push_back(v);
+            vertexCount++;
             if (flag) // 밑으로
                 z += TILE_LEN;
             else { // 위로
@@ -23,31 +27,20 @@ void World::draw() {
                 z += TILE_LEN;
             flag = !flag;
         }
-        glEnd();
+        lastLineIdx.push_back(vertexCount);
     }
-
-    // x axis (red)
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glBegin(GL_LINE_LOOP);
-    glVertex3f(-WORLD_LIMIT_ABS, 0.0f, 0.0f);
-    glVertex3f(WORLD_LIMIT_ABS, 0.0f, 0.0f);
-    glEnd();
-
-    // z axis (blue)
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glBegin(GL_LINE_LOOP);
-    glVertex3f(0.0f, 0.0f, -WORLD_LIMIT_ABS);
-    glVertex3f(0.0f, 0.0f, WORLD_LIMIT_ABS);
-    glEnd();
-
-    // bound of game world (green)
-    const int WORLD_TILE_N = TILE_N / 3;
-    const int offset = WORLD_TILE_N / 2;
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glBegin(GL_LINE_LOOP);
-    glVertex3f(-TILE_LEN * float(offset), 0.0f, -TILE_LEN * float(offset));
-    glVertex3f(-TILE_LEN * float(offset), 0.0f, TILE_LEN * float(offset));
-    glVertex3f(TILE_LEN * float(offset), 0.0f, TILE_LEN * float(offset));
-    glVertex3f(TILE_LEN * float(offset), 0.0f, -TILE_LEN * float(offset));
-    glEnd();
+    unsigned int begin = 2;
+    for (int i = 0; i < lastLineIdx.size(); i++) {
+        unsigned int end = lastLineIdx[i];
+        for (unsigned int third = begin; third < end; third++) {
+            unsigned int first = third == begin ? begin - 2 : indices[indices.size() - 2];
+            unsigned int second = third == begin ? begin - 1 : indices[indices.size() - 1];
+            indices.push_back(first);
+            indices.push_back(second);
+            indices.push_back(third);
+        }
+        begin = end + 2;
+    }
+    meshes.push_back(Mesh(vertices, indices));
+    setDraw(true);
 }

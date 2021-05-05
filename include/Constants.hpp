@@ -27,8 +27,8 @@ const float WINDOW_WIDTH = 1280.0f;
 const float WINDOW_HEIGHT = 720.0f;
 const float WINDOW_FACTOR = 1000.0f;
 
-const float AXIS_LIMIT_ABS = 6.0f;
-const float WORLD_LIMIT_ABS = 2.0f;
+const float AXIS_LIMIT_ABS = 9.0f;
+const float WORLD_LIMIT_ABS = 3.0f;
 const int TILE_N = 90; // 전체 타일의 수는 TILE_N ^ 2
 const float TILE_LEN = (AXIS_LIMIT_ABS * 2.0f) / (float)TILE_N;
 
