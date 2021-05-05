@@ -20,6 +20,7 @@ public:
     std::vector<glm::vec3> getRotateAxisStack() const = delete;
     void loadModel(const std::string& path) = delete;
     ModelViewMat cloneModelViewObj() const = delete;
+    void setModelViewMat(const ModelViewMat& _mat) = delete;
     glm::mat4 getModelViewMat() const = delete;
     glm::vec3 getUpVec() const = delete;
     glm::vec3 getFrontVec() const = delete;

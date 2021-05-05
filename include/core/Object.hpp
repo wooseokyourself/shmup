@@ -108,8 +108,7 @@ public: // Utilities
     void loadModel (const std::string& path) {
         Assimp::Importer import;
         const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-        {
+        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
             cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
             return;
         }
@@ -123,6 +122,9 @@ public: // Utilities
     }
     ModelViewMat cloneModelViewObj() const {
         return modelViewMat;
+    }
+    void setModelViewMat(const ModelViewMat& _mat) {
+        modelViewMat = _mat;
     }
     glm::mat4 getModelViewMat () const {
         return modelViewMat.get();

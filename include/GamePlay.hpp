@@ -56,7 +56,7 @@ private: // Perspective
     glm::mat4 perspectiveProjection;
 
 private: // Ortho
-    // Hud* hud;
+    Hud* hud;
 
     glm::mat4 orthoLookAt;
     glm::mat4 orthoProjection;

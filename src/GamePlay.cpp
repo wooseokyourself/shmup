@@ -14,8 +14,7 @@ GamePlay::GamePlay () : viewMode(0) {
     itemManager = new StraightMovingObjectManager(5);
     // planetaryA = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
     // planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
-
-    // hud = new Hud;
+    hud = new Hud(PLAYER_LIVES);
 
     cout << "allocated done" << endl;
 
@@ -27,6 +26,7 @@ GamePlay::GamePlay () : viewMode(0) {
     itemManager->loadShader("shader/vertex.vert", "shader/fragment.frag");
     // planetaryA->loadShader("shader/vertex.vert", "shader/fragment.frag");
     // planetaryB->loadShader("shader/vertex.vert", "shader/fragment.frag");
+    hud->loadShader("shader/vertex.vert", "shader/fragment.frag");
 
     player->loadModel("assets/models/player.obj");
     enemy->loadModel("assets/models/ebm314.obj");
@@ -61,11 +61,10 @@ GamePlay::~GamePlay () {
     delete enemy;
     delete player;
     delete perspectiveSceneRoot;
-    // delete hud;
+    delete hud;
 }
 
 void GamePlay::start () {
-    // hud->init(PLAYER_LIVES);
     // planetaryA->init(PLANETARY_A_POS, PLANETARY_A_MAX_SIZE);
     // planetaryB->init(PLANETARY_B_POS, PLANETARY_B_MAX_SIZE);
     player->init(PLAYER_INIT_POS, 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), PLAYER_COLOR, PLAYER_MAX_SIZE, AircraftSpeed::FAST, PLAYER_LIVES);
@@ -88,10 +87,11 @@ void GamePlay::renderPerspectiveScene () {
 }
 
 void GamePlay::renderOrthoScene () {
-    // glClear(GL_DEPTH_BUFFER_BIT);
-    // glDepthMask(GL_FALSE);
-    // glDisable(GL_DEPTH_TEST);
-    // hud->display(orthoProjection, orthoLookAt, glm::mat4(1.0f));
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glDepthMask(GL_FALSE);
+    glDisable(GL_DEPTH_TEST);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    hud->display(orthoProjection, orthoLookAt);
 }
 
 void GamePlay::update (const bool* asyncKeyBuf, std::queue<unsigned char>& discreteKeyBuf) {
@@ -126,7 +126,7 @@ void GamePlay::update (const bool* asyncKeyBuf, std::queue<unsigned char>& discr
             enemy->addShotgunBullet();
         enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
     }
-    // hud->setValue(stage, viewMode, renderingMode, gameMode, player->getLives());
+    hud->setValue(stage, viewMode, renderingMode, gameMode, player->getLives());
 
     // Update view
     switch (viewMode) {

@@ -6,20 +6,26 @@
 
 class Hud : public Object {
 public:
-    virtual void display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat);
-    void init (const int playerLives);
+    Hud(const int playerLives);
+    ~Hud();
+    void display (const glm::mat4& projection, const glm::mat4& lookAt);
+    void loadShader(const std::string& vertPath, const std::string& fragPath); // override
+    void setShader(Shader* loadedShader); // override
     void setValue (const uint8_t stage, const int viewMode, bool renderingMode, const int gameMode, const int playerLives);
-    void setWireframe (bool flag); // override to Object::setWireframe()
 
 private:
-    void drawText ();
+    Object* heart;
+    std::vector<ModelViewMat> heartMats;
+    Object* viewModeTPS;
+    Object* viewModeFPS;
+    Object* viewMode2D;
+    Object* wireOn;
+    Object* wireOff;
+    Object* allPass;
+    Object* allFail;
 
 private:
     std::string stageText;
-    std::string viewModeText;
-    std::string renderingModeText;
-    std::string gameModeText;
-    std::vector<Object*> heartPtrs;
 
 public:
     void translate(const glm::vec3 factors) = delete;
@@ -33,6 +39,7 @@ public:
     std::vector<glm::vec3> getRotateAxisStack() const = delete;
     void loadModel(const std::string& path) = delete;
     ModelViewMat cloneModelViewObj() const = delete;
+    void setModelViewMat(const ModelViewMat& _mat) = delete;
     glm::mat4 getModelViewMat() const = delete;
     glm::vec3 getUpVec() const = delete;
     glm::vec3 getFrontVec() const = delete;
