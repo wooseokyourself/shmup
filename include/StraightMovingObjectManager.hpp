@@ -33,7 +33,6 @@ public:
     void setLongestSideTo(const float len) = delete;
     std::vector<float> getAngleStack() const = delete;
     std::vector<glm::vec3> getRotateAxisStack() const = delete;
-    void setDraw(bool flag) = delete;
     ModelViewMat cloneModelViewObj() const = delete;
     glm::mat4 getModelViewMat() const = delete;
     glm::vec3 getUpVec() const = delete;
