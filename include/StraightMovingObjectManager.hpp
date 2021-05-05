@@ -23,6 +23,26 @@ public:
 private:
     bool isPointOutOfWorld(const glm::vec3& p, const float axisLimitAbs);
 
+public:
+    void translate(const glm::vec3 factors) = delete;
+    void setTranslate(const glm::vec3 factors) = delete;
+    void rotate(const float angle, const glm::vec3 axis) = delete;
+    void setRotate(const float angle, const glm::vec3 axis) = delete;
+    void setRotateStack(const std::vector<float> _angleStack, const std::vector<glm::vec3> _rotateAxisStack) = delete;
+    void scale(const glm::vec3 factors) = delete;
+    void setLongestSideTo(const float len) = delete;
+    std::vector<float> getAngleStack() const = delete;
+    std::vector<glm::vec3> getRotateAxisStack() const = delete;
+    void setDraw(bool flag) = delete;
+    ModelViewMat cloneModelViewObj() const = delete;
+    glm::mat4 getModelViewMat() const = delete;
+    glm::vec3 getUpVec() const = delete;
+    glm::vec3 getFrontVec() const = delete;
+    glm::vec3 getWorldPos() const = delete;
+    void move(const glm::vec3 directionInModelFrame) = delete;
+    bool isIn(const glm::vec3 p) const = delete;
+    bool isCenterOutOfWorld(const float axisLimitAbs) = delete;
+
 private:
     std::list<ModelViewMat*> activatedObjectMat;
     std::stack<ModelViewMat*> pool;
