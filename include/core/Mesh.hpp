@@ -48,7 +48,7 @@ private:
     std::vector<vertex> vertices;
     std::vector<unsigned int> indices;
 
-public:
+private:
     unsigned int VAO, VBO, EBO;
 };
 

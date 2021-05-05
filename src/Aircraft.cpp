@@ -59,12 +59,10 @@ void Aircraft::fire (StraightMovingObjectManager* bulletManager, const float bul
     if (shotgunBulletNumber % 2 == 0)
         bulletDegree -= (addingDegree / 2.0f);
     for (int i = 0 ; i < shotgunBulletNumber ; i ++) {
+        ModelViewMat bulletInitTransform = modelViewMat;
         float bulletRotateAngle = bulletDegree += (addingDegree * ( (i % 2 == 1) ? i : -i) );
-        std::vector<float> aircraftAngleStack = getAngleStack();
-        std::vector<glm::vec3> aircraftRotateAxisStack = getRotateAxisStack();
-        aircraftAngleStack.push_back(bulletRotateAngle);
-        aircraftRotateAxisStack.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-        bulletManager->activateObject(modelViewMat, bulletMaxSize);   
+        bulletInitTransform.rotate(bulletRotateAngle, getUpVec());
+        bulletManager->activateObject(bulletInitTransform, bulletMaxSize);   
     }
 }
 

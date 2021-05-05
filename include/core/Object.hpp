@@ -269,16 +269,16 @@ protected: // Model-view matrix
     ModelViewMat modelViewMat;
     glm::vec3 inheritedScalef;
 
-private: // Scene graph
-    Object* parent;
-    std::list<Object*> children;
-
-public: // Mesh
+protected: // Mesh
     std::vector<Mesh> meshes;
     float longestSide;
     glm::vec3 bbMin;
     glm::vec3 bbMax;
     std::vector<glm::vec3> bbVertices;
+
+private: // Scene graph
+    Object* parent;
+    std::list<Object*> children;
 
 private: // Other properties
     glm::vec4 color;

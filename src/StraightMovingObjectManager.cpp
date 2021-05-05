@@ -58,7 +58,7 @@ void StraightMovingObjectManager::activateObject (const ModelViewMat& initTransf
         return;
     ModelViewMat* mat = pool.top();
     pool.pop();
-    *mat = initTransform;
+    *mat = initTransform; 
     mat->scale((maxSide / longestSide) / inheritedScalef);
     activatedObjectMat.push_back(mat);
 }

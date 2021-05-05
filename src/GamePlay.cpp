@@ -33,23 +33,6 @@ GamePlay::GamePlay () : viewMode(0) {
     enemyBulletManager->loadModel("assets/models/sphere.obj");
     itemManager->loadModel("assets/models/ammo_crate.obj");
 
-    cout << "player               VBO: ";
-    for (int i = 0; i < player->meshes.size(); i++)
-        cout << player->meshes[i].VBO << ", ";
-    cout << endl;
-    cout << "enemy                VBO: ";
-    for (int i = 0; i < enemy->meshes.size(); i++)
-        cout << enemy->meshes[i].VBO << ", ";
-    cout << endl;
-    cout << "playerBulletManager  VBO: ";
-    for (int i = 0; i < playerBulletManager->meshes.size(); i++)
-        cout << playerBulletManager->meshes[i].VBO << ", ";
-    cout << endl;
-    cout << "enemyBulletManager   VBO: ";
-    for (int i = 0; i < enemyBulletManager->meshes.size(); i++)
-        cout << enemyBulletManager->meshes[i].VBO << ", ";
-    cout << endl;
-
     cout << "shader loading done" << endl;
 
     // perspectiveSceneRoot->pushChild(planetaryA);
@@ -88,7 +71,7 @@ void GamePlay::start () {
     enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_COLOR, ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, 1);
     playerBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), PLAYER_BULLET_COLOR, BulletSpeed::FAST);
     enemyBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
-    itemManager->init(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 0.0f), BulletSpeed::NORMAL);
+    itemManager->init(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), BulletSpeed::NORMAL);
     enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
 }
 
@@ -303,7 +286,7 @@ void GamePlay::afterEnemyHit () {
     if (!enemy->isAlive()) {
         stage += 1;
         enemyAi.stop();
-        itemManager->activateObject(enemy->cloneModelViewObj(), PLAYER_BULLET_MAX_SIZE);
+        itemManager->activateObject(enemy->cloneModelViewObj(), ITEM_MAX_SIZE);
     }
 }
 
