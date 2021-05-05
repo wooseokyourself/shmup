@@ -23,6 +23,11 @@ public:
 private:
     bool isPointOutOfWorld(const glm::vec3& p, const float axisLimitAbs);
 
+private:
+    std::list<ModelViewMat*> activatedObjectMat;
+    std::stack<ModelViewMat*> pool;
+    glm::vec3 objectFront; // object front in model frame
+
 public:
     void translate(const glm::vec3 factors) = delete;
     void setTranslate(const glm::vec3 factors) = delete;
@@ -41,11 +46,6 @@ public:
     void move(const glm::vec3 directionInModelFrame) = delete;
     bool isIn(const glm::vec3 p) const = delete;
     bool isCenterOutOfWorld(const float axisLimitAbs) = delete;
-
-private:
-    std::list<ModelViewMat*> activatedObjectMat;
-    std::stack<ModelViewMat*> pool;
-    glm::vec3 objectFront; // object front in model frame
 };
 
 #endif
