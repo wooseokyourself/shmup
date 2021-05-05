@@ -20,8 +20,11 @@ public:
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
     }
-    void use () {
+    void bind () {
         glUseProgram(ID);
+    }
+    void unbind() {
+        glUseProgram(0);
     }
     void setBool (const std::string &name, const bool value) const {
         glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);

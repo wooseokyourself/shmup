@@ -1,99 +1,95 @@
 #include "StraightMovingObjectManager.hpp"
 
-StraightMovingObjectManager::StraightMovingObjectManager (const std::string& vertPath, const std::string& fragPath, const int maxPool, const std::string objectModelPath, const glm::vec3 _objectFront) {
-    loadShader(vertPath, fragPath);
-    for (int i = 0 ; i < maxPool ; i ++) {
-        Object* object = new Object;
-        object->setShader(shader);
-        object->loadModel(objectModelPath);
-        pool.push(object);
-        pushChild(object);
-    }
-    objectFront = _objectFront;
+StraightMovingObjectManager::StraightMovingObjectManager (const int maxPool) {
+    for (int i = 0; i < maxPool; i++)
+        pool.push(new ModelViewMat);
+    objectFront = glm::vec3(0.0f, 0.0f, 1.0f);
 }
 
-StraightMovingObjectManager::~StraightMovingObjectManager () {
-    while (!activatedObjects.empty()) {
-        if (activatedObjects.back() != nullptr)
-            delete activatedObjects.back();
-        activatedObjects.pop_back();
-    }
+StraightMovingObjectManager::~StraightMovingObjectManager() {
     while (!pool.empty()) {
-        if (pool.top() != nullptr)
-            delete pool.top();
+        ModelViewMat* mat = pool.top();
         pool.pop();
+        delete mat;
+    }
+    while (!activatedObjectMat.empty()) {
+        ModelViewMat* mat = activatedObjectMat.back();
+        activatedObjectMat.pop_back();
+        delete mat;
     }
 }
 
 void StraightMovingObjectManager::update () {
-    std::stack<Object*> deactivating;
-    for (Object* object : activatedObjects) {
-        object->update();
-        if (object->isCenterOutOfWorld(AXIS_LIMIT_ABS)) {
-            deactivating.push(object);
+    std::stack<ModelViewMat*> deactivating;
+    for (ModelViewMat* mat : activatedObjectMat) {
+        if (isPointOutOfWorld(mat->getTranslate(), AXIS_LIMIT_ABS)) {
+            deactivating.push(mat);
             continue;
         }
-        object->move(objectFront);
+        glm::vec4 unit = mat->get() * glm::vec4(objectFront, 0);
+        mat->translate(glm::vec3(unit / glm::length(glm::vec3(unit)) * getSpeed()));
+        mat->update();
     }
     while (!deactivating.empty()) {
-        Object* object = deactivating.top();
+        ModelViewMat* mat = deactivating.top();
         deactivating.pop();
-        activatedObjects.remove(object);
-        pool.push(object);
-        object->setDraw(false);
+        activatedObjectMat.remove(mat);
+        pool.push(mat);
     }
 }
 
 void StraightMovingObjectManager::display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat) {
-    for (Object* object : activatedObjects)
-        object->display(projection, lookAt, prevMat);
+    setDraw(true);
+    for (ModelViewMat* mat : activatedObjectMat) {
+        modelViewMat = *mat;
+        Object::display(projection, lookAt, glm::mat4(1.0f));
+    }
+    setDraw(false);
 }
 
-void StraightMovingObjectManager::activateObject (const glm::vec3 translate,
-                        const std::vector<float> angleStack,
-                        const std::vector<glm::vec3> rotateAxisStack, 
-                        const float maxSide, 
-                        const glm::vec4 color, 
-                        const GLfloat speed) {
+void StraightMovingObjectManager::init(const glm::vec3 straightVec, const glm::vec4 color, const float speed) {
+    objectFront = straightVec;
+    setColor(color);
+    setSpeed(speed);
+}
+
+void StraightMovingObjectManager::activateObject (const ModelViewMat& initTransform, const float maxSide) {
     if (pool.empty())
         return;
-    Object* object = pool.top();
+    ModelViewMat* mat = pool.top();
     pool.pop();
-    activatedObjects.push_back(object);
-    object->setTranslate(translate);
-    object->setRotateStack(angleStack, rotateAxisStack);
-    object->setLongestSideTo(maxSide);
-    object->setColor(color);
-    object->setSpeed(speed);
-    object->setDraw(true);
+    *mat = initTransform;
+    mat->scale((maxSide / longestSide) / inheritedScalef);
+    activatedObjectMat.push_back(mat);
 }
 
 size_t StraightMovingObjectManager::getActivatedObjectsNumber () const {
-    return activatedObjects.size();
+    return activatedObjectMat.size();
 }
 
 bool StraightMovingObjectManager::deactivateObjectWhichIsIn (const Object* targetBox) {
     bool ret = false;
-    std::stack<Object*> deactivating;
-    for (Object* object : activatedObjects) {
-        if (targetBox->isIn(object->getWorldPos())) {
+    std::stack<ModelViewMat*> deactivating;
+    for (ModelViewMat* mat : activatedObjectMat) {
+        if (targetBox->isIn(mat->getTranslate())) {
             ret = true;
-            deactivating.push(object);
+            deactivating.push(mat);
             continue;
         }
     }
     while (!deactivating.empty()) {
-        Object* object = deactivating.top();
+        ModelViewMat* mat = deactivating.top();
         deactivating.pop();
-        activatedObjects.remove(object);
-        pool.push(object);
-        object->setDraw(false);
+        activatedObjectMat.remove(mat);
+        pool.push(mat);
     }
     return ret;
 }
 
-void StraightMovingObjectManager::setAutoRotation (const float anglePerFrame, const glm::vec3 axis) {
-    for (Object* object : activatedObjects) {
-        // setTranslate(-axis);
-    }
+bool StraightMovingObjectManager::isPointOutOfWorld(const glm::vec3& p, const float axisLimitAbs) {
+    return (
+        p.x < -axisLimitAbs || p.x > axisLimitAbs ||
+        p.y < -axisLimitAbs || p.y > axisLimitAbs ||
+        p.z < -axisLimitAbs || p.z > axisLimitAbs
+        );
 }

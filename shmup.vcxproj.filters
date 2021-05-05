@@ -104,9 +104,6 @@
     <ClInclude Include="include\core\Utility.hpp">
       <Filter>헤더 파일\core</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\Camera.hpp">
-      <Filter>헤더 파일\core</Filter>
-    </ClInclude>
     <ClInclude Include="include\core\Shader.hpp">
       <Filter>헤더 파일\core</Filter>
     </ClInclude>
@@ -115,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="include\core\Mesh.hpp.prev">
       <Filter>헤더 파일\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\ModelViewMat.hpp">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

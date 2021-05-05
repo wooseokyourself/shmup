@@ -10,11 +10,7 @@ using namespace std::chrono_literals;
 
 class Ai {
 public:
-    void start (Aircraft* _aircraft, 
-                StraightMovingObjectManager* _bulletManager, 
-                const float _bulletSize, 
-                const glm::vec4 _bulletColor, 
-                const float _bulletSpeed);
+    void start (Aircraft* _aircraft, StraightMovingObjectManager* _bulletManager, const float _bulletMaxSize);
     void stop ();
 
 private:
@@ -24,9 +20,7 @@ private:
 private:
     Aircraft* aircraft;
     StraightMovingObjectManager* bulletManager;
-    float bulletSize;
-    glm::vec4 bulletColor;
-    float bulletSpeed;
+    float bulletMaxSize;
 
 private:
     std::thread t;

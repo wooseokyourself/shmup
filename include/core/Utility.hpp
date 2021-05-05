@@ -15,10 +15,6 @@
 #   include <core/GL/glut.h>
 #endif
 
-#include <core/glm/glm.hpp>
-#include <core/glm/gtc/type_ptr.hpp>
-#include <core/glm/gtx/string_cast.hpp>
-
 inline float getRadian (const float degree) {
     return degree * 3.141592653589793f / 180.0f;
 }

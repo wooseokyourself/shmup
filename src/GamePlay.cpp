@@ -9,9 +9,9 @@ GamePlay::GamePlay () : viewMode(0) {
     perspectiveSceneRoot = new World;
     player = new Aircraft;
     enemy = new Aircraft;
-    playerBulletManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 10, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
-    enemyBulletManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 10, "assets/models/sphere.obj", glm::vec3(0.0f, 0.0f, 1.0f));
-    itemManager = new StraightMovingObjectManager("shader/vertex.vert", "shader/fragment.frag", 1, "assets/models/ammo_crate.obj", glm::vec3(0.0f, 0.0f, 1.0f));
+    playerBulletManager = new StraightMovingObjectManager(50);
+    enemyBulletManager = new StraightMovingObjectManager(50);
+    itemManager = new StraightMovingObjectManager(5);
     // planetaryA = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
     // planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
 
@@ -21,11 +21,34 @@ GamePlay::GamePlay () : viewMode(0) {
 
     player->loadShader("shader/vertex.vert", "shader/fragment.frag");
     enemy->loadShader("shader/vertex.vert", "shader/fragment.frag");
+    playerBulletManager->loadShader("shader/vertex.vert", "shader/fragment.frag");
+    enemyBulletManager->loadShader("shader/vertex.vert", "shader/fragment.frag");
+    itemManager->loadShader("shader/vertex.vert", "shader/fragment.frag");
     // planetaryA->loadShader("shader/vertex.vert", "shader/fragment.frag");
     // planetaryB->loadShader("shader/vertex.vert", "shader/fragment.frag");
 
     player->loadModel("assets/models/player.obj");
     enemy->loadModel("assets/models/ebm314.obj");
+    playerBulletManager->loadModel("assets/models/sphere.obj");
+    enemyBulletManager->loadModel("assets/models/sphere.obj");
+    itemManager->loadModel("assets/models/ammo_crate.obj");
+
+    cout << "player               VBO: ";
+    for (int i = 0; i < player->meshes.size(); i++)
+        cout << player->meshes[i].VBO << ", ";
+    cout << endl;
+    cout << "enemy                VBO: ";
+    for (int i = 0; i < enemy->meshes.size(); i++)
+        cout << enemy->meshes[i].VBO << ", ";
+    cout << endl;
+    cout << "playerBulletManager  VBO: ";
+    for (int i = 0; i < playerBulletManager->meshes.size(); i++)
+        cout << playerBulletManager->meshes[i].VBO << ", ";
+    cout << endl;
+    cout << "enemyBulletManager   VBO: ";
+    for (int i = 0; i < enemyBulletManager->meshes.size(); i++)
+        cout << enemyBulletManager->meshes[i].VBO << ", ";
+    cout << endl;
 
     cout << "shader loading done" << endl;
 
@@ -63,7 +86,10 @@ void GamePlay::start () {
     // planetaryB->init(PLANETARY_B_POS, PLANETARY_B_MAX_SIZE);
     player->init(PLAYER_INIT_POS, 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), PLAYER_COLOR, PLAYER_MAX_SIZE, AircraftSpeed::FAST, PLAYER_LIVES);
     enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_COLOR, ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, 1);
-    enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE, ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
+    playerBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), PLAYER_BULLET_COLOR, BulletSpeed::FAST);
+    enemyBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
+    itemManager->init(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 0.0f), BulletSpeed::NORMAL);
+    enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
 }
 
 void GamePlay::renderPerspectiveScene () {
@@ -114,7 +140,7 @@ void GamePlay::update (const bool* asyncKeyBuf, std::queue<unsigned char>& discr
         enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_COLOR, ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, stage);
         for (int i = 1 ; i < enemy->getLives() ; i ++)
             enemy->addShotgunBullet();
-        enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE, ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
+        enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
     }
     // hud->setValue(stage, viewMode, renderingMode, gameMode, player->getLives());
 
@@ -159,7 +185,7 @@ void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf
         switch (key) {
             case ' ':
                 if (gameMode != GAMEMODE_ALL_FAIL)
-                    player->fire(playerBulletManager, PLAYER_BULLET_MAX_SIZE, PLAYER_BULLET_COLOR, BulletSpeed::FAST);
+                    player->fire(playerBulletManager, PLAYER_BULLET_MAX_SIZE);
                 break;
             case 'c':
                 if (gameMode != GAMEMODE_ALL_PASS) {
@@ -277,7 +303,7 @@ void GamePlay::afterEnemyHit () {
     if (!enemy->isAlive()) {
         stage += 1;
         enemyAi.stop();
-        itemManager->activateObject(enemy->getTranslate(), enemy->getAngleStack(), enemy->getRotateAxisStack(), ITEM_MAX_SIZE, ITEM_COLOR, BulletSpeed::SLOW);
+        itemManager->activateObject(enemy->cloneModelViewObj(), PLAYER_BULLET_MAX_SIZE);
     }
 }
 

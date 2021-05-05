@@ -1,11 +1,9 @@
 #include "Ai.hpp"
 
-void Ai::start (Aircraft* _aircraft, StraightMovingObjectManager* _bulletManager, const float _bulletSize, const glm::vec4 _bulletColor, const float _bulletSpeed) {
+void Ai::start (Aircraft* _aircraft, StraightMovingObjectManager* _bulletManager, const float _bulletMaxSize) {
     aircraft = _aircraft;
     bulletManager = _bulletManager;
-    bulletSize = _bulletSize;
-    bulletColor = _bulletColor;
-    bulletSpeed = _bulletSpeed;
+    bulletMaxSize = _bulletMaxSize;
     t = std::thread(&Ai::action, this);
 }
 
@@ -54,7 +52,7 @@ void Ai::fire (const int rand) {
         if (ELAPSED_TIME > taskMills)
             break;
         if (rand % 2 == 0)
-            aircraft->fire(bulletManager, bulletSize, bulletColor, bulletSpeed);
+            aircraft->fire(bulletManager, bulletMaxSize);
         std::this_thread::sleep_for(350ms);
     }
 }

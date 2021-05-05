@@ -5,7 +5,6 @@
 #include <vector>
 #include <queue>
 
-#include "core/Camera.hpp"
 #include "core/Object.hpp"
 #include "Constants.hpp"
 #include "World.hpp"

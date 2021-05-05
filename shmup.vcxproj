@@ -33,12 +33,12 @@
     <ClInclude Include="include\Ai.hpp" />
     <ClInclude Include="include\Aircraft.hpp" />
     <ClInclude Include="include\Constants.hpp" />
-    <ClInclude Include="include\core\Camera.hpp" />
     <ClInclude Include="include\core\Mesh.hpp.prev" />
     <ClInclude Include="include\core\Object.hpp" />
     <ClInclude Include="include\core\SceneGraph.hpp" />
     <ClInclude Include="include\core\Shader.hpp" />
     <ClInclude Include="include\core\Utility.hpp" />
+    <ClInclude Include="include\core\ModelViewMat.hpp" />
     <ClInclude Include="include\GamePlay.hpp" />
     <ClInclude Include="include\Hud.hpp" />
     <ClInclude Include="include\Planetary.hpp" />

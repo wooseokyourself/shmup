@@ -5,6 +5,7 @@
 #include <vector>
 #include <list>
 
+#include "core/ModelViewMat.hpp"
 #include "core/Shader.hpp"
 #include "core/Utility.hpp"
 
@@ -47,7 +48,7 @@ private:
     std::vector<vertex> vertices;
     std::vector<unsigned int> indices;
 
-private:
+public:
     unsigned int VAO, VBO, EBO;
 };
 

@@ -21,10 +21,7 @@ class Object {
 public:
     Object () : parent(nullptr), speed(0.0f), drawFlag(false) {
         shader = nullptr;
-        translatef = glm::vec3(0.0f, 0.0f, 0.0f);
-        scalef = glm::vec3(1.0f, 1.0f, 1.0f);
         inheritedScalef = glm::vec3(1.0f, 1.0f, 1.0f);
-        modelViewMat = glm::mat4(1.0f);
         bbMax = glm::vec3(0.0f);
         bbMin = glm::vec3(0.0f);
         color = glm::vec4(1.0f);
@@ -34,39 +31,28 @@ public:
         delete shader;
     }
     virtual void update () {
-        modelViewMat = glm::translate(glm::mat4(1.0f), translatef);
-        for (int i = rotateAxisStack.size() - 1 ; i >= 0 ; i --)
-            modelViewMat = glm::rotate(modelViewMat, getRadian(angleStack[i]), rotateAxisStack[i]);
-        modelViewMat = glm::scale(modelViewMat, scalef); 
+        modelViewMat.update();
         for (Object* child : children) {
-            child->inheritedScalef = inheritedScalef * scalef;
+            child->inheritedScalef = inheritedScalef * modelViewMat.getScale();
             child->update();
         }
     }
     virtual void display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat) {
-        const glm::mat4 ctm = this->modelViewMat * prevMat;
+        const glm::mat4 ctm = modelViewMat.get() * prevMat;
         if (shader && drawFlag) {
+            shader->bind();
             unsigned int uni = glGetUniformLocation(shader->ID, "transform");
             glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(lookAt * ctm));
             uni = glGetUniformLocation(shader->ID, "projection");
             glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(projection));
             uni = glGetUniformLocation(shader->ID, "color");
             glUniform4fv(uni, 1, glm::value_ptr(color));
-            shader->use();
             for (Mesh mesh : meshes)
                 mesh.draw();
+            shader->unbind();
         }
         for (Object* child : children)
             child->display(projection, lookAt, ctm);
-    }
-    virtual void display () {
-        if (shader && drawFlag) {
-            shader->use();
-            for (Mesh mesh : meshes)
-                mesh.draw();
-        }
-        for (Object* child : children)
-            child->display();
     }
 
 public: // Scene graph
@@ -84,44 +70,32 @@ public: // Scene graph
 
 public: // Transformations
     void translate (const glm::vec3 factors) {
-        translatef += factors / inheritedScalef;
+        modelViewMat.translate(factors / inheritedScalef);
     }
     void setTranslate (const glm::vec3 factors) {
-        translatef = factors / inheritedScalef;
+        modelViewMat.setTranslate(factors / inheritedScalef);
     }
     void rotate (const float angle, const glm::vec3 axis) {
-        if (angle != 0.0f) {
-            rotateAxisStack.push_back(axis);
-            angleStack.push_back(angle);
-        }
+        modelViewMat.rotate(angle, axis);
     }
     void setRotate (const float angle, const glm::vec3 axis) {
-        rotateAxisStack.clear();
-        angleStack.clear();
-        if (angle != 0.0f) {
-            rotateAxisStack.push_back(axis);
-            angleStack.push_back(angle);
-        }
+        modelViewMat.setRotate(angle, axis);
     }
     void setRotateStack (const std::vector<float> _angleStack, const std::vector<glm::vec3> _rotateAxisStack) {
-        angleStack = _angleStack;
-        rotateAxisStack = _rotateAxisStack;
+        modelViewMat.setRotateStack(_angleStack, _rotateAxisStack);
     }
     void scale (const glm::vec3 factors) {
-        scalef += factors;
+        modelViewMat.scale(factors);
     }
     void setLongestSideTo (const float len) {
-        scalef = (len / longestSide) / inheritedScalef;
-        update();
+        modelViewMat.scale((len / longestSide) / inheritedScalef);
+        modelViewMat.update();
     }
     std::vector<float> getAngleStack () const {
-        return angleStack;
+        return modelViewMat.getAngleStack();
     }
     std::vector<glm::vec3> getRotateAxisStack () const {
-        return rotateAxisStack;
-    }
-    glm::vec3 getTranslate () const {
-        return translatef;
+        return modelViewMat.getRotateAxisStack();
     }
 
 public: // Utilities
@@ -147,25 +121,20 @@ public: // Utilities
         for (Object* child : children)
             child->setDraw(flag);
     }
-    glm::mat4 getModelViewMat () const {
+    ModelViewMat cloneModelViewObj() const {
         return modelViewMat;
     }
+    glm::mat4 getModelViewMat () const {
+        return modelViewMat.get();
+    }
     glm::vec3 getUpVec () const {
-        return modelViewMat[1]; // second column
+        return modelViewMat.get()[1]; // second column
     }
     glm::vec3 getFrontVec () const {
-        return modelViewMat[2]; // third column
+        return modelViewMat.get()[2]; // third column
     }
     glm::vec3 getWorldPos () const {
-        return translatef;
-    }
-    void setWireframe (bool flag) {
-        // 쉐이더로 변경됨으로써 이 부분도 바뀌어야 한다.
-        /*
-        mesh.setWireframe (flag);
-        for (Object* child : children)
-            child->setWireframe(flag);
-        */
+        return modelViewMat.getTranslate();
     }
     void setSpeed (const float _speed) {
         speed = _speed;
@@ -174,12 +143,12 @@ public: // Utilities
         return speed;
     }
     void move (const glm::vec3 directionInModelFrame) {
-        glm::vec4 unit = modelViewMat * glm::vec4(directionInModelFrame, 0);
+        glm::vec4 unit = modelViewMat.get() * glm::vec4(directionInModelFrame, 0);
         translate(glm::vec3(unit / glm::length(glm::vec3(unit)) * speed));
     }
     bool isIn (const glm::vec3 p) const {
-        glm::vec3 worldVecA = glm::vec3(modelViewMat * glm::vec4(bbMin, 1));
-        glm::vec3 worldVecB = glm::vec3(modelViewMat * glm::vec4(bbMax, 1));
+        glm::vec3 worldVecA = glm::vec3(modelViewMat.get() * glm::vec4(bbMin, 1));
+        glm::vec3 worldVecB = glm::vec3(modelViewMat.get() * glm::vec4(bbMax, 1));
     
         /*
         std::cout << "p: " << glm::to_string(p) << std::endl;
@@ -296,24 +265,20 @@ private:
 protected:
     Shader* shader;
 
+protected: // Model-view matrix
+    ModelViewMat modelViewMat;
+    glm::vec3 inheritedScalef;
+
 private: // Scene graph
     Object* parent;
     std::list<Object*> children;
 
-private: // Mesh
+public: // Mesh
     std::vector<Mesh> meshes;
     float longestSide;
     glm::vec3 bbMin;
     glm::vec3 bbMax;
     std::vector<glm::vec3> bbVertices;
-
-private: // Model-view matrix
-    glm::mat4x4 modelViewMat;
-    glm::vec3 translatef;
-    glm::vec3 scalef;
-    glm::vec3 inheritedScalef;
-    std::vector<glm::vec3> rotateAxisStack;
-    std::vector<float> angleStack;
 
 private: // Other properties
     glm::vec4 color;

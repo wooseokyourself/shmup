@@ -11,23 +11,21 @@ class Item;
 
 class StraightMovingObjectManager : public Object {
 public:
-    StraightMovingObjectManager (const std::string& vertPath, const std::string& fragPath, const int maxPool, const std::string objectModelPath, const glm::vec3 _objectFront);
+    StraightMovingObjectManager (const int maxPool);
     ~StraightMovingObjectManager ();
     virtual void update ();
     virtual void display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat);
-    void activateObject (const glm::vec3 translate,
-                         const std::vector<float> angleStack,
-                         const std::vector<glm::vec3> rotateAxisStack, 
-                         const float maxSide, 
-                         const glm::vec4 color, 
-                         const GLfloat speed);
+    void init(const glm::vec3 straightVec, const glm::vec4 color, const float speed);
+    void activateObject (const ModelViewMat& initTransform, const float maxSide);
     size_t getActivatedObjectsNumber () const;
     bool deactivateObjectWhichIsIn (const Object* targetBox);
-    void setAutoRotation (const float anglePerFrame, const glm::vec3 axis);
 
 private:
-    std::list<Object*> activatedObjects;
-    std::stack<Object*> pool;
+    bool isPointOutOfWorld(const glm::vec3& p, const float axisLimitAbs);
+
+private:
+    std::list<ModelViewMat*> activatedObjectMat;
+    std::stack<ModelViewMat*> pool;
     glm::vec3 objectFront; // object front in model frame
 };
 

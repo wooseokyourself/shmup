@@ -27,10 +27,7 @@ public:
     int getLives () const;
     int getLastActivatedTime () const;
     int getLastDeactivatedTime () const;
-    void fire (StraightMovingObjectManager* bulletManager,
-               const float bulletMaxSize, 
-               const glm::vec4 bulletColor, 
-               const float bulletSpeed);
+    void fire(StraightMovingObjectManager* bulletManager, const float bulletMaxSize);
     void addShotgunBullet ();
     void move (const glm::vec3 directionInModelFrame); // override to Object::move()
 

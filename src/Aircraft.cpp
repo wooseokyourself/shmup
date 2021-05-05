@@ -51,14 +51,11 @@ int Aircraft::getLastDeactivatedTime () const {
     return lastDeactivatedTime;
 }
 
-void Aircraft::fire (StraightMovingObjectManager* bulletManager,
-            const float bulletMaxSize, 
-            const glm::vec4 bulletColor, 
-            const float bulletSpeed) {
+void Aircraft::fire (StraightMovingObjectManager* bulletManager, const float bulletMaxSize) {
     if (!isAlive())
         return;
-    GLfloat addingDegree = 15.0f;
-    GLfloat bulletDegree = 0.0f;
+    float addingDegree = 15.0f;
+    float bulletDegree = 0.0f;
     if (shotgunBulletNumber % 2 == 0)
         bulletDegree -= (addingDegree / 2.0f);
     for (int i = 0 ; i < shotgunBulletNumber ; i ++) {
@@ -67,9 +64,7 @@ void Aircraft::fire (StraightMovingObjectManager* bulletManager,
         std::vector<glm::vec3> aircraftRotateAxisStack = getRotateAxisStack();
         aircraftAngleStack.push_back(bulletRotateAngle);
         aircraftRotateAxisStack.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-        bulletManager->activateObject(getTranslate(),
-                                        aircraftAngleStack, aircraftRotateAxisStack, 
-                                        bulletMaxSize, bulletColor, bulletSpeed);   
+        bulletManager->activateObject(modelViewMat, bulletMaxSize);   
     }
 }
 
@@ -79,7 +74,7 @@ void Aircraft::addShotgunBullet () {
 
 void Aircraft::move (const glm::vec3 directionInModelFrame) { // override to Object::move()
     glm::vec4 unit = getModelViewMat() * glm::vec4(directionInModelFrame, 0);
-    glm::vec3 newTranslate = getTranslate() + glm::vec3(unit / glm::length(glm::vec3(unit)) * getSpeed());
+    glm::vec3 newTranslate = getWorldPos() + glm::vec3(unit / glm::length(glm::vec3(unit)) * getSpeed());
     if (newTranslate.x < -WORLD_LIMIT_ABS)
         newTranslate.x = -WORLD_LIMIT_ABS;
     else if (newTranslate.x > WORLD_LIMIT_ABS)

@@ -52,11 +52,6 @@ void Hud::setValue (const uint8_t stage, const int viewMode, bool renderingMode,
     }
 }
 
-void Hud::setWireframe (bool flag) { // override to Object::setWireframe()
-    for (Object* heart : heartPtrs)
-        heart->setWireframe(flag);
-}
-
 void Hud::drawText () {
     glPushMatrix();
     glTranslatef(UI_MIN_X, UI_Y + (UI_Y_HALF_ABS * 0.9f), UI_Z);
