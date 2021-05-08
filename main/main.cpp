@@ -61,19 +61,19 @@ int main(int argc, char** argv) {
     printf("%s\n", glGetString(GL_VERSION));
     printf("%s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-    gameplay = new GamePlay;
-    glutDisplayFunc(display);
-    glutReshapeFunc(reshape);
-    
-    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glShadeModel(GL_SMOOTH);
     glutIgnoreKeyRepeat(1);
     glutKeyboardFunc(keyboardDown);
     glutSpecialFunc(specialKeyboardDown);
     glutSpecialUpFunc(specialKeyboardUp);
     glutIdleFunc(updateFrame);
+    
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+
+    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glShadeModel(GL_SMOOTH);
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -82,6 +82,7 @@ int main(int argc, char** argv) {
     glEnable(GL_NORMALIZE);
     glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
 
+    gameplay = new GamePlay;
     gameplay->start();
     glutMainLoop();
 

@@ -1,6 +1,6 @@
 #include "Planetary.hpp"
 
-Planetary::Planetary (const std::string& vertPath, const std::string& fragPath, const std::string aModelPath, const std::string bModelPath, const std::string cModelPath) {
+Planetary::Planetary (const std::string aModelPath, const std::string bModelPath, const std::string cModelPath) {
     a = new Object;
     b = new Object;
     c = new Object;
@@ -29,6 +29,25 @@ void Planetary::update () {
     a->setRotate(a->getAngleStack().back() += aAngle, aRotateAxis);
     b->setRotate(b->getAngleStack().back() += bAngle, bRotateAxis);
     Object::update();
+}
+
+void Planetary::loadShader(const std::string& vertPath, const std::string& fragPath) {
+    Object::loadShader(vertPath, fragPath);
+    a->setShader(shader);
+    b->setShader(shader);
+    c->setShader(shader);
+}
+
+void Planetary::setShader(Shader* loadedShader) {
+    a->setShader(shader);
+    b->setShader(shader);
+    c->setShader(shader);
+}
+
+void Planetary::setDraw(bool flag) {
+    a->setDraw(flag);
+    b->setDraw(flag);
+    c->setDraw(flag);
 }
 
 void Planetary::init (const glm::vec3 pos, const float maxSize) {

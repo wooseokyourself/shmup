@@ -83,15 +83,15 @@ Hud::~Hud() {
     delete allFail;
 }
 
-void Hud::display(const glm::mat4& projection, const glm::mat4& lookAt) {
+void Hud::display(const glm::mat4& viewProjectionMat) {
     for (ModelViewMat mat : heartMats) {
         // heart->setModelViewMat(mat);
         heart->setTranslate(mat.getTranslate());
         heart->setRotateStack(mat.getAngleStack(), mat.getRotateAxisStack());
         heart->update();
-        heart->display(projection, lookAt, glm::mat4(1.0f));
+        heart->display(viewProjectionMat, glm::mat4(1.0f));
     }
-    Object::display(projection, lookAt, glm::mat4(1.0f));
+    Object::display(viewProjectionMat, glm::mat4(1.0f));
 }
 
 void Hud::loadShader(const std::string& vertPath, const std::string& fragPath) {

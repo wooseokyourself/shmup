@@ -6,7 +6,7 @@
 
 class World : public Object {
 public:
-    World();
+    World(const glm::vec4 color);
 
 public:
     void translate(const glm::vec3 factors) = delete;

@@ -10,7 +10,7 @@
 #include "World.hpp"
 #include "Aircraft.hpp"
 #include "StraightMovingObjectManager.hpp"
-// #include "Planetary.hpp"
+#include "Planetary.hpp"
 #include "Ai.hpp"
 #include "Hud.hpp"
 
@@ -49,8 +49,8 @@ private: // Perspective
     StraightMovingObjectManager* playerBulletManager;
     StraightMovingObjectManager* enemyBulletManager;
     StraightMovingObjectManager* itemManager;
-    // Planetary* planetaryA;
-    // Planetary* planetaryB;
+    Planetary* planetaryA;
+    Planetary* planetaryB;
 
     glm::mat4 perspectiveLookAt;
     glm::mat4 perspectiveProjection;

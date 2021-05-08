@@ -31,20 +31,17 @@ public:
         delete shader;
     }
     virtual void update () {
-        modelViewMat.update();
         for (Object* child : children) {
             child->inheritedScalef = inheritedScalef * modelViewMat.getScale();
             child->update();
         }
     }
-    virtual void display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat) {
-        const glm::mat4 ctm = modelViewMat.get() * prevMat;
+    virtual void display (const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat) {
+        const glm::mat4 ctm = parentModelViewMat * modelViewMat.get();
         if (shader && drawFlag) {
             shader->bind();
-            unsigned int uni = glGetUniformLocation(shader->ID, "transform");
-            glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(lookAt * ctm));
-            uni = glGetUniformLocation(shader->ID, "projection");
-            glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(projection));
+            unsigned int uni = glGetUniformLocation(shader->ID, "mvp");
+            glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(viewProjectionMat * ctm));
             uni = glGetUniformLocation(shader->ID, "color");
             glUniform4fv(uni, 1, glm::value_ptr(color));
             for (Mesh mesh : meshes)
@@ -52,7 +49,7 @@ public:
             shader->unbind();
         }
         for (Object* child : children)
-            child->display(projection, lookAt, ctm);
+            child->display(viewProjectionMat, ctm);
     }
 
 public: // Scene graph
@@ -84,12 +81,12 @@ public: // Transformations
     void setRotateStack (const std::vector<float> _angleStack, const std::vector<glm::vec3> _rotateAxisStack) {
         modelViewMat.setRotateStack(_angleStack, _rotateAxisStack);
     }
-    void scale (const glm::vec3 factors) {
-        modelViewMat.scale(factors);
+    void setScale (const glm::vec3 factors) {
+        modelViewMat.setScale(factors);
     }
     void setLongestSideTo (const float len) {
-        modelViewMat.scale((len / longestSide) / inheritedScalef);
-        modelViewMat.update();
+        modelViewMat.setScale((len / longestSide) / inheritedScalef);
+        update();
     }
     std::vector<float> getAngleStack () const {
         return modelViewMat.getAngleStack();
@@ -97,12 +94,15 @@ public: // Transformations
     std::vector<glm::vec3> getRotateAxisStack () const {
         return modelViewMat.getRotateAxisStack();
     }
+    glm::vec3 getScale() {
+        return modelViewMat.getScale();
+    }
 
 public: // Utilities
-    void loadShader (const std::string& vertPath, const std::string& fragPath) {
+    virtual void loadShader (const std::string& vertPath, const std::string& fragPath) {
         shader = new Shader(vertPath, fragPath);
     }
-    void setShader(Shader* loadedShader) {
+    virtual void setShader(Shader* loadedShader) {
         shader = loadedShader;
     }
     void loadModel (const std::string& path) {
@@ -115,7 +115,7 @@ public: // Utilities
         assimpToMesh(scene->mRootNode, scene);
         calcBoundingBox(scene);
     }
-    void setDraw (bool flag) {
+    virtual void setDraw (bool flag) {
         drawFlag = flag;
         for (Object* child : children)
             child->setDraw(flag);
@@ -126,13 +126,13 @@ public: // Utilities
     void setModelViewMat(const ModelViewMat& _mat) {
         modelViewMat = _mat;
     }
-    glm::mat4 getModelViewMat () const {
+    glm::mat4 getModelViewMat () {
         return modelViewMat.get();
     }
-    glm::vec3 getUpVec () const {
+    glm::vec3 getUpVec () {
         return modelViewMat.get()[1]; // second column
     }
-    glm::vec3 getFrontVec () const {
+    glm::vec3 getFrontVec () {
         return modelViewMat.get()[2]; // third column
     }
     glm::vec3 getWorldPos () const {
@@ -148,7 +148,7 @@ public: // Utilities
         glm::vec4 unit = modelViewMat.get() * glm::vec4(directionInModelFrame, 0);
         translate(glm::vec3(unit / glm::length(glm::vec3(unit)) * speed));
     }
-    bool isIn (const glm::vec3 p) const {
+    bool isIn (const glm::vec3 p) {
         glm::vec3 worldVecA = glm::vec3(modelViewMat.get() * glm::vec4(bbMin, 1));
         glm::vec3 worldVecB = glm::vec3(modelViewMat.get() * glm::vec4(bbMax, 1));
     

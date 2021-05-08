@@ -38,11 +38,11 @@ void StraightMovingObjectManager::update () {
     }
 }
 
-void StraightMovingObjectManager::display (const glm::mat4& projection, const glm::mat4& lookAt, const glm::mat4& prevMat) {
+void StraightMovingObjectManager::display (const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat) {
     setDraw(true);
     for (ModelViewMat* mat : activatedObjectMat) {
         modelViewMat = *mat;
-        Object::display(projection, lookAt, glm::mat4(1.0f));
+        Object::display(viewProjectionMat, glm::mat4(1.0f));
     }
     setDraw(false);
 }
@@ -59,7 +59,7 @@ void StraightMovingObjectManager::activateObject (const ModelViewMat& initTransf
     ModelViewMat* mat = pool.top();
     pool.pop();
     *mat = initTransform; 
-    mat->scale((maxSide / longestSide) / inheritedScalef);
+    mat->setScale((maxSide / longestSide) / inheritedScalef);
     activatedObjectMat.push_back(mat);
 }
 
@@ -67,7 +67,7 @@ size_t StraightMovingObjectManager::getActivatedObjectsNumber () const {
     return activatedObjectMat.size();
 }
 
-bool StraightMovingObjectManager::deactivateObjectWhichIsIn (const Object* targetBox) {
+bool StraightMovingObjectManager::deactivateObjectWhichIsIn (Object* targetBox) {
     bool ret = false;
     std::stack<ModelViewMat*> deactivating;
     for (ModelViewMat* mat : activatedObjectMat) {

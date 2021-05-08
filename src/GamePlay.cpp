@@ -6,14 +6,14 @@ GamePlay::GamePlay () : viewMode(0) {
     viewMode = VIEWMODE_TPS;
     renderingMode = true;
 
-    perspectiveSceneRoot = new World;
+    perspectiveSceneRoot = new World(WORLD_GROUND_COLOR);
     player = new Aircraft;
     enemy = new Aircraft;
     playerBulletManager = new StraightMovingObjectManager(50);
     enemyBulletManager = new StraightMovingObjectManager(50);
     itemManager = new StraightMovingObjectManager(5);
-    // planetaryA = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
-    // planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
+    planetaryA = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
+    planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
     hud = new Hud(PLAYER_LIVES);
 
     cout << "allocated done" << endl;
@@ -24,8 +24,8 @@ GamePlay::GamePlay () : viewMode(0) {
     playerBulletManager->loadShader("shader/vertex.vert", "shader/fragment.frag");
     enemyBulletManager->loadShader("shader/vertex.vert", "shader/fragment.frag");
     itemManager->loadShader("shader/vertex.vert", "shader/fragment.frag");
-    // planetaryA->loadShader("shader/vertex.vert", "shader/fragment.frag");
-    // planetaryB->loadShader("shader/vertex.vert", "shader/fragment.frag");
+    planetaryA->loadShader("shader/vertex.vert", "shader/fragment.frag");
+    planetaryB->loadShader("shader/vertex.vert", "shader/fragment.frag");
     hud->loadShader("shader/vertex.vert", "shader/fragment.frag");
 
     player->loadModel("assets/models/player.obj");
@@ -36,8 +36,8 @@ GamePlay::GamePlay () : viewMode(0) {
 
     cout << "shader loading done" << endl;
 
-    // perspectiveSceneRoot->pushChild(planetaryA);
-    // perspectiveSceneRoot->pushChild(planetaryB);
+    perspectiveSceneRoot->pushChild(planetaryA);
+    perspectiveSceneRoot->pushChild(planetaryB);
     perspectiveSceneRoot->pushChild(player);
     perspectiveSceneRoot->pushChild(enemy);
     perspectiveSceneRoot->pushChild(playerBulletManager);
@@ -53,8 +53,8 @@ GamePlay::GamePlay () : viewMode(0) {
 }
 
 GamePlay::~GamePlay () {
-    // delete planetaryB;
-    // delete planetaryA;
+    delete planetaryB;
+    delete planetaryA;
     delete itemManager;
     delete enemyBulletManager;
     delete playerBulletManager;
@@ -65,8 +65,8 @@ GamePlay::~GamePlay () {
 }
 
 void GamePlay::start () {
-    // planetaryA->init(PLANETARY_A_POS, PLANETARY_A_MAX_SIZE);
-    // planetaryB->init(PLANETARY_B_POS, PLANETARY_B_MAX_SIZE);
+    planetaryA->init(PLANETARY_A_POS, PLANETARY_A_MAX_SIZE);
+    planetaryB->init(PLANETARY_B_POS, PLANETARY_B_MAX_SIZE);
     player->init(PLAYER_INIT_POS, 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), PLAYER_COLOR, PLAYER_MAX_SIZE, AircraftSpeed::FAST, PLAYER_LIVES);
     enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_COLOR, ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, 1);
     playerBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), PLAYER_BULLET_COLOR, BulletSpeed::FAST);
@@ -83,7 +83,7 @@ void GamePlay::renderPerspectiveScene () {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    perspectiveSceneRoot->display(perspectiveProjection, perspectiveLookAt, glm::mat4(1.0f));
+    perspectiveSceneRoot->display(perspectiveProjection * perspectiveLookAt, glm::mat4(1.0f));
 }
 
 void GamePlay::renderOrthoScene () {
@@ -91,7 +91,7 @@ void GamePlay::renderOrthoScene () {
     glDepthMask(GL_FALSE);
     glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    hud->display(orthoProjection, orthoLookAt);
+    hud->display(orthoProjection * orthoLookAt);
 }
 
 void GamePlay::update (const bool* asyncKeyBuf, std::queue<unsigned char>& discreteKeyBuf) {
@@ -219,6 +219,8 @@ void GamePlay::setViewTPS () {
     const glm::vec3 camUp = glm::vec3(playerUpVec);
     perspectiveLookAt = glm::lookAt(camPos, at, camUp);
     player->setDraw(true);
+    planetaryA->setDraw(true);
+    planetaryB->setDraw(true);
 }
 
 void GamePlay::setViewFPS () {
@@ -228,6 +230,8 @@ void GamePlay::setViewFPS () {
     const glm::vec3 camUp = player->getUpVec();
     perspectiveLookAt = glm::lookAt(camPos, at, camUp);
     player->setDraw(false);
+    planetaryA->setDraw(true);
+    planetaryB->setDraw(true);
 }
 
 void GamePlay::setView2D () {
@@ -236,6 +240,8 @@ void GamePlay::setView2D () {
     const glm::vec3 camUp = glm::vec3(0.0f, 0.0f, -1.0f);
     perspectiveLookAt = glm::lookAt(camPos, at, camUp);
     player->setDraw(true);
+    planetaryA->setDraw(false);
+    planetaryB->setDraw(false);
 }
 
 void GamePlay::handleHitNormal (StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
