@@ -93,10 +93,10 @@
 ```
 
 # Example Screen
-<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115849759-29cc4280-a460-11eb-8426-9ac54d2dab0d.png">    
-<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839161-57f85500-a455-11eb-882e-4ece20daba58.png">    
-<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839169-59c21880-a455-11eb-8ea7-0bdfc852d563.png">    
-<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/115839175-5a5aaf00-a455-11eb-814c-0fb30d210253.png">
+<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/117574832-f228f000-b119-11eb-9879-0ce65f51a913.png">    
+<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/117574833-f3f2b380-b119-11eb-9736-d9642928d0fa.png">    
+<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/117574836-f523e080-b119-11eb-8ac6-715d38a0adfb.png">    
+<img width="828" alt="example" src="https://user-images.githubusercontent.com/49421142/117574837-f6eda400-b119-11eb-8b70-f6f39bf023ca.png">
 
 # Resources
 
