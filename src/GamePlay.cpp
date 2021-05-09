@@ -1,6 +1,6 @@
 #include "GamePlay.hpp"
 
-GamePlay::GamePlay () : viewMode(0) {
+GamePlay::GamePlay() : viewMode(0) {
     stage = 1;
     gameMode = GAMEMODE_NONE;
     viewMode = VIEWMODE_TPS;
@@ -52,7 +52,7 @@ GamePlay::GamePlay () : viewMode(0) {
     orthoLookAt = glm::lookAt(glm::vec3(UI_CAM_X, UI_CAM_Y, UI_CAM_Z), glm::vec3(UI_CAM_X, UI_CAM_Y, UI_Z), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
-GamePlay::~GamePlay () {
+GamePlay::~GamePlay() {
     delete planetaryB;
     delete planetaryA;
     delete itemManager;
@@ -64,7 +64,7 @@ GamePlay::~GamePlay () {
     delete hud;
 }
 
-void GamePlay::start () {
+void GamePlay::start() {
     planetaryA->init(PLANETARY_A_POS, PLANETARY_A_MAX_SIZE);
     planetaryB->init(PLANETARY_B_POS, PLANETARY_B_MAX_SIZE);
     player->setRandomColor();
@@ -77,7 +77,7 @@ void GamePlay::start () {
     enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
 }
 
-void GamePlay::renderPerspectiveScene () {
+void GamePlay::renderPerspectiveScene() {
     glDepthMask(GL_TRUE);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
@@ -88,7 +88,7 @@ void GamePlay::renderPerspectiveScene () {
     perspectiveSceneRoot->display(perspectiveProjection * perspectiveLookAt, glm::mat4(1.0f));
 }
 
-void GamePlay::renderOrthoScene () {
+void GamePlay::renderOrthoScene() {
     glClear(GL_DEPTH_BUFFER_BIT);
     glDepthMask(GL_FALSE);
     glDisable(GL_DEPTH_TEST);
@@ -96,7 +96,7 @@ void GamePlay::renderOrthoScene () {
     hud->display(orthoProjection * orthoLookAt);
 }
 
-void GamePlay::update (const bool* asyncKeyBuf, std::queue<unsigned char>& discreteKeyBuf) {
+void GamePlay::update(const bool* asyncKeyBuf, std::queue<unsigned char>& discreteKeyBuf) {
     // Keyboard input handling
     handleAsyncKeyInput(asyncKeyBuf);
     handleDiscreteKeyInput(discreteKeyBuf);
@@ -144,7 +144,7 @@ void GamePlay::update (const bool* asyncKeyBuf, std::queue<unsigned char>& discr
     }
 }
 
-void GamePlay::handleAsyncKeyInput (const bool* asyncKeyBuf) {
+void GamePlay::handleAsyncKeyInput(const bool* asyncKeyBuf) {
     const bool* buf = asyncKeyBuf;
     if (buf[GLUT_KEY_LEFT] && !buf[GLUT_KEY_UP] && !buf[GLUT_KEY_RIGHT] && !buf[GLUT_KEY_DOWN])
         player->move(PLAYER_FRAME::LEFT);
@@ -164,7 +164,7 @@ void GamePlay::handleAsyncKeyInput (const bool* asyncKeyBuf) {
         player->move(PLAYER_FRAME::LEFT - PLAYER_FRAME::FRONT);
 }
 
-void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf) {
+void GamePlay::handleDiscreteKeyInput(std::queue<unsigned char>& discreteKeyBuf) {
     while (!discreteKeyBuf.empty()) {
         unsigned char key = discreteKeyBuf.front();
         discreteKeyBuf.pop();
@@ -203,7 +203,7 @@ void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf
     }
 }
 
-void GamePlay::setViewTPS () {
+void GamePlay::setViewTPS() {
     const glm::vec3 playerPos = player->getWorldPos();
     const glm::vec3 playerFrontVec = player->getFrontVec();
     const glm::vec3 playerUpVec = player->getUpVec();
@@ -216,7 +216,7 @@ void GamePlay::setViewTPS () {
     planetaryB->setDraw(true);
 }
 
-void GamePlay::setViewFPS () {
+void GamePlay::setViewFPS() {
     glm::vec3 playerPos = player->getWorldPos();
     const glm::vec3 camPos = playerPos;
     const glm::vec3 at = playerPos + player->getFrontVec() * glm::vec3(AXIS_LIMIT_ABS);
@@ -227,7 +227,7 @@ void GamePlay::setViewFPS () {
     planetaryB->setDraw(true);
 }
 
-void GamePlay::setView2D () {
+void GamePlay::setView2D() {
     const glm::vec3 camPos = glm::vec3(0.0f, WORLD_LIMIT_ABS * 2.0f, 0.0f);
     const glm::vec3 at = glm::vec3(0.0f, 0.0f, 0.0f);
     const glm::vec3 camUp = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -237,7 +237,7 @@ void GamePlay::setView2D () {
     planetaryB->setDraw(false);
 }
 
-void GamePlay::handleHitNormal (StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
+void GamePlay::handleHitNormal(StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
     if (!target->isAlive())
         return;
     if (attackerBulletManager->deactivateObjectWhichIsIn(target)) {
@@ -248,7 +248,7 @@ void GamePlay::handleHitNormal (StraightMovingObjectManager* attackerBulletManag
     }
 }
 
-void GamePlay::handleHitInstantKill (StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
+void GamePlay::handleHitInstantKill(StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
     if (!target->isAlive())
         return;
     if (attackerBulletManager->deactivateObjectWhichIsIn(target)) {
@@ -261,27 +261,27 @@ void GamePlay::handleHitInstantKill (StraightMovingObjectManager* attackerBullet
     }
 }
 
-void GamePlay::handleHitDodge (StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
+void GamePlay::handleHitDodge(StraightMovingObjectManager* attackerBulletManager, Aircraft* target) {
     if (!target->isAlive())
         return;
     if (attackerBulletManager->deactivateObjectWhichIsIn(target)) { }
 }
 
-void GamePlay::handleGotItem (Aircraft* target) {
+void GamePlay::handleGotItem(Aircraft* target) {
     if (!target->isAlive())
         return;
     if (itemManager->deactivateObjectWhichIsIn(target))
         target->addShotgunBullet();
 }
 
-void GamePlay::afterPlayerHit () {
+void GamePlay::afterPlayerHit() {
     player->loseLife();
     if (!player->isAlive())
         lose();
     player->setRandomColor();
 }
 
-void GamePlay::afterEnemyHit () {
+void GamePlay::afterEnemyHit() {
     enemy->loseLife();
     if (!enemy->isAlive()) {
         stage += 1;
@@ -291,13 +291,13 @@ void GamePlay::afterEnemyHit () {
     }
 }
 
-void GamePlay::win () {
+void GamePlay::win() {
     std::cout << "Win!" << std::endl;
     enemyAi.stop();
     glutDestroyWindow(glutGetWindow());
 }
 
-void GamePlay::lose () {
+void GamePlay::lose() {
     std::cout << "Lose.." << std::endl;
     enemyAi.stop();
     glutDestroyWindow(glutGetWindow());

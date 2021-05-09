@@ -10,12 +10,12 @@ using namespace std::chrono_literals;
 
 class Ai {
 public:
-    void start (Aircraft* _aircraft, StraightMovingObjectManager* _bulletManager, const float _bulletMaxSize);
-    void stop ();
+    void start(Aircraft* _aircraft, StraightMovingObjectManager* _bulletManager, const float _bulletMaxSize);
+    void stop();
 
 private:
-    void action ();
-    void fire (const int rand);
+    void action();
+    void fire(const int rand);
 
 private:
     Aircraft* aircraft;

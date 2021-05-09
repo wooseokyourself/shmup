@@ -117,7 +117,7 @@ void Hud::setShader(Shader* loadedShader) {
     allFail->setShader(loadedShader);
 }
 
-void Hud::setValue (const uint8_t stage, const int viewMode, bool renderingMode, const int gameMode, const int playerLives) {
+void Hud::setValue(const uint8_t stage, const int viewMode, bool renderingMode, const int gameMode, const int playerLives) {
     stageText = "Stage " + std::to_string(stage);
     switch (viewMode) {
         case VIEWMODE_TPS:

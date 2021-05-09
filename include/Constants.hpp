@@ -30,7 +30,7 @@ const float WINDOW_FACTOR = 1000.0f;
 const float AXIS_LIMIT_ABS = 9.0f;
 const float WORLD_LIMIT_ABS = 3.0f;
 const int TILE_N = 90; // 전체 타일의 수는 TILE_N ^ 2
-const float TILE_LEN = (AXIS_LIMIT_ABS * 2.0f) / (float)TILE_N;
+const float TILE_LEN =(AXIS_LIMIT_ABS * 2.0f) /(float)TILE_N;
 const glm::vec4 WORLD_GROUND_COLOR(0.0f, 0.0f, 0.0f, 1.0f);
 
 const float UI_MIN_X = -(WINDOW_WIDTH / WINDOW_FACTOR); 

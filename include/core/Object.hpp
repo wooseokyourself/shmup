@@ -19,7 +19,7 @@ using namespace std;
 
 class Object {
 public:
-    Object () : parent(nullptr), speed(0.0f), drawFlag(false) {
+    Object() : parent(nullptr), speed(0.0f), drawFlag(false) {
         shader = nullptr;
         inheritedScalef = glm::vec3(1.0f, 1.0f, 1.0f);
         bbMax = glm::vec3(0.0f);
@@ -27,16 +27,16 @@ public:
         color = glm::vec4(1.0f);
         longestSide = 0.0f;
     }
-    ~Object () {
+    ~Object() {
         delete shader;
     }
-    virtual void update () {
+    virtual void update() {
         for (Object* child : children) {
             child->inheritedScalef = inheritedScalef * modelViewMat.getScale();
             child->update();
         }
     }
-    virtual void display (const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat) {
+    virtual void display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat) {
         const glm::mat4 ctm = parentModelViewMat * modelViewMat.get();
         if (shader && drawFlag) {
             shader->bind();
@@ -53,45 +53,45 @@ public:
     }
 
 public: // Scene graph
-    Object* pushChild (Object* child) {
+    Object* pushChild(Object* child) {
         child->parent = this;
         children.push_back(child);
         return child;
     }
-    std::list<Object*>& getChildren () {
+    std::list<Object*>& getChildren() {
         return children;
     }
-    Object* getParent () {
+    Object* getParent() {
         return parent;
     }
 
 public: // Transformations
-    void translate (const glm::vec3 factors) {
+    void translate(const glm::vec3 factors) {
         modelViewMat.translate(factors / inheritedScalef);
     }
-    void setTranslate (const glm::vec3 factors) {
+    void setTranslate(const glm::vec3 factors) {
         modelViewMat.setTranslate(factors / inheritedScalef);
     }
-    void rotate (const float angle, const glm::vec3 axis) {
+    void rotate(const float angle, const glm::vec3 axis) {
         modelViewMat.rotate(angle, axis);
     }
-    void setRotate (const float angle, const glm::vec3 axis) {
+    void setRotate(const float angle, const glm::vec3 axis) {
         modelViewMat.setRotate(angle, axis);
     }
-    void setRotateStack (const std::vector<float> _angleStack, const std::vector<glm::vec3> _rotateAxisStack) {
+    void setRotateStack(const std::vector<float> _angleStack, const std::vector<glm::vec3> _rotateAxisStack) {
         modelViewMat.setRotateStack(_angleStack, _rotateAxisStack);
     }
-    void setScale (const glm::vec3 factors) {
+    void setScale(const glm::vec3 factors) {
         modelViewMat.setScale(factors);
     }
-    void setLongestSideTo (const float len) {
+    void setLongestSideTo(const float len) {
         modelViewMat.setScale((len / longestSide) / inheritedScalef);
         update();
     }
-    std::vector<float> getAngleStack () const {
+    std::vector<float> getAngleStack() const {
         return modelViewMat.getAngleStack();
     }
-    std::vector<glm::vec3> getRotateAxisStack () const {
+    std::vector<glm::vec3> getRotateAxisStack() const {
         return modelViewMat.getRotateAxisStack();
     }
     glm::vec3 getScale() {
@@ -99,13 +99,13 @@ public: // Transformations
     }
 
 public: // Utilities
-    virtual void loadShader (const std::string& vertPath, const std::string& fragPath) {
+    virtual void loadShader(const std::string& vertPath, const std::string& fragPath) {
         shader = new Shader(vertPath, fragPath);
     }
     virtual void setShader(Shader* loadedShader) {
         shader = loadedShader;
     }
-    void loadModel (const std::string& path) {
+    void loadModel(const std::string& path) {
         Assimp::Importer import;
         const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
@@ -118,7 +118,7 @@ public: // Utilities
     void pushMesh(const std::vector<glm::vec3>& vertices, const std::vector<unsigned int>& indices) {
         meshes.push_back(Mesh(vertices, indices));
     }
-    virtual void setDraw (bool flag) {
+    virtual void setDraw(bool flag) {
         drawFlag = flag;
         for (Object* child : children)
             child->setDraw(flag);
@@ -129,29 +129,29 @@ public: // Utilities
     void setModelViewMat(const ModelViewMat& _mat) {
         modelViewMat = _mat;
     }
-    glm::mat4 getModelViewMat () {
+    glm::mat4 getModelViewMat() {
         return modelViewMat.get();
     }
-    glm::vec3 getUpVec () {
+    glm::vec3 getUpVec() {
         return modelViewMat.get()[1]; // second column
     }
-    glm::vec3 getFrontVec () {
+    glm::vec3 getFrontVec() {
         return modelViewMat.get()[2]; // third column
     }
-    glm::vec3 getWorldPos () const {
+    glm::vec3 getWorldPos() const {
         return modelViewMat.getTranslate();
     }
-    void setSpeed (const float _speed) {
+    void setSpeed(const float _speed) {
         speed = _speed;
     }
-    float getSpeed () const {
+    float getSpeed() const {
         return speed;
     }
-    void move (const glm::vec3 directionInModelFrame) {
+    void move(const glm::vec3 directionInModelFrame) {
         glm::vec4 unit = modelViewMat.get() * glm::vec4(directionInModelFrame, 0);
         translate(glm::vec3(unit / glm::length(glm::vec3(unit)) * speed));
     }
-    bool isIn (const glm::vec3 p) {
+    bool isIn(const glm::vec3 p) {
         glm::vec3 worldVecA = glm::vec3(modelViewMat.get() * glm::vec4(bbMin, 1));
         glm::vec3 worldVecB = glm::vec3(modelViewMat.get() * glm::vec4(bbMax, 1));
         return (
@@ -161,7 +161,7 @@ public: // Utilities
                 (worldVecA.y <= p.y && worldVecB.y >= p.y) || (worldVecA.y >= p.y && worldVecB.y <= p.y)
             );
     }
-    bool isCenterOutOfWorld (const float axisLimitAbs) {
+    bool isCenterOutOfWorld(const float axisLimitAbs) {
         glm::vec3 p = getWorldPos();
         return (
             p.x < -axisLimitAbs || p.x > axisLimitAbs ||
@@ -171,18 +171,18 @@ public: // Utilities
     }
 
 public: // Colors
-    void setColor (const glm::vec4 _color) {
+    void setColor(const glm::vec4 _color) {
         color = _color;
     }
-    void setRandomColor () {
+    void setRandomColor() {
         color = glm::vec4(randomRealNumber(0.0f, 1.0f), randomRealNumber(0.0f, 1.0f), randomRealNumber(0.0f, 1.0f), 1.0f);
     }
-    glm::vec4 getColor () const {
+    glm::vec4 getColor() const {
         return color;
     }
 
 private:
-    void assimpToMesh (aiNode* node, const aiScene* scene) {
+    void assimpToMesh(aiNode* node, const aiScene* scene) {
         /**
          * loadModel 에서 aiProcess_Triangulate 옵션으로 모델을 불러오기 떄문에 
          * 모든 primitive는 삼각형으로 재구성된다. 그러므로 glDrawArray에서 primitive 종류를
@@ -212,7 +212,7 @@ private:
         for (int i = 0 ; i < node->mNumChildren ; i ++)
             assimpToMesh(node->mChildren[i], scene);
     }
-    void calcBoundingBox (const aiScene* scene) {
+    void calcBoundingBox(const aiScene* scene) {
         aiMatrix4x4 mat;
         aiIdentityMatrix4(&mat);
         bbMin.x = bbMin.y = bbMin.z = 1e10f;
@@ -238,7 +238,7 @@ private:
         bbVertices.push_back(glm::vec3(bbMin.x, bbMax.y, bbMin.z));
         */
     }
-    void calculateBoundingBoxForNode (const aiScene* scene, const aiNode* node, aiMatrix4x4* mat, glm::vec3& bbMin, glm::vec3& bbMax) {
+    void calculateBoundingBoxForNode(const aiScene* scene, const aiNode* node, aiMatrix4x4* mat, glm::vec3& bbMin, glm::vec3& bbMax) {
         aiMatrix4x4 prevMat = *mat;
         aiMultiplyMatrix4(mat, &node->mTransformation);
         for (int i = 0 ; i < node->mNumMeshes ; i ++) {

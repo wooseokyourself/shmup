@@ -1,6 +1,6 @@
 #include "Aircraft.hpp"
 
-void Aircraft::init (const glm::vec3 _translate,
+void Aircraft::init(const glm::vec3 _translate,
             const float _angle,
             const glm::vec3 _rotateAxis,
             const float maxSideSize,
@@ -16,7 +16,7 @@ void Aircraft::init (const glm::vec3 _translate,
     lastActivatedTime = glutGet(GLUT_ELAPSED_TIME);
 }
 
-void Aircraft::init (std::string modelPath,
+void Aircraft::init(std::string modelPath,
             const glm::vec3 _translate,
             const float _angle,
             const glm::vec3 _rotateAxis,
@@ -27,28 +27,28 @@ void Aircraft::init (std::string modelPath,
     init(_translate, _angle, _rotateAxis, maxSideSize, _speed, _lives);
 }
 
-void Aircraft::loseLife () {
+void Aircraft::loseLife() {
     if (--lives <= 0)
         destruct();
 }
 
-bool Aircraft::isAlive () const {
+bool Aircraft::isAlive() const {
     return lives > 0;
 }
 
-int Aircraft::getLives () const {
+int Aircraft::getLives() const {
     return lives;
 }
 
-int Aircraft::getLastActivatedTime () const {
+int Aircraft::getLastActivatedTime() const {
     return lastActivatedTime;
 }
 
-int Aircraft::getLastDeactivatedTime () const {
+int Aircraft::getLastDeactivatedTime() const {
     return lastDeactivatedTime;
 }
 
-void Aircraft::fire (StraightMovingObjectManager* bulletManager, const float bulletMaxSize) {
+void Aircraft::fire(StraightMovingObjectManager* bulletManager, const float bulletMaxSize) {
     if (!isAlive())
         return;
     float addingDegree = 15.0f;
@@ -63,11 +63,11 @@ void Aircraft::fire (StraightMovingObjectManager* bulletManager, const float bul
     }
 }
 
-void Aircraft::addShotgunBullet () {
+void Aircraft::addShotgunBullet() {
     shotgunBulletNumber += 1;
 }
 
-void Aircraft::move (const glm::vec3 directionInModelFrame) { // override to Object::move()
+void Aircraft::move(const glm::vec3 directionInModelFrame) { // override to Object::move()
     glm::vec4 unit = getModelViewMat() * glm::vec4(directionInModelFrame, 0);
     glm::vec3 newTranslate = getWorldPos() + glm::vec3(unit / glm::length(glm::vec3(unit)) * getSpeed());
     if (newTranslate.x < -WORLD_LIMIT_ABS)
@@ -85,7 +85,7 @@ void Aircraft::move (const glm::vec3 directionInModelFrame) { // override to Obj
     setTranslate(newTranslate);
 }
 
-void Aircraft::destruct () {
+void Aircraft::destruct() {
     lives = 0;
     setDraw(false);
     lastDeactivatedTime = glutGet(GLUT_ELAPSED_TIME);

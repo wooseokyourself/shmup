@@ -8,10 +8,10 @@ class Hud : public Object {
 public:
     Hud(const int playerLives);
     ~Hud();
-    void display (const glm::mat4& viewProjectionMat);
+    void display(const glm::mat4& viewProjectionMat);
     virtual void loadShader(const std::string& vertPath, const std::string& fragPath) override;
     virtual void setShader(Shader* loadedShader) override;
-    void setValue (const uint8_t stage, const int viewMode, bool renderingMode, const int gameMode, const int playerLives);
+    void setValue(const uint8_t stage, const int viewMode, bool renderingMode, const int gameMode, const int playerLives);
 
 private:
     Object* heart;

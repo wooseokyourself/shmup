@@ -18,29 +18,29 @@ using namespace std;
 
 class GamePlay {
 public:
-    GamePlay ();
-    ~GamePlay ();
-    void start ();
-    void renderPerspectiveScene ();
-    void renderOrthoScene ();
-    void update (const bool* asyncKeyBuf, std::queue<unsigned char>& discreteKeyBuf);
+    GamePlay();
+    ~GamePlay();
+    void start();
+    void renderPerspectiveScene();
+    void renderOrthoScene();
+    void update(const bool* asyncKeyBuf, std::queue<unsigned char>& discreteKeyBuf);
 
 private:
-    void handleAsyncKeyInput (const bool* asyncKeyBuf);
-    void handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf);
-    void setViewTPS ();
-    void setViewFPS ();
-    void setView2D ();
-    void handleHitNormal (StraightMovingObjectManager* attackerBulletManager, Aircraft* target);
-    void handleHitInstantKill (StraightMovingObjectManager* attackerBulletManager, Aircraft* target);
-    void handleHitDodge (StraightMovingObjectManager* attackerBulletManager, Aircraft* target);
-    void handleGotItem (Aircraft* target);
-    void afterPlayerHit ();
-    void afterEnemyHit ();
+    void handleAsyncKeyInput(const bool* asyncKeyBuf);
+    void handleDiscreteKeyInput(std::queue<unsigned char>& discreteKeyBuf);
+    void setViewTPS();
+    void setViewFPS();
+    void setView2D();
+    void handleHitNormal(StraightMovingObjectManager* attackerBulletManager, Aircraft* target);
+    void handleHitInstantKill(StraightMovingObjectManager* attackerBulletManager, Aircraft* target);
+    void handleHitDodge(StraightMovingObjectManager* attackerBulletManager, Aircraft* target);
+    void handleGotItem(Aircraft* target);
+    void afterPlayerHit();
+    void afterEnemyHit();
 
 private:
-    void win ();
-    void lose ();
+    void win();
+    void lose();
 
 private: // Perspective
     World* perspectiveSceneRoot;

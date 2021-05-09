@@ -1,6 +1,6 @@
 #include "StraightMovingObjectManager.hpp"
 
-StraightMovingObjectManager::StraightMovingObjectManager (const int maxPool) {
+StraightMovingObjectManager::StraightMovingObjectManager(const int maxPool) {
     for (int i = 0; i < maxPool; i++)
         pool.push(new ModelViewMat);
     objectFront = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -19,7 +19,7 @@ StraightMovingObjectManager::~StraightMovingObjectManager() {
     }
 }
 
-void StraightMovingObjectManager::update () {
+void StraightMovingObjectManager::update() {
     std::stack<ModelViewMat*> deactivating;
     for (ModelViewMat* mat : activatedObjectMat) {
         if (isPointOutOfWorld(mat->getTranslate(), AXIS_LIMIT_ABS)) {
@@ -38,7 +38,7 @@ void StraightMovingObjectManager::update () {
     }
 }
 
-void StraightMovingObjectManager::display (const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat) {
+void StraightMovingObjectManager::display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat) {
     setDraw(true);
     for (ModelViewMat* mat : activatedObjectMat) {
         modelViewMat = *mat;
@@ -53,7 +53,7 @@ void StraightMovingObjectManager::init(const glm::vec3 straightVec, const glm::v
     setSpeed(speed);
 }
 
-void StraightMovingObjectManager::activateObject (const ModelViewMat& initTransform, const float maxSide) {
+void StraightMovingObjectManager::activateObject(const ModelViewMat& initTransform, const float maxSide) {
     if (pool.empty())
         return;
     ModelViewMat* mat = pool.top();
@@ -63,11 +63,11 @@ void StraightMovingObjectManager::activateObject (const ModelViewMat& initTransf
     activatedObjectMat.push_back(mat);
 }
 
-size_t StraightMovingObjectManager::getActivatedObjectsNumber () const {
+size_t StraightMovingObjectManager::getActivatedObjectsNumber() const {
     return activatedObjectMat.size();
 }
 
-bool StraightMovingObjectManager::deactivateObjectWhichIsIn (Object* targetBox) {
+bool StraightMovingObjectManager::deactivateObjectWhichIsIn(Object* targetBox) {
     bool ret = false;
     std::stack<ModelViewMat*> deactivating;
     for (ModelViewMat* mat : activatedObjectMat) {

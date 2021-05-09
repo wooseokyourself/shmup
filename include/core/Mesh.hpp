@@ -14,7 +14,7 @@
 
 class Mesh {
 public:
-    Mesh (const std::vector<glm::vec3> vertices, const std::vector<unsigned int> indices) {
+    Mesh(const std::vector<glm::vec3> vertices, const std::vector<unsigned int> indices) {
         this->vertices = vertices;
         this->indices = indices;
         
@@ -31,7 +31,7 @@ public:
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
     }
-    void draw () {
+    void draw() {
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);

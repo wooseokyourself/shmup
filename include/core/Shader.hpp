@@ -13,14 +13,14 @@ using namespace std;
 
 class Shader {
 public:
-    Shader (const std::string& vertexShaderPath, const std::string& fragmentShaderPath) {
+    Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath) {
         unsigned int vertexShader = readAndCompileShader(vertexShaderPath, GL_VERTEX_SHADER);
         unsigned int fragmentShader = readAndCompileShader(fragmentShaderPath, GL_FRAGMENT_SHADER);
         ID = linkShaders(vertexShader, fragmentShader);
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
     }
-    void bind () {
+    void bind() {
         glUseProgram(ID);
     }
     void unbind() {
@@ -28,11 +28,11 @@ public:
     }
 
 private:
-    unsigned int readAndCompileShader (const std::string& shaderPath, const unsigned int type) const {
+    unsigned int readAndCompileShader(const std::string& shaderPath, const unsigned int type) const {
         // Read source code
         std::string _shaderCode;
         std::ifstream shaderFile;
-        shaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
+        shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
         try {
             shaderFile.open(shaderPath);
             std::stringstream shaderStream;
@@ -61,7 +61,7 @@ private:
         return shader;
     }
 
-    unsigned int linkShaders (const unsigned int vertexShader, const unsigned int fragmentShader) const {
+    unsigned int linkShaders(const unsigned int vertexShader, const unsigned int fragmentShader) const {
         int success;
         char infoLog[512];
         unsigned int shader = glCreateProgram();

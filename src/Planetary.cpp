@@ -1,6 +1,6 @@
 #include "Planetary.hpp"
 
-Planetary::Planetary (const std::string aModelPath, const std::string bModelPath, const std::string cModelPath) {
+Planetary::Planetary(const std::string aModelPath, const std::string bModelPath, const std::string cModelPath) {
     a = new Object;
     b = new Object;
     c = new Object;
@@ -19,13 +19,13 @@ Planetary::Planetary (const std::string aModelPath, const std::string bModelPath
     b->pushChild(c);
 }
 
-Planetary::~Planetary () {
+Planetary::~Planetary() {
     delete a;
     delete b;
     delete c;
 }
 
-void Planetary::update () {
+void Planetary::update() {
     a->setRotate(a->getAngleStack().back() += aAngle, aRotateAxis);
     b->setRotate(b->getAngleStack().back() += bAngle, bRotateAxis);
     Object::update();
@@ -50,7 +50,7 @@ void Planetary::setDraw(bool flag) {
     c->setDraw(flag);
 }
 
-void Planetary::init (const glm::vec3 pos, const float maxSize) {
+void Planetary::init(const glm::vec3 pos, const float maxSize) {
     float bSize = maxSize / 3.0f;
     float cSize = bSize / 3.0f;
     

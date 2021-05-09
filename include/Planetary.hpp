@@ -6,13 +6,13 @@
 
 class Planetary : public Object {
 public:
-    Planetary (const std::string aModelPath, const std::string bModelPath, const std::string cModelPath);
-    ~Planetary ();
-    virtual void update () override;
+    Planetary(const std::string aModelPath, const std::string bModelPath, const std::string cModelPath);
+    ~Planetary();
+    virtual void update() override;
     virtual void loadShader(const std::string& vertPath, const std::string& fragPath) override;
     virtual void setShader(Shader* loadedShader) override;
     virtual void setDraw(bool flag) override;
-    void init (const glm::vec3 pos, const float maxSize);
+    void init(const glm::vec3 pos, const float maxSize);
 
 private:
     Object* a;

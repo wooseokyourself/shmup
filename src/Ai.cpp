@@ -1,18 +1,18 @@
 #include "Ai.hpp"
 
-void Ai::start (Aircraft* _aircraft, StraightMovingObjectManager* _bulletManager, const float _bulletMaxSize) {
+void Ai::start(Aircraft* _aircraft, StraightMovingObjectManager* _bulletManager, const float _bulletMaxSize) {
     aircraft = _aircraft;
     bulletManager = _bulletManager;
     bulletMaxSize = _bulletMaxSize;
     t = std::thread(&Ai::action, this);
 }
 
-void Ai::stop () {
+void Ai::stop() {
     if (t.joinable())
         t.detach();
 }
 
-void Ai::action () {
+void Ai::action() {
     while (aircraft->isAlive()) {
         const int rand = randomIntegerNumber(0, 99);
         const glm::vec3 p = aircraft->getWorldPos();
@@ -43,8 +43,8 @@ void Ai::action () {
     }
 }
 
-void Ai::fire (const int rand) {
-    int taskMills = (rand % 10) * 100;
+void Ai::fire(const int rand) {
+    int taskMills =(rand % 10) * 100;
     auto START = std::chrono::steady_clock::now();
     while (aircraft->isAlive()) {
         auto NOW = std::chrono::steady_clock::now();

@@ -13,30 +13,30 @@ std::queue<unsigned char> discreteKeyBuf;
 
 GamePlay* gameplay;
 
-void display () {
+void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     gameplay->renderPerspectiveScene();
     gameplay->renderOrthoScene();
     glutSwapBuffers();
 }
 
-void reshape (int width, int height) {
+void reshape(int width, int height) {
 
 }
 
-void keyboardDown (unsigned char key, int x, int y) {
+void keyboardDown(unsigned char key, int x, int y) {
     discreteKeyBuf.push(key);
 }
 
-void specialKeyboardDown (int key, int x, int y) {
+void specialKeyboardDown(int key, int x, int y) {
     asyncKeyBuf[key] = true;
 }
 
-void specialKeyboardUp (int key, int x, int y) {
+void specialKeyboardUp(int key, int x, int y) {
     asyncKeyBuf[key] = false;
 }
 
-void updateFrame () {
+void updateFrame() {
     const int NOW_TIME = glutGet(GLUT_ELAPSED_TIME);
     if (NOW_TIME - lastRenderTime < TIME_PER_FRAME)
         return;
