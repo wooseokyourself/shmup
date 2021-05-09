@@ -37,7 +37,7 @@ public:
         }
     }
     virtual void display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat) {
-        const glm::mat4 ctm = parentModelViewMat * modelViewMat.get();
+        const glm::mat4 ctm = parentModelViewMat * this->modelViewMat.get();
         if (shader && drawFlag) {
             shader->bind();
             unsigned int uni = glGetUniformLocation(shader->ID, "mvp");

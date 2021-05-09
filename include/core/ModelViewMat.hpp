@@ -13,16 +13,14 @@ public:
         mat = glm::mat4(1.0f);
         isUpdated = true;
     }
-    void update() { // Translate * Rotate * Scale
-        mat = glm::translate(glm::mat4(1.0f), translatef);
-        for (int i = rotateAxisStack.size() - 1; i >= 0; i--)
-            mat = glm::rotate(mat, glm::radians(angleStack[i]), rotateAxisStack[i]);
-        mat = glm::scale(mat, scalef);
-        isUpdated = true;
-    }
     glm::mat4 get() {
-        if (!isUpdated)
-            update();
+        if (!isUpdated) {
+            mat = glm::translate(glm::mat4(1.0f), translatef);
+            for (int i = rotateAxisStack.size() - 1; i >= 0; i--)
+                mat = glm::rotate(mat, glm::radians(angleStack[i]), rotateAxisStack[i]);
+            mat = glm::scale(mat, scalef);
+            isUpdated = true;
+        }
         return mat;
     }
     void translate(const glm::vec3 factors) {
