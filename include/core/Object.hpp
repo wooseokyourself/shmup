@@ -147,7 +147,7 @@ void loadModel(const std::string& path) {
     float getSpeed() const {
         return speed;
     }
-    virtual void move(const glm::vec3 directionInModelFrame) {
+    void move(const glm::vec3 directionInModelFrame) {
         glm::vec4 unit = modelViewMat.get() * glm::vec4(directionInModelFrame, 0);
         translate(glm::vec3(unit / glm::length(glm::vec3(unit)) * speed));
     }

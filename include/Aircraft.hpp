@@ -27,7 +27,7 @@ public:
     int getLastDeactivatedTime() const;
     void fire(StraightMovingObjectManager* bulletManager, const float bulletMaxSize);
     void addShotgunBullet();
-    virtual void move(const glm::vec3 directionInModelFrame) override;
+    void move(const glm::vec3 directionInModelFrame);
 
 private:
     void destruct();

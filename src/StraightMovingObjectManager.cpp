@@ -28,7 +28,6 @@ void StraightMovingObjectManager::update() {
         }
         glm::vec4 unit = mat->get() * glm::vec4(objectFront, 0);
         mat->translate(glm::vec3(unit / glm::length(glm::vec3(unit)) * getSpeed()));
-        mat->update();
     }
     while (!deactivating.empty()) {
         ModelViewMat* mat = deactivating.top();
