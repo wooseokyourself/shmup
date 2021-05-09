@@ -16,8 +16,6 @@ GamePlay::GamePlay() : viewMode(0) {
     planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
     hud = new Hud(PLAYER_LIVES);
 
-    cout << "allocated done" << endl;
-
     perspectiveSceneRoot->loadShader("shader/vertex.vert", "shader/fragment.frag");
     player->loadShader("shader/vertex.vert", "shader/fragment.frag");
     enemy->loadShader("shader/vertex.vert", "shader/fragment.frag");
@@ -33,8 +31,6 @@ GamePlay::GamePlay() : viewMode(0) {
     playerBulletManager->loadModel("assets/models/sphere.obj");
     enemyBulletManager->loadModel("assets/models/sphere.obj");
     itemManager->loadModel("assets/models/ammo_crate.obj");
-
-    cout << "shader loading done" << endl;
 
     perspectiveSceneRoot->pushChild(planetaryA);
     perspectiveSceneRoot->pushChild(planetaryB);

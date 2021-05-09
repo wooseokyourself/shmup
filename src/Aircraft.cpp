@@ -67,7 +67,7 @@ void Aircraft::addShotgunBullet() {
     shotgunBulletNumber += 1;
 }
 
-void Aircraft::move(const glm::vec3 directionInModelFrame) { // override to Object::move()
+void Aircraft::move(const glm::vec3 directionInModelFrame) {
     glm::vec4 unit = getModelViewMat() * glm::vec4(directionInModelFrame, 0);
     glm::vec3 newTranslate = getWorldPos() + glm::vec3(unit / glm::length(glm::vec3(unit)) * getSpeed());
     if (newTranslate.x < -WORLD_LIMIT_ABS)

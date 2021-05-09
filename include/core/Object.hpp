@@ -105,16 +105,16 @@ public: // Utilities
     virtual void setShader(Shader* loadedShader) {
         shader = loadedShader;
     }
-    void loadModel(const std::string& path) {
-        Assimp::Importer import;
-        const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-        if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-            cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
-            return;
-        }
-        assimpToMesh(scene->mRootNode, scene);
-        calcBoundingBox(scene);
+void loadModel(const std::string& path) {
+    Assimp::Importer import;
+    const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+        cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
+        return;
     }
+    assimpToMesh(scene->mRootNode, scene);
+    calcBoundingBox(scene);
+}
     void pushMesh(const std::vector<glm::vec3>& vertices, const std::vector<unsigned int>& indices) {
         meshes.push_back(Mesh(vertices, indices));
     }
@@ -147,7 +147,7 @@ public: // Utilities
     float getSpeed() const {
         return speed;
     }
-    void move(const glm::vec3 directionInModelFrame) {
+    virtual void move(const glm::vec3 directionInModelFrame) {
         glm::vec4 unit = modelViewMat.get() * glm::vec4(directionInModelFrame, 0);
         translate(glm::vec3(unit / glm::length(glm::vec3(unit)) * speed));
     }
