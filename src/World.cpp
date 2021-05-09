@@ -2,7 +2,7 @@
 
 World::World(const glm::vec4 color) {
     setColor(color);
-    std::vector<vertex> vertices;
+    std::vector<glm::vec3> vertices;
     std::vector<unsigned int> indices;
     std::vector<unsigned int> lastLineIdx;
     float z = -AXIS_LIMIT_ABS;
@@ -11,10 +11,10 @@ World::World(const glm::vec4 color) {
     while (z <= AXIS_LIMIT_ABS) {
         float x = -AXIS_LIMIT_ABS;
         while (x <= AXIS_LIMIT_ABS) {
-            vertex v;
-            v.position.x = x;
-            v.position.y = 0.0f;
-            v.position.z = z;
+            glm::vec3 v;
+            v.x = x;
+            v.y = 0.0f;
+            v.z = z;
             vertices.push_back(v);
             vertexCount++;
             if (flag) // 밑으로
@@ -41,6 +41,6 @@ World::World(const glm::vec4 color) {
         }
         begin = end + 2;
     }
-    meshes.push_back(Mesh(vertices, indices));
+    pushMesh(vertices, indices);
     setDraw(true);
 }

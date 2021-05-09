@@ -67,8 +67,10 @@ GamePlay::~GamePlay () {
 void GamePlay::start () {
     planetaryA->init(PLANETARY_A_POS, PLANETARY_A_MAX_SIZE);
     planetaryB->init(PLANETARY_B_POS, PLANETARY_B_MAX_SIZE);
-    player->init(PLAYER_INIT_POS, 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), PLAYER_COLOR, PLAYER_MAX_SIZE, AircraftSpeed::FAST, PLAYER_LIVES);
-    enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_COLOR, ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, 1);
+    player->setRandomColor();
+    player->init(PLAYER_INIT_POS, 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), PLAYER_MAX_SIZE, AircraftSpeed::FAST, PLAYER_LIVES);
+    enemy->setRandomColor();
+    enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, 1);
     playerBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), PLAYER_BULLET_COLOR, BulletSpeed::FAST);
     enemyBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
     itemManager->init(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), BulletSpeed::NORMAL);
@@ -121,7 +123,7 @@ void GamePlay::update (const bool* asyncKeyBuf, std::queue<unsigned char>& discr
         win();
     if (!enemy->isAlive() &&
         (glutGet(GLUT_ELAPSED_TIME) - enemy->getLastDeactivatedTime() >= ENEMY_REGEN_INTERVAL_SECE * 1000)) {
-        enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_COLOR, ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, stage);
+        enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, stage);
         for (int i = 1 ; i < enemy->getLives() ; i ++)
             enemy->addShotgunBullet();
         enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
@@ -172,39 +174,30 @@ void GamePlay::handleDiscreteKeyInput (std::queue<unsigned char>& discreteKeyBuf
                     player->fire(playerBulletManager, PLAYER_BULLET_MAX_SIZE);
                 break;
             case 'c':
-                if (gameMode != GAMEMODE_ALL_PASS) {
+                if (gameMode != GAMEMODE_ALL_PASS)
                     gameMode = GAMEMODE_ALL_PASS;
-                }
-                else {
+                else 
                     gameMode = GAMEMODE_NONE;
-                }
                 break;
             case 'f':
-                if (gameMode != GAMEMODE_ALL_FAIL) {
+                if (gameMode != GAMEMODE_ALL_FAIL)
                     gameMode = GAMEMODE_ALL_FAIL;
-                }
-                else {
+                else
                     gameMode = GAMEMODE_NONE;
-                }
                 break;
             case 'r':
-                if (!renderingMode) {
+                if (!renderingMode)
                     renderingMode = true;
-                }
-                else {
+                else
                     renderingMode = false;
-                }
                 break;
             case 'v':
-                if (viewMode == VIEWMODE_2D) {
+                if (viewMode == VIEWMODE_2D)
                     viewMode = VIEWMODE_TPS;
-                }
-                else if (viewMode == VIEWMODE_TPS) {
+                else if (viewMode == VIEWMODE_TPS)
                     viewMode = VIEWMODE_FPS;
-                }
-                else {
+                else
                     viewMode = VIEWMODE_2D;
-                }
                 break;
         }
     }
@@ -294,6 +287,7 @@ void GamePlay::afterEnemyHit () {
         stage += 1;
         enemyAi.stop();
         itemManager->activateObject(enemy->cloneModelViewObj(), ITEM_MAX_SIZE);
+        enemy->setRandomColor();
     }
 }
 

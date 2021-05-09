@@ -10,7 +10,6 @@ public:
     void init (const glm::vec3 _translate,
                const float _angle,
                const glm::vec3 _rotateAxis,
-               const glm::vec4 _color, 
                const float maxSideSize,
                const float _speed,
                const int _lives);
@@ -18,7 +17,6 @@ public:
                const glm::vec3 _translate,
                const float _angle,
                const glm::vec3 _rotateAxis,
-               const glm::vec4 _color, 
                const float maxSideSize,
                const float _speed,
                const int _lives);

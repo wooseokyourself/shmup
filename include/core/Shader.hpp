@@ -26,15 +26,6 @@ public:
     void unbind() {
         glUseProgram(0);
     }
-    void setBool (const std::string &name, const bool value) const {
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
-    }
-    void setInt (const std::string &name, const int value) const {
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
-    }
-    void setFloat (const std::string &name, const float value) const {
-        glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
-    }
 
 private:
     unsigned int readAndCompileShader (const std::string& shaderPath, const unsigned int type) const {

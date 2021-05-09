@@ -3,14 +3,12 @@
 void Aircraft::init (const glm::vec3 _translate,
             const float _angle,
             const glm::vec3 _rotateAxis,
-            const glm::vec4 _color, 
             const float maxSideSize,
             const float _speed,
             const int _lives) {
     shotgunBulletNumber = 1;
     setTranslate(_translate);
     setRotate(_angle, _rotateAxis);
-    setColor(_color);
     setLongestSideTo(maxSideSize);
     setSpeed(_speed);
     lives = _lives;
@@ -22,12 +20,11 @@ void Aircraft::init (std::string modelPath,
             const glm::vec3 _translate,
             const float _angle,
             const glm::vec3 _rotateAxis,
-            const glm::vec4 _color, 
             const float maxSideSize,
             const float _speed,
             const int _lives) {
     loadModel(modelPath);
-    init(_translate, _angle, _rotateAxis, _color, maxSideSize, _speed, _lives);
+    init(_translate, _angle, _rotateAxis, maxSideSize, _speed, _lives);
 }
 
 void Aircraft::loseLife () {

@@ -115,6 +115,9 @@ public: // Utilities
         assimpToMesh(scene->mRootNode, scene);
         calcBoundingBox(scene);
     }
+    void pushMesh(const std::vector<glm::vec3>& vertices, const std::vector<unsigned int>& indices) {
+        meshes.push_back(Mesh(vertices, indices));
+    }
     virtual void setDraw (bool flag) {
         drawFlag = flag;
         for (Object* child : children)
@@ -151,13 +154,6 @@ public: // Utilities
     bool isIn (const glm::vec3 p) {
         glm::vec3 worldVecA = glm::vec3(modelViewMat.get() * glm::vec4(bbMin, 1));
         glm::vec3 worldVecB = glm::vec3(modelViewMat.get() * glm::vec4(bbMax, 1));
-    
-        /*
-        std::cout << "p: " << glm::to_string(p) << std::endl;
-        std::cout << "a: " << glm::to_string(worldVecA) << std::endl;
-        std::cout << "b: " << glm::to_string(worldVecB) << std::endl;
-        */
-       
         return (
                 (worldVecA.x <= p.x && worldVecA.z <= p.z && worldVecB.x >= p.x && worldVecB.z >= p.z) ||
                 (worldVecA.x >= p.x && worldVecA.z >= p.z && worldVecB.x <= p.x && worldVecB.z <= p.z)
@@ -191,18 +187,15 @@ private:
          * loadModel 에서 aiProcess_Triangulate 옵션으로 모델을 불러오기 떄문에 
          * 모든 primitive는 삼각형으로 재구성된다. 그러므로 glDrawArray에서 primitive 종류를
          * 신경써줄 필요가 없다. (모두 GL_TRIANGLES 로 통일)
-         * 
          */
         const unsigned int* meshIdx = node->mMeshes;
         for (int i = 0 ; i < node->mNumMeshes ; i ++) { 
             const aiMesh* mesh = scene->mMeshes[meshIdx[i]];
-            std::vector<vertex> vertices;
+            std::vector<glm::vec3> vertices;
             std::vector<unsigned int> indices;
             for (int j = 0 ; j < mesh->mNumVertices ; j ++) { // Vertices
-                vertex v;
                 const glm::vec3 pos = glm::vec3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z);
-                v.position = pos;
-                vertices.push_back(v);
+                vertices.push_back(pos);
             }
             for (int j = 0 ; j < mesh->mNumFaces ; j ++) {
                 if (mesh->mFaces->mNumIndices == 3) {
@@ -234,6 +227,7 @@ private:
         longestSide = max(longestSide, depth);
 
         // Calculate vertices of bounding box
+        /*
         bbVertices.push_back(glm::vec3(bbMin.x, bbMin.y, bbMax.z));
         bbVertices.push_back(glm::vec3(bbMax.x, bbMin.y, bbMax.z));
         bbVertices.push_back(glm::vec3(bbMax.x, bbMax.y, bbMax.z));
@@ -242,6 +236,7 @@ private:
         bbVertices.push_back(glm::vec3(bbMax.x, bbMin.y, bbMin.z));
         bbVertices.push_back(glm::vec3(bbMax.x, bbMax.y, bbMin.z));
         bbVertices.push_back(glm::vec3(bbMin.x, bbMax.y, bbMin.z));
+        */
     }
     void calculateBoundingBoxForNode (const aiScene* scene, const aiNode* node, aiMatrix4x4* mat, glm::vec3& bbMin, glm::vec3& bbMax) {
         aiMatrix4x4 prevMat = *mat;
@@ -276,7 +271,7 @@ protected: // Mesh
     float longestSide;
     glm::vec3 bbMin;
     glm::vec3 bbMax;
-    std::vector<glm::vec3> bbVertices;
+    // std::vector<glm::vec3> bbVertices;
 
 private: // Scene graph
     Object* parent;
