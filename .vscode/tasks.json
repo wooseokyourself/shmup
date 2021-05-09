@@ -19,6 +19,8 @@
 				"src/Aircraft.cpp",
 				"src/GamePlay.cpp",
 				"src/StraightMovingObjectManager.cpp",
+				"src/Hud.cpp",
+				"src/Planetary.cpp",
 				"src/World.cpp",
 				"main/main.cpp",
 				"-o",
