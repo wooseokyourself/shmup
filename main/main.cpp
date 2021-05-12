@@ -75,12 +75,14 @@ int main(int argc, char** argv) {
     glEnable(GL_BLEND);
     glShadeModel(GL_SMOOTH);
 
+/*
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
     glEnable(GL_NORMALIZE);
     glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+*/
 
     gameplay = new GamePlay;
     gameplay->start();
