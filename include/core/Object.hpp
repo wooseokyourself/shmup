@@ -40,10 +40,8 @@ public:
         const glm::mat4 ctm = parentModelViewMat * this->modelViewMat.get();
         if (shader && drawFlag) {
             shader->bind();
-            unsigned int uni = glGetUniformLocation(shader->ID, "mvp");
-            glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(viewProjectionMat * ctm));
-            uni = glGetUniformLocation(shader->ID, "color");
-            glUniform4fv(uni, 1, glm::value_ptr(color));
+            shader->setUniformMat4("mvp", viewProjectionMat * ctm);
+            shader->setUniformVec4("color", color);
             for (Mesh mesh : meshes)
                 mesh.draw();
             shader->unbind();
