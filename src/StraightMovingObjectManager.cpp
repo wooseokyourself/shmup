@@ -46,6 +46,16 @@ void StraightMovingObjectManager::display(const glm::mat4& viewProjectionMat, co
     setDraw(false);
 }
 
+void StraightMovingObjectManager::display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat, 
+                                        const glm::vec3& lightPos, const glm::vec3& viewPos) {
+    setDraw(true);
+    for (ModelViewMat* mat : activatedObjectMat) {
+        modelViewMat = *mat;
+        Object::display(viewProjectionMat, glm::mat4(1.0f), lightPos, viewPos);
+    }
+    setDraw(false);
+}
+
 void StraightMovingObjectManager::init(const glm::vec3 straightVec, const glm::vec4 color, const float speed) {
     objectFront = straightVec;
     setColor(color);

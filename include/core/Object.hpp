@@ -17,10 +17,16 @@
 
 using namespace std;
 
+enum shaderType {
+    NONLIGHT,
+    PHONG,
+    GOURAUD
+};
+
 class Object {
 public:
     Object() : parent(nullptr), speed(0.0f), drawFlag(false) {
-        shader = nullptr;
+        shader = std::vector<Shader*>(3, nullptr);
         inheritedScalef = glm::vec3(1.0f, 1.0f, 1.0f);
         bbMax = glm::vec3(0.0f);
         bbMin = glm::vec3(0.0f);
@@ -28,7 +34,8 @@ public:
         longestSide = 0.0f;
     }
     ~Object() {
-        delete shader;
+        for (int i = 0; i < shader.size(); i++)
+            delete shader[i];
     }
     virtual void update() {
         for (Object* child : children) {
@@ -38,16 +45,48 @@ public:
     }
     virtual void display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat) {
         const glm::mat4 ctm = parentModelViewMat * this->modelViewMat.get();
-        if (shader && drawFlag) {
-            shader->bind();
-            shader->setUniformMat4("mvp", viewProjectionMat * ctm);
-            shader->setUniformVec4("color", color);
+        if (shader[NONLIGHT] && drawFlag) {
+            shader[NONLIGHT]->bind();
+
+            // vertex shader uniforms
+            shader[NONLIGHT]->setUniformMat4("mvp", viewProjectionMat * ctm);
+
+            // fragment shader uniforms
+            shader[NONLIGHT]->setUniformVec4("color", color);
+
             for (Mesh mesh : meshes)
                 mesh.draw();
-            shader->unbind();
+            shader[NONLIGHT]->unbind();
         }
         for (Object* child : children)
             child->display(viewProjectionMat, ctm);
+    }
+    virtual void display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat,
+                        const glm::vec3& lightPos, const glm::vec3& viewPos) {
+        const glm::mat4 ctm = parentModelViewMat * this->modelViewMat.get();
+        if (shader[PHONG] && drawFlag) {
+            shader[PHONG]->bind();
+
+            // vertex shader uniforms
+            shader[PHONG]->setUniformMat4("mvp", viewProjectionMat * ctm);
+            shader[PHONG]->setUniformMat4("modelViewMat", this->modelViewMat.get());
+            shader[PHONG]->setUniformMat3("modelViewMatForNormal", glm::mat3(glm::transpose(glm::inverse(this->modelViewMat.get()))));
+
+            // fragment shader uniforms
+            shader[PHONG]->setUniformVec4("color", color);
+            shader[PHONG]->setUniformVec4("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+            shader[PHONG]->setUniformVec3("lightPos", lightPos);
+            shader[PHONG]->setUniformVec3("viewPos", viewPos);
+            shader[PHONG]->setUniformFloat("ambientStrength", 0.1f);
+            shader[PHONG]->setUniformFloat("specularStrength", 0.5f);
+            shader[PHONG]->setUniformFloat("shininess", 10.0f);
+
+            for (Mesh mesh : meshes)
+                mesh.draw();
+            shader[PHONG]->unbind();
+        }
+        for (Object* child : children)
+            child->display(viewProjectionMat, ctm, lightPos, viewPos);
     }
 
 public: // Scene graph
@@ -97,11 +136,13 @@ public: // Transformations
     }
 
 public: // Utilities
-    virtual void loadShader(const std::string& vertPath, const std::string& fragPath) {
-        shader = new Shader(vertPath, fragPath);
+    virtual void loadShader(unsigned int type, const std::string& vertPath, const std::string& fragPath) {
+        if (shader[type])
+            delete shader[type];
+        shader[type] = new Shader(vertPath, fragPath);
     }
-    virtual void setShader(Shader* loadedShader) {
-        shader = loadedShader;
+    virtual void setShader(unsigned int type, Shader* loadedShader) {
+        shader[type] = loadedShader;
     }
 void loadModel(const std::string& path) {
     Assimp::Importer import;
@@ -261,7 +302,7 @@ private:
     }
 
 protected:
-    Shader* shader;
+    std::vector<Shader*> shader;
 
 protected: // Model-view matrix
     ModelViewMat modelViewMat;

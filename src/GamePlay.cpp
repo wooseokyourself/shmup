@@ -15,16 +15,16 @@ GamePlay::GamePlay() : viewMode(0) {
     planetaryA = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
     planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
     hud = new Hud(PLAYER_LIVES);
-
-    perspectiveSceneRoot->loadShader("shader/vertex.vert", "shader/fragment.frag");
-    player->loadShader("shader/vertex.vert", "shader/fragment.frag");
-    enemy->loadShader("shader/vertex.vert", "shader/fragment.frag");
-    playerBulletManager->loadShader("shader/vertex.vert", "shader/fragment.frag");
-    enemyBulletManager->loadShader("shader/vertex.vert", "shader/fragment.frag");
-    itemManager->loadShader("shader/vertex.vert", "shader/fragment.frag");
-    planetaryA->loadShader("shader/vertex.vert", "shader/fragment.frag");
-    planetaryB->loadShader("shader/vertex.vert", "shader/fragment.frag");
-    hud->loadShader("shader/vertex.vert", "shader/fragment.frag");
+    
+    perspectiveSceneRoot->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
+    player->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
+    enemy->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
+    playerBulletManager->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
+    enemyBulletManager->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
+    itemManager->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
+    planetaryA->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
+    planetaryB->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
+    hud->loadShader(NONLIGHT, "shader/nonlight_vertex.vert", "shader/nonlight_fragment.frag");
 
     player->loadModel("assets/models/player.obj");
     enemy->loadModel("assets/models/ebm314.obj");
@@ -39,7 +39,10 @@ GamePlay::GamePlay() : viewMode(0) {
     perspectiveSceneRoot->pushChild(playerBulletManager);
     perspectiveSceneRoot->pushChild(enemyBulletManager);
     perspectiveSceneRoot->pushChild(itemManager);
-
+    
+    camPos = glm::vec3(0.0f, 0.0f, 0.0f);
+    camAt = glm::vec3(0.0f, 0.0f, 0.0f);
+    camUp = glm::vec3(0.0f, 0.0f, 0.0f);
     const float base = WINDOW_HEIGHT < WINDOW_WIDTH ? WINDOW_HEIGHT : WINDOW_WIDTH;
     const float widthset = WINDOW_WIDTH / base;
     const float heightset = WINDOW_HEIGHT / base;
@@ -81,7 +84,8 @@ void GamePlay::renderPerspectiveScene() {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    perspectiveSceneRoot->display(perspectiveProjection * perspectiveLookAt, glm::mat4(1.0f));
+    perspectiveSceneRoot->display(perspectiveProjection * perspectiveLookAt, glm::mat4(1.0f), 
+                                    glm::vec3(0.0f, 10.0f, 0.0f), camPos);
 }
 
 void GamePlay::renderOrthoScene() {
@@ -203,10 +207,10 @@ void GamePlay::setViewTPS() {
     const glm::vec3 playerPos = player->getWorldPos();
     const glm::vec3 playerFrontVec = player->getFrontVec();
     const glm::vec3 playerUpVec = player->getUpVec();
-    const glm::vec3 camPos = glm::vec3(playerPos + (-playerFrontVec * 7.0f + playerUpVec * 3.5f));
-    const glm::vec3 at = playerPos + playerFrontVec * glm::vec3(AXIS_LIMIT_ABS);
-    const glm::vec3 camUp = glm::vec3(playerUpVec);
-    perspectiveLookAt = glm::lookAt(camPos, at, camUp);
+    camPos = glm::vec3(playerPos + (-playerFrontVec * 7.0f + playerUpVec * 3.5f));
+    camAt = playerPos + playerFrontVec * glm::vec3(AXIS_LIMIT_ABS);
+    camUp = glm::vec3(playerUpVec);
+    perspectiveLookAt = glm::lookAt(camPos, camAt, camUp);
     player->setDraw(true);
     planetaryA->setDraw(true);
     planetaryB->setDraw(true);
@@ -214,20 +218,20 @@ void GamePlay::setViewTPS() {
 
 void GamePlay::setViewFPS() {
     glm::vec3 playerPos = player->getWorldPos();
-    const glm::vec3 camPos = playerPos;
-    const glm::vec3 at = playerPos + player->getFrontVec() * glm::vec3(AXIS_LIMIT_ABS);
-    const glm::vec3 camUp = player->getUpVec();
-    perspectiveLookAt = glm::lookAt(camPos, at, camUp);
+    camPos = playerPos;
+    camAt = playerPos + player->getFrontVec() * glm::vec3(AXIS_LIMIT_ABS);
+    camUp = player->getUpVec();
+    perspectiveLookAt = glm::lookAt(camPos, camAt, camUp);
     player->setDraw(false);
     planetaryA->setDraw(true);
     planetaryB->setDraw(true);
 }
 
 void GamePlay::setView2D() {
-    const glm::vec3 camPos = glm::vec3(0.0f, WORLD_LIMIT_ABS * 2.0f, 0.0f);
-    const glm::vec3 at = glm::vec3(0.0f, 0.0f, 0.0f);
-    const glm::vec3 camUp = glm::vec3(0.0f, 0.0f, -1.0f);
-    perspectiveLookAt = glm::lookAt(camPos, at, camUp);
+    camPos = glm::vec3(0.0f, WORLD_LIMIT_ABS * 2.0f, 0.0f);
+    camAt = glm::vec3(0.0f, 0.0f, 0.0f);
+    camUp = glm::vec3(0.0f, 0.0f, -1.0f);
+    perspectiveLookAt = glm::lookAt(camPos, camAt, camUp);
     player->setDraw(true);
     planetaryA->setDraw(false);
     planetaryB->setDraw(false);

@@ -94,27 +94,28 @@ void Hud::display(const glm::mat4& viewProjectionMat) {
     Object::display(viewProjectionMat, glm::mat4(1.0f));
 }
 
-void Hud::loadShader(const std::string& vertPath, const std::string& fragPath) {
-    Object::loadShader(vertPath, fragPath);
-    heart->setShader(shader);
-    viewModeTPS->setShader(shader);
-    viewModeFPS->setShader(shader);
-    viewMode2D->setShader(shader);
-    wireOn->setShader(shader);
-    wireOff->setShader(shader);
-    allPass->setShader(shader);
-    allFail->setShader(shader);
+void Hud::loadShader(unsigned int type, const std::string& vertPath, const std::string& fragPath) {
+    Object::loadShader(type, vertPath, fragPath);
+    heart->setShader(type, shader[type]);
+    viewModeTPS->setShader(type, shader[type]);
+    viewModeFPS->setShader(type, shader[type]);
+    viewMode2D->setShader(type, shader[type]);
+    wireOn->setShader(type, shader[type]);
+    wireOff->setShader(type, shader[type]);
+    allPass->setShader(type, shader[type]);
+    allFail->setShader(type, shader[type]);
 }
 
-void Hud::setShader(Shader* loadedShader) {
-    heart->setShader(loadedShader);
-    viewModeTPS->setShader(loadedShader);
-    viewModeFPS->setShader(loadedShader);
-    viewMode2D->setShader(loadedShader);
-    wireOn->setShader(loadedShader);
-    wireOff->setShader(loadedShader);
-    allPass->setShader(loadedShader);
-    allFail->setShader(loadedShader);
+void Hud::setShader(unsigned int type, Shader* loadedShader) {
+    Object::setShader(type, loadedShader);
+    heart->setShader(type, shader[type]);
+    viewModeTPS->setShader(type, shader[type]);
+    viewModeFPS->setShader(type, shader[type]);
+    viewMode2D->setShader(type, shader[type]);
+    wireOn->setShader(type, shader[type]);
+    wireOff->setShader(type, shader[type]);
+    allPass->setShader(type, shader[type]);
+    allFail->setShader(type, shader[type]);
 }
 
 void Hud::setValue(const uint8_t stage, const int viewMode, bool renderingMode, const int gameMode, const int playerLives) {

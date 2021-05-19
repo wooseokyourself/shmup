@@ -15,6 +15,8 @@ public:
     ~StraightMovingObjectManager();
     virtual void update() override;
     virtual void display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat) override;
+    virtual void display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat,
+                         const glm::vec3& lightPos, const glm::vec3& viewPos) override;
     void init(const glm::vec3 straightVec, const glm::vec4 color, const float speed);
     void activateObject(const ModelViewMat& initTransform, const float maxSide);
     size_t getActivatedObjectsNumber() const;

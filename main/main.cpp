@@ -70,19 +70,14 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
 
-    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+    /*
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glShadeModel(GL_SMOOTH);
-
-/*
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_COLOR_MATERIAL);
-    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-    glEnable(GL_NORMALIZE);
-    glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-*/
+    */
 
     gameplay = new GamePlay;
     gameplay->start();

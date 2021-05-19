@@ -31,17 +31,17 @@ void Planetary::update() {
     Object::update();
 }
 
-void Planetary::loadShader(const std::string& vertPath, const std::string& fragPath) {
-    Object::loadShader(vertPath, fragPath);
-    a->setShader(shader);
-    b->setShader(shader);
-    c->setShader(shader);
+void Planetary::loadShader(unsigned int type, const std::string& vertPath, const std::string& fragPath) {
+    Object::loadShader(type, vertPath, fragPath);
+    a->setShader(type, shader[type]);
+    b->setShader(type, shader[type]);
+    c->setShader(type, shader[type]);
 }
 
-void Planetary::setShader(Shader* loadedShader) {
-    a->setShader(shader);
-    b->setShader(shader);
-    c->setShader(shader);
+void Planetary::setShader(unsigned int type, Shader* loadedShader) {
+    a->setShader(type, shader[type]);
+    b->setShader(type, shader[type]);
+    c->setShader(type, shader[type]);
 }
 
 void Planetary::setDraw(bool flag) {

@@ -2,7 +2,7 @@
 
 World::World(const glm::vec4 color) {
     setColor(color);
-    std::vector<glm::vec3> vertices;
+    std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<unsigned int> lastLineIdx;
     float z = -AXIS_LIMIT_ABS;
@@ -11,10 +11,13 @@ World::World(const glm::vec4 color) {
     while (z <= AXIS_LIMIT_ABS) {
         float x = -AXIS_LIMIT_ABS;
         while (x <= AXIS_LIMIT_ABS) {
-            glm::vec3 v;
-            v.x = x;
-            v.y = 0.0f;
-            v.z = z;
+            Vertex v;
+            v.pos.x = x;
+            v.pos.y = 0.0f;
+            v.pos.z = z;
+            v.norm.x = 0.0f;
+            v.norm.y = 1.0f;
+            v.norm.z = 0.0f;
             vertices.push_back(v);
             vertexCount++;
             if (flag) // 밑으로

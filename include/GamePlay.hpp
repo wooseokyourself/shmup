@@ -42,6 +42,11 @@ private:
     void win();
     void lose();
 
+private: // Camera
+    glm::vec3 camPos;
+    glm::vec3 camAt;
+    glm::vec3 camUp;
+
 private: // Perspective
     World* perspectiveSceneRoot;
     Aircraft* player;

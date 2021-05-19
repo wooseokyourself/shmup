@@ -20,9 +20,24 @@ public:
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
     }
+    bool setUniformFloat(const std::string& name, const float data) {
+        unsigned int uni = glGetUniformLocation(ID, name.c_str());
+        glUniform1f(uni, data);
+        return uni;
+    }
+    bool setUniformMat3(const std::string& name, const glm::mat3 data) {
+        unsigned int uni = glGetUniformLocation(ID, name.c_str());
+        glUniformMatrix3fv(uni, 1, GL_FALSE, glm::value_ptr(data));
+        return uni;
+    }
     bool setUniformMat4(const std::string& name, const glm::mat4 data) {
         unsigned int uni = glGetUniformLocation(ID, name.c_str());
         glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(data));
+        return uni;
+    }
+    bool setUniformVec3(const std::string& name, const glm::vec3& data) {
+        unsigned int uni = glGetUniformLocation(ID, name.c_str());
+        glUniform3fv(uni, 1, glm::value_ptr(data));
         return uni;
     }
     bool setUniformVec4(const std::string& name, const glm::vec4& data) {
