@@ -112,10 +112,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader\fragment.frag">
+    <None Include="shader\phong_fragment.frag">
       <Filter>shader</Filter>
     </None>
-    <None Include="shader\vertex.vert">
+    <None Include="shader\phong_vertex.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\nonlight_vertex.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\nonlight_fragment.frag">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>
