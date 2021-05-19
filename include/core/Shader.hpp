@@ -20,6 +20,16 @@ public:
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
     }
+    bool setUniformMat4(const std::string& name, const glm::mat4 data) {
+        unsigned int uni = glGetUniformLocation(ID, name.c_str());
+        glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(data));
+        return uni;
+    }
+    bool setUniformVec4(const std::string& name, const glm::vec4& data) {
+        unsigned int uni = glGetUniformLocation(ID, name.c_str());
+        glUniform4fv(uni, 1, glm::value_ptr(data));
+        return uni;
+    }
     void bind() {
         glUseProgram(ID);
     }
@@ -75,18 +85,6 @@ private:
             shader = -1;
         }
         return shader;
-    }
-
-    bool setUniformMat4(const std::string& name, const glm::mat4 data) {
-        unsigned int uni = glGetUniformLocation(ID, name.c_str());
-        glUniformMatrix4fv(uni, 1, GL_FALSE, glm::value_ptr(data));
-        return uni;
-    }
-
-    bool setUniformVec4(const std::string& name, const glm::vec4& data) {
-        unsigned int uni = glGetUniformLocation(ID, name.c_str());
-        glUniform4fv(uni, 1, glm::value_ptr(data));
-        return uni;
     }
 
 public:
