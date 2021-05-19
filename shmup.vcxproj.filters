@@ -110,6 +110,9 @@
     <ClInclude Include="include\core\ModelViewMat.hpp">
       <Filter>헤더 파일\core</Filter>
     </ClInclude>
+    <ClInclude Include="include\DirectionalLight.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\phong_fragment.frag">
