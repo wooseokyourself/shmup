@@ -48,9 +48,6 @@
     <ClCompile Include="main\main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="include\core\Mesh.hpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="src\Ai.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -71,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="src\World.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="include\core\Mesh.hpp">
+      <Filter>헤더 파일\core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,11 +107,8 @@
     <ClInclude Include="include\core\Shader.hpp">
       <Filter>헤더 파일\core</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\Mesh.hpp.prev">
-      <Filter>헤더 파일\core</Filter>
-    </ClInclude>
     <ClInclude Include="include\core\ModelViewMat.hpp">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
