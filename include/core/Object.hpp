@@ -113,7 +113,7 @@ void loadModel(const std::string& path) {
     assimpToMesh(scene->mRootNode, scene);
     calcBoundingBox(scene);
 }
-    void pushMesh(const std::vector<glm::vec3>& vertices, const std::vector<unsigned int>& indices) {
+    void pushMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
         meshes.push_back(Mesh(vertices, indices));
     }
     virtual void setDraw(bool flag) {
@@ -189,11 +189,14 @@ private:
         const unsigned int* meshIdx = node->mMeshes;
         for (int i = 0 ; i < node->mNumMeshes ; i ++) { 
             const aiMesh* mesh = scene->mMeshes[meshIdx[i]];
-            std::vector<glm::vec3> vertices;
+            std::vector<Vertex> vertices;
             std::vector<unsigned int> indices;
             for (int j = 0 ; j < mesh->mNumVertices ; j ++) { // Vertices
-                const glm::vec3 pos = glm::vec3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z);
-                vertices.push_back(pos);
+                Vertex v;
+                v.pos = glm::vec3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z);
+                if (mesh->HasNormals())
+                    v.norm = glm::vec3(mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z);
+                vertices.push_back(v);
             }
             for (int j = 0 ; j < mesh->mNumFaces ; j ++) {
                 if (mesh->mFaces->mNumIndices == 3) {

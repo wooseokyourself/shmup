@@ -12,9 +12,14 @@
 #define min(a,b) a<b?a:b
 #define max(a,b) a>b?a:b
 
+struct Vertex {
+    glm::vec3 pos;
+    glm::vec3 norm;
+};
+
 class Mesh {
 public:
-    Mesh(const std::vector<glm::vec3> vertices, const std::vector<unsigned int> indices) {
+    Mesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices) {
         this->vertices = vertices;
         this->indices = indices;
         
@@ -23,9 +28,11 @@ public:
 
         glGenBuffers(1, &VBO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, norm));
 
         glGenBuffers(1, &EBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -38,7 +45,7 @@ public:
     }   
 
 private:
-    std::vector<glm::vec3> vertices;
+    std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
 private:
