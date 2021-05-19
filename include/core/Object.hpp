@@ -62,7 +62,7 @@ public:
             child->display(viewProjectionMat, ctm);
     }
     virtual void display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat,
-                        const glm::vec3& lightPos, const glm::vec3& viewPos) {
+                        const glm::vec4& lightColor, const glm::vec3& lightPos, const glm::vec3& viewPos) {
         const glm::mat4 ctm = parentModelViewMat * this->modelViewMat.get();
         if (shader[PHONG] && drawFlag) {
             shader[PHONG]->bind();
@@ -74,19 +74,19 @@ public:
 
             // fragment shader uniforms
             shader[PHONG]->setUniformVec4("color", color);
-            shader[PHONG]->setUniformVec4("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+            shader[PHONG]->setUniformVec4("lightColor", lightColor);
             shader[PHONG]->setUniformVec3("lightPos", lightPos);
             shader[PHONG]->setUniformVec3("viewPos", viewPos);
             shader[PHONG]->setUniformFloat("ambientStrength", 0.01f);
             shader[PHONG]->setUniformFloat("specularStrength", 0.5f);
-            shader[PHONG]->setUniformFloat("shininess", 16.0f);
+            shader[PHONG]->setUniformFloat("shininess", 32.0f);
 
             for (Mesh mesh : meshes)
                 mesh.draw();
             shader[PHONG]->unbind();
         }
         for (Object* child : children)
-            child->display(viewProjectionMat, ctm, lightPos, viewPos);
+            child->display(viewProjectionMat, ctm, lightColor, lightPos, viewPos);
     }
 
 public: // Scene graph
@@ -177,8 +177,8 @@ void loadModel(const std::string& path) {
     glm::vec3 getFrontVec() {
         return modelViewMat.get()[2]; // third column
     }
-    glm::vec3 getWorldPos() const {
-        return modelViewMat.getTranslate();
+    glm::vec3 getTranslateVec() {
+        return modelViewMat.get()[3];
     }
     void setSpeed(const float _speed) {
         speed = _speed;
@@ -201,7 +201,7 @@ void loadModel(const std::string& path) {
             );
     }
     bool isCenterOutOfWorld(const float axisLimitAbs) {
-        glm::vec3 p = getWorldPos();
+        glm::vec3 p = getTranslateVec();
         return (
             p.x < -axisLimitAbs || p.x > axisLimitAbs ||
             p.y < -axisLimitAbs || p.y > axisLimitAbs ||

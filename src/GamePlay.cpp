@@ -7,6 +7,7 @@ GamePlay::GamePlay() : viewMode(0) {
     renderingMode = true;
 
     perspectiveSceneRoot = new World(WORLD_GROUND_COLOR);
+    directionalLight = new DirectionalLight(AXIS_LIMIT_ABS, 0.3f, glm::vec4(1.0f));
     player = new Aircraft;
     enemy = new Aircraft;
     playerBulletManager = new StraightMovingObjectManager(50);
@@ -32,6 +33,7 @@ GamePlay::GamePlay() : viewMode(0) {
     enemyBulletManager->loadModel("assets/models/sphere.obj");
     itemManager->loadModel("assets/models/ammo_crate.obj");
 
+    perspectiveSceneRoot->pushChild(directionalLight);
     perspectiveSceneRoot->pushChild(planetaryA);
     perspectiveSceneRoot->pushChild(planetaryB);
     perspectiveSceneRoot->pushChild(player);
@@ -59,6 +61,7 @@ GamePlay::~GamePlay() {
     delete playerBulletManager;
     delete enemy;
     delete player;
+    delete directionalLight;
     delete perspectiveSceneRoot;
     delete hud;
 }
@@ -69,7 +72,7 @@ void GamePlay::start() {
     player->setRandomColor();
     player->init(PLAYER_INIT_POS, 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), PLAYER_MAX_SIZE, AircraftSpeed::FAST, PLAYER_LIVES);
     enemy->setRandomColor();
-    enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, 1);
+    enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, 1);
     playerBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), PLAYER_BULLET_COLOR, BulletSpeed::FAST);
     enemyBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
     itemManager->init(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), BulletSpeed::NORMAL);
@@ -85,7 +88,7 @@ void GamePlay::renderPerspectiveScene() {
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     perspectiveSceneRoot->display(perspectiveProjection * perspectiveLookAt, glm::mat4(1.0f), 
-                                    glm::vec3(0.0f, 5.0f, 0.0f), camPos);
+                                  directionalLight->getColor(), directionalLight->getLightPos(), camPos);
 }
 
 void GamePlay::renderOrthoScene() {
@@ -204,7 +207,7 @@ void GamePlay::handleDiscreteKeyInput(std::queue<unsigned char>& discreteKeyBuf)
 }
 
 void GamePlay::setViewTPS() {
-    const glm::vec3 playerPos = player->getWorldPos();
+    const glm::vec3 playerPos = player->getTranslateVec();
     const glm::vec3 playerFrontVec = player->getFrontVec();
     const glm::vec3 playerUpVec = player->getUpVec();
     camPos = glm::vec3(playerPos + (-playerFrontVec * 7.0f + playerUpVec * 3.5f));
@@ -217,7 +220,7 @@ void GamePlay::setViewTPS() {
 }
 
 void GamePlay::setViewFPS() {
-    glm::vec3 playerPos = player->getWorldPos();
+    glm::vec3 playerPos = player->getTranslateVec();
     camPos = playerPos;
     camAt = playerPos + player->getFrontVec() * glm::vec3(AXIS_LIMIT_ABS);
     camUp = player->getUpVec();

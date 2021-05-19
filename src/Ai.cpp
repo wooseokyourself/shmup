@@ -15,7 +15,7 @@ void Ai::stop() {
 void Ai::action() {
     while (aircraft->isAlive()) {
         const int rand = randomIntegerNumber(0, 99);
-        const glm::vec3 p = aircraft->getWorldPos();
+        const glm::vec3 p = aircraft->getTranslateVec();
         glm::vec3 direction = -PLAYER_FRAME::LEFT;
         if (p.x < -WORLD_LIMIT_ABS * 0.9f)
             direction = PLAYER_FRAME::LEFT;

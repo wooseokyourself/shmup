@@ -16,7 +16,7 @@ public:
     virtual void update() override;
     virtual void display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat) override;
     virtual void display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat,
-                         const glm::vec3& lightPos, const glm::vec3& viewPos) override;
+                         const glm::vec4& lightColor, const glm::vec3& lightPos, const glm::vec3& viewPos) override;
     void init(const glm::vec3 straightVec, const glm::vec4 color, const float speed);
     void activateObject(const ModelViewMat& initTransform, const float maxSide);
     size_t getActivatedObjectsNumber() const;
@@ -44,7 +44,7 @@ public:
     glm::mat4 getModelViewMat() const = delete;
     glm::vec3 getUpVec() const = delete;
     glm::vec3 getFrontVec() const = delete;
-    glm::vec3 getWorldPos() const = delete;
+    glm::vec3 getTranslateVec() const = delete;
     void move(const glm::vec3 directionInModelFrame) = delete;
     bool isIn(const glm::vec3 p) const = delete;
     bool isCenterOutOfWorld(const float axisLimitAbs) = delete;

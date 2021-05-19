@@ -43,7 +43,7 @@ public:
     glm::mat4 getModelViewMat() const = delete;
     glm::vec3 getUpVec() const = delete;
     glm::vec3 getFrontVec() const = delete;
-    glm::vec3 getWorldPos() const = delete;
+    glm::vec3 getTranslateVec() const = delete;
     void setSpeed(const float _speed) = delete;
     float getSpeed() const = delete;
     void move(const glm::vec3 directionInModelFrame) = delete;

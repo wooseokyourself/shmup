@@ -32,19 +32,15 @@ public:
         isUpdated = false;
     }
     void rotate(const float angle, const glm::vec3 axis) {
-        if (angle != 0.0f) {
-            rotateAxisStack.push_back(axis);
-            angleStack.push_back(angle);
-        }
+        rotateAxisStack.push_back(axis);
+        angleStack.push_back(angle);
         isUpdated = false;
     }
     void setRotate(const float angle, const glm::vec3 axis) {
         rotateAxisStack.clear();
         angleStack.clear();
-        if (angle != 0.0f) {
-            rotateAxisStack.push_back(axis);
-            angleStack.push_back(angle);
-        }
+        rotateAxisStack.push_back(axis);
+        angleStack.push_back(angle);
         isUpdated = false;
     }
     void setRotateStack(const std::vector<float> _angleStack, const std::vector<glm::vec3> _rotateAxisStack) {
