@@ -85,7 +85,7 @@ void GamePlay::renderPerspectiveScene() {
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     perspectiveSceneRoot->display(perspectiveProjection * perspectiveLookAt, glm::mat4(1.0f), 
-                                    glm::vec3(0.0f, 10.0f, 0.0f), camPos);
+                                    glm::vec3(0.0f, 5.0f, 0.0f), camPos);
 }
 
 void GamePlay::renderOrthoScene() {

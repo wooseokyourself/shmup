@@ -77,9 +77,9 @@ public:
             shader[PHONG]->setUniformVec4("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
             shader[PHONG]->setUniformVec3("lightPos", lightPos);
             shader[PHONG]->setUniformVec3("viewPos", viewPos);
-            shader[PHONG]->setUniformFloat("ambientStrength", 0.1f);
+            shader[PHONG]->setUniformFloat("ambientStrength", 0.01f);
             shader[PHONG]->setUniformFloat("specularStrength", 0.5f);
-            shader[PHONG]->setUniformFloat("shininess", 10.0f);
+            shader[PHONG]->setUniformFloat("shininess", 16.0f);
 
             for (Mesh mesh : meshes)
                 mesh.draw();
