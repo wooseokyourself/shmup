@@ -92,6 +92,7 @@
         "valarray": "cpp",
         "*.ipp": "cpp",
         "semaphore": "cpp",
-        "*.prev": "cpp"
+        "*.prev": "cpp",
+        "filesystem": "cpp"
     }
 }
