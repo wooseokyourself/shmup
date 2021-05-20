@@ -68,6 +68,10 @@ private: // Ortho
     glm::mat4 orthoLookAt;
     glm::mat4 orthoProjection;
 
+private: // Lighting utility
+    DirectionalLightFactors* dFactorsPtr;
+    std::vector<PointLightFactors*> pFactorsPtrs;
+
 private: // Variables for game play
     Ai enemyAi;
     int stage;
