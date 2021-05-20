@@ -7,7 +7,7 @@ GamePlay::GamePlay() : viewMode(0) {
     renderingMode = true;
 
     perspectiveSceneRoot = new World(WORLD_GROUND_COLOR);
-    sun = new Sun(AXIS_LIMIT_ABS, 0.3f);
+    sun = new Sun(glm::vec3(0.0f), AXIS_LIMIT_ABS, 0.3f);
     player = new Aircraft;
     enemy = new Aircraft;
     playerBulletManager = new StraightMovingObjectManager(50);
