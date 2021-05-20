@@ -6,8 +6,8 @@
 
 class Sun : public Object {
 public:
-    Sun(const float distanceFromCenter, const float anglePerFrame)
-    : radius(distanceFromCenter), angle(anglePerFrame), clockwise(true) {
+    Sun(const glm::vec3 orbitCenter, const float distanceFromCenter, const float anglePerFrame)
+    : orbitCenter(orbitCenter), radius(distanceFromCenter), angle(anglePerFrame), clockwise(true) {
         lightSource = new Object;
         lightFactors = new DirectionalLightFactors;
         lightSource->setTranslate(glm::vec3(radius, 0.0f, 0.0f));
@@ -41,7 +41,7 @@ public:
         lightFactors->specularStrength = specularStrength; // 0.5f;
         lightFactors->shininess = shininess; // 32.0f 
     }
-    DirectionalLightFactors* getLightFactors(const glm::vec3& orbitCenter) {
+    DirectionalLightFactors* getLightFactors() {
         return lightFactors;
     }
 
@@ -50,6 +50,7 @@ private:
     DirectionalLightFactors* lightFactors;
     float radius;
     float angle;
+    glm::vec3 orbitCenter;
     bool clockwise;
 
 public:
