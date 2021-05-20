@@ -1,21 +1,25 @@
 
-#ifndef __DIRECTIONALLIGHT__
-#define __DIRECTIONALLIGHT__
+#ifndef __SUN__
+#define __SUN__
 
 #include "core/Object.hpp"
 
-class DirectionalLight : public Object {
+class Sun : public Object {
 public:
-    DirectionalLight(const float distanceFromCenter, const float anglePerFrame, const glm::vec4 lightColor)
+    Sun(const float distanceFromCenter, const float anglePerFrame,
+        const glm::vec4 lightColor, const float ambientStrength, const float specularStrength, const float shininess)
     : radius(distanceFromCenter), angle(anglePerFrame), clockwise(true) {
-        light = new Object;
-        light->setColor(lightColor);
-        light->setTranslate(glm::vec3(radius, 0.0f, 0.0f));
-        pushChild(light);
+        lightFactors.color = lightColor;
+        lightFactors.ambientStrength = ambientStrength; // 0.01f;
+        lightFactors.specularStrength = specularStrength; // 0.5f;
+        lightFactors.shininess = shininess; // 32.0f 
+        lightSource = new Object;
+        lightSource->setTranslate(glm::vec3(radius, 0.0f, 0.0f));
+        pushChild(lightSource);
         setRotate(randomRealNumber(0.0f, 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     }
-    ~DirectionalLight() {
-        delete light;
+    ~Sun() {
+        delete lightSource;
     }
     virtual void update() override {
         const float currentAngle = getAngleStack().back();
@@ -32,16 +36,18 @@ public:
         setRotate(nextAngle, glm::vec3(0.0f, 0.0f, 1.0f));
         Object::update();
     }
-    glm::vec3 getLightPos() {
-        const glm::vec4 lightPos = getModelViewMat() * light->getModelViewMat() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-        return glm::vec3(lightPos);
+    DirectionalLightFactors getFactors(const glm::vec3& orbitCenter) {
+        const glm::vec3 lightPos = getModelViewMat() * lightSource->getModelViewMat() * glm::vec3(0.0f, 0.0f, 0.0f);
+        lightFactors.lightDirection = lightPos - orbitCenter;
+        return lightFactors;
     }
     glm::vec4 getColor() const {
-        return light->getColor();
+        return lightFactors.color;
     }
 
 private:
-    Object* light;
+    DirectionalLightFactors lightFactors;
+    Object* lightSource;
     float radius;
     float angle;
     bool clockwise;

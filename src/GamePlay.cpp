@@ -7,7 +7,7 @@ GamePlay::GamePlay() : viewMode(0) {
     renderingMode = true;
 
     perspectiveSceneRoot = new World(WORLD_GROUND_COLOR);
-    directionalLight = new DirectionalLight(AXIS_LIMIT_ABS, 0.3f, glm::vec4(1.0f));
+    sun = new Sun(AXIS_LIMIT_ABS, 0.3f, glm::vec4(1.0f), 0.01f, 0.5f, 32.0f);
     player = new Aircraft;
     enemy = new Aircraft;
     playerBulletManager = new StraightMovingObjectManager(50);
@@ -33,7 +33,7 @@ GamePlay::GamePlay() : viewMode(0) {
     enemyBulletManager->loadModel("assets/models/sphere.obj");
     itemManager->loadModel("assets/models/ammo_crate.obj");
 
-    perspectiveSceneRoot->pushChild(directionalLight);
+    perspectiveSceneRoot->pushChild(sun);
     perspectiveSceneRoot->pushChild(planetaryA);
     perspectiveSceneRoot->pushChild(planetaryB);
     perspectiveSceneRoot->pushChild(player);
@@ -61,7 +61,7 @@ GamePlay::~GamePlay() {
     delete playerBulletManager;
     delete enemy;
     delete player;
-    delete directionalLight;
+    delete sun;
     delete perspectiveSceneRoot;
     delete hud;
 }
@@ -88,7 +88,7 @@ void GamePlay::renderPerspectiveScene() {
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     perspectiveSceneRoot->display(perspectiveProjection * perspectiveLookAt, glm::mat4(1.0f), 
-                                  directionalLight->getColor(), directionalLight->getLightPos(), camPos);
+                                  sun->getFactors(), directionalLight->getLightPos(), camPos);
 }
 
 void GamePlay::renderOrthoScene() {

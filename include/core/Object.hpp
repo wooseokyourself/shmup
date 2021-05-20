@@ -97,10 +97,6 @@ public:
             shader[PHONG]->setUniformInt("pointLightNumber", pFactors.size());
             shader[PHONG]->setUniformVec3("viewPos", viewPos);
 
-            // shader[PHONG]->setUniformFloat("ambientStrength", 0.01f);
-            // shader[PHONG]->setUniformFloat("specularStrength", 0.5f);
-            // shader[PHONG]->setUniformFloat("shininess", 32.0f);
-
             for (Mesh mesh : meshes)
                 mesh.draw();
             shader[PHONG]->unbind();

@@ -13,7 +13,7 @@
 #include "Planetary.hpp"
 #include "Ai.hpp"
 #include "Hud.hpp"
-#include "DirectionalLight.hpp"
+#include "Sun.hpp"
 
 using namespace std;
 
@@ -50,7 +50,7 @@ private: // Camera
 
 private: // Perspective
     World* perspectiveSceneRoot;
-    DirectionalLight* directionalLight;
+    Sun* sun;
     Aircraft* player;
     Aircraft* enemy;
     StraightMovingObjectManager* playerBulletManager;
