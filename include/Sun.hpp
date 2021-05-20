@@ -37,9 +37,9 @@ public:
     }
     void setLightFactors(const glm::vec4 lightColor, const float ambientStrength, const float specularStrength, const float shininess) {
         lightFactors->color = lightColor;
-        lightFactors->ambientStrength = ambientStrength; // 0.01f;
-        lightFactors->specularStrength = specularStrength; // 0.5f;
-        lightFactors->shininess = shininess; // 32.0f 
+        lightFactors->ambientStrength = ambientStrength;
+        lightFactors->specularStrength = specularStrength;
+        lightFactors->shininess = shininess;
     }
     DirectionalLightFactors* getLightFactors() {
         return lightFactors;

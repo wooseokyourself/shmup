@@ -113,6 +113,12 @@
     <ClInclude Include="include\DirectionalLight.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\Light.hpp">
+      <Filter>헤더 파일\core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Sun.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\phong_fragment.frag">
@@ -125,6 +131,12 @@
       <Filter>shader</Filter>
     </None>
     <None Include="shader\nonlight_fragment.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\gouraud_fragment.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="shader\gouraud_vertex.vert">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

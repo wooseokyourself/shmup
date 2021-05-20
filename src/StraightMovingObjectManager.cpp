@@ -37,21 +37,12 @@ void StraightMovingObjectManager::update() {
     }
 }
 
-void StraightMovingObjectManager::display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat) {
+void StraightMovingObjectManager::display(const int shadingType, const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat,
+    const DirectionalLightFactors* dFactors, const std::vector<PointLightFactors*>& pFactorsArr, const glm::vec3& viewPos) {
     setDraw(true);
     for (ModelViewMat* mat : activatedObjectMat) {
         modelViewMat = *mat;
-        Object::display(viewProjectionMat, glm::mat4(1.0f));
-    }
-    setDraw(false);
-}
-
-void StraightMovingObjectManager::display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat, 
-                                        const glm::vec4& lightColor, const glm::vec3& lightPos, const glm::vec3& viewPos) {
-    setDraw(true);
-    for (ModelViewMat* mat : activatedObjectMat) {
-        modelViewMat = *mat;
-        Object::display(viewProjectionMat, glm::mat4(1.0f), lightColor, lightPos, viewPos);
+        Object::display(shadingType, viewProjectionMat, parentModelViewMat, dFactors, pFactorsArr, viewPos);
     }
     setDraw(false);
 }

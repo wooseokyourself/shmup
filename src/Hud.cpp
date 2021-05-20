@@ -1,5 +1,7 @@
 #include "Hud.hpp"
 
+using namespace std;
+
 Hud::Hud(const int playerLives) {
     heart = new Object;
     viewModeTPS = new Object;
@@ -9,6 +11,8 @@ Hud::Hud(const int playerLives) {
     wireOff = new Object;
     allPass = new Object;
     allFail = new Object;
+    phongShading = new Object;
+    gouraudShading = new Object;
 
     heart->loadModel("assets/models/love.obj");
     viewModeTPS->loadModel("assets/models/text3d_viewmode_tps.obj");
@@ -52,7 +56,7 @@ Hud::Hud(const int playerLives) {
     glm::vec3 viewModePos(UI_MIN_X, UI_Y + (UI_Y_HALF_ABS * 0.8f), UI_Z);
     glm::vec3 renderingModePos(UI_MIN_X, UI_Y + (UI_Y_HALF_ABS * 0.75f), UI_Z);
     glm::vec3 gameModePos(UI_MIN_X, UI_Y + (UI_Y_HALF_ABS * 0.65f), UI_Z);
-    glm::vec3 shadingTypePos(UI_MIN_X, UI_Y + (UI_Y_HALF_ABS * 0.55f), UI_Z)
+    glm::vec3 shadingTypePos(UI_MIN_X, UI_Y + (UI_Y_HALF_ABS * 0.55f), UI_Z);
     viewModeTPS->setTranslate(viewModePos);
     viewModeFPS->setTranslate(viewModePos);
     viewMode2D->setTranslate(viewModePos);
@@ -94,6 +98,8 @@ Hud::~Hud() {
     delete wireOff;
     delete allPass;
     delete allFail;
+    delete phongShading;
+    delete gouraudShading;
 }
 
 void Hud::display(const int shadingType, const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat,

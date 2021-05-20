@@ -33,6 +33,7 @@
     <ClInclude Include="include\Ai.hpp" />
     <ClInclude Include="include\Aircraft.hpp" />
     <ClInclude Include="include\Constants.hpp" />
+    <ClInclude Include="include\core\Light.hpp" />
     <ClInclude Include="include\core\Object.hpp" />
     <ClInclude Include="include\core\Shader.hpp" />
     <ClInclude Include="include\core\Utility.hpp" />
@@ -42,9 +43,12 @@
     <ClInclude Include="include\Hud.hpp" />
     <ClInclude Include="include\Planetary.hpp" />
     <ClInclude Include="include\StraightMovingObjectManager.hpp" />
+    <ClInclude Include="include\Sun.hpp" />
     <ClInclude Include="include\World.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shader\gouraud_fragment.frag" />
+    <None Include="shader\gouraud_vertex.vert" />
     <None Include="shader\nonlight_fragment.frag" />
     <None Include="shader\phong_fragment.frag" />
     <None Include="shader\phong_vertex.vert" />

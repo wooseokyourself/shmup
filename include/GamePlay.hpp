@@ -72,6 +72,7 @@ private: // Lighting utility
     int shadingType;
     DirectionalLightFactors* dFactorsPtr;
     std::vector<PointLightFactors*> pFactorsPtrs;
+    int lightingFlag;
 
 private: // Variables for game play
     Ai enemyAi;

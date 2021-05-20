@@ -1,6 +1,6 @@
 #include "GamePlay.hpp"
 
-GamePlay::GamePlay() : viewMode(0), shadingType(PHONG) {
+GamePlay::GamePlay() : viewMode(0), shadingType(PHONG), lightingFlag(1) {
     stage = 1;
     gameMode = GAMEMODE_NONE;
     viewMode = VIEWMODE_TPS;
@@ -16,7 +16,7 @@ GamePlay::GamePlay() : viewMode(0), shadingType(PHONG) {
     planetaryA = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
     planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
     hud = new Hud(PLAYER_LIVES);
-    
+
     // Set shaders for each objects.
     perspectiveSceneRoot->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
     player->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
@@ -26,6 +26,16 @@ GamePlay::GamePlay() : viewMode(0), shadingType(PHONG) {
     itemManager->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
     planetaryA->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
     planetaryB->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
+
+    perspectiveSceneRoot->loadShader(GOURAUD, "shader/gouraud_vertex.vert", "shader/gouraud_fragment.frag");
+    player->loadShader(GOURAUD, "shader/gouraud_vertex.vert", "shader/gouraud_fragment.frag");
+    enemy->loadShader(GOURAUD, "shader/gouraud_vertex.vert", "shader/gouraud_fragment.frag");
+    playerBulletManager->loadShader(GOURAUD, "shader/gouraud_vertex.vert", "shader/gouraud_fragment.frag");
+    enemyBulletManager->loadShader(GOURAUD, "shader/gouraud_vertex.vert", "shader/gouraud_fragment.frag");
+    itemManager->loadShader(GOURAUD, "shader/gouraud_vertex.vert", "shader/gouraud_fragment.frag");
+    planetaryA->loadShader(GOURAUD, "shader/gouraud_vertex.vert", "shader/gouraud_fragment.frag");
+    planetaryB->loadShader(GOURAUD, "shader/gouraud_vertex.vert", "shader/gouraud_fragment.frag");
+
     hud->loadShader(NONLIGHT, "shader/nonlight_vertex.vert", "shader/nonlight_fragment.frag");
 
     // Load models of objects.
@@ -36,9 +46,9 @@ GamePlay::GamePlay() : viewMode(0), shadingType(PHONG) {
     itemManager->loadModel("assets/models/ammo_crate.obj");
 
     // Configure lighting objects.
-    sun->setLightFactors(glm::vec4(1.0f), 0.01f, 0.5f, 32.0f);
-    planetaryA->setLightFactors(glm::vec4(1.0f), 0.01f, 0.5f, 32.0f, 1.0f, 0.7f, 1.8f);
-    planetaryB->setLightFactors(glm::vec4(1.0f), 0.01f, 0.5f, 32.0f, 1.0f, 0.7f, 1.8f);
+    sun->setLightFactors(glm::vec4(1.0f), 0.1f, 0.5f, 8.0f);
+    planetaryA->setLightFactors(glm::vec4(1.0f), 0.1f, 0.5f, 8.0f, 1.0f, 0.09f, 0.032f);
+    planetaryB->setLightFactors(glm::vec4(1.0f), 0.1f, 0.5f, 8.0f, 1.0f, 0.09f, 0.032f);
     dFactorsPtr = sun->getLightFactors();
     pFactorsPtrs.push_back(planetaryA->getLightFactors());
     pFactorsPtrs.push_back(planetaryB->getLightFactors());
@@ -98,6 +108,7 @@ void GamePlay::renderPerspectiveScene() {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    perspectiveSceneRoot->setShaderLightingMode(lightingFlag);
     perspectiveSceneRoot->display(shadingType, perspectiveProjection * perspectiveLookAt, glm::mat4(1.0f), dFactorsPtr, pFactorsPtrs, camPos);
 }
 
@@ -141,7 +152,7 @@ void GamePlay::update(const bool* asyncKeyBuf, std::queue<unsigned char>& discre
             enemy->addShotgunBullet();
         enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
     }
-    hud->setValue(stage, viewMode, renderingMode, gameMode, player->getLives());
+    hud->setValue(stage, viewMode, renderingMode, gameMode, shadingType, player->getLives());
 
     // Update view
     switch (viewMode) {
@@ -217,6 +228,18 @@ void GamePlay::handleDiscreteKeyInput(std::queue<unsigned char>& discreteKeyBuf)
                     shadingType = GOURAUD;
                 else
                     shadingType = PHONG;
+                break;
+            case '1':
+                lightingFlag = LIGHTING_ALL;
+                break;
+            case '2':
+                lightingFlag = DIRECTIONAL_LIGHTING_ONLY;
+                break;
+            case '3':
+                lightingFlag = POINT_LIGHTING_ONLY;
+                break;
+            case '4':
+                lightingFlag = NO_LIGHTING;
                 break;
         }
     }
