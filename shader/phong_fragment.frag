@@ -77,6 +77,11 @@ vec4 getPointLight(PointLightFactors factors, vec3 fragPos, vec3 normal, vec3 vi
 
 void main() {
     vec3 normal = normalize(fragNormalVec);
-    vec4 light = getDirectionalLight(dFactors, normal, viewPos) + getPointLight(pFactors, fragPos, normal, viewPos);
-    fragColor = light * objColor;
+    
+    vec4 directionalLighting = getDirectionalLight(dFactors, normal, viewPos);
+    vec4 pointLighting(0.0f);
+    for (int i = 0; i < pointLightNumber; i++)
+        pointLighting += getPointLight(pFactors[i], fragPos, normal, viewPos);
+
+    fragColor = (directionalLighting + pointLighting) * objColor;
 }

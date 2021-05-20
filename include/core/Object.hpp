@@ -14,6 +14,7 @@
 
 #include "core/Utility.hpp"
 #include "core/Mesh.hpp"
+#include "core/Light.hpp"
 
 using namespace std;
 
@@ -62,7 +63,7 @@ public:
             child->display(viewProjectionMat, ctm);
     }
     virtual void display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat,
-                        const glm::vec4& lightColor, const glm::vec3& lightPos, const glm::vec3& viewPos) {
+                        const DirectionalLightFactors& dFactors, const std::vector<PointLightFactors>& pFactors, const glm::vec3& viewPos) {
         const glm::mat4 ctm = parentModelViewMat * this->modelViewMat.get();
         if (shader[PHONG] && drawFlag) {
             shader[PHONG]->bind();
@@ -73,20 +74,39 @@ public:
             shader[PHONG]->setUniformMat3("modelViewMatForNormal", glm::mat3(glm::transpose(glm::inverse(this->modelViewMat.get()))));
 
             // fragment shader uniforms
-            shader[PHONG]->setUniformVec4("color", color);
-            shader[PHONG]->setUniformVec4("lightColor", lightColor);
-            shader[PHONG]->setUniformVec3("lightPos", lightPos);
+            // Directional Light
+            shader[PHONG]->setUniformVec4("dFactors.color", dFactors.color);
+            shader[PHONG]->setUniformVec3("dFactors.lightDirection", dFactors.lightDirection);
+            shader[PHONG]->setUniformFloat("dFactors.ambientStrength", dFactors.ambientStrength);
+            shader[PHONG]->setUniformFloat("dFactors.specularStrength", dFactors.specularStrength);
+            shader[PHONG]->setUniformFloat("dFactors.shininess", dFactors.shininess);
+
+            // Point Light
+            for (int i = 0; i < pFactors.size(); i++) {
+                shader[PHONG]->setUniformVec4("pFactors[" + std::to_string(i) + "].color", pFactors[i].color);
+                shader[PHONG]->setUniformVec3("pFactors[" + std::to_string(i) + "].lightPosition", pFactors[i].lightPosition);
+                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].ambientStrength", pFactors[i].ambientStrength);
+                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].specularStrength", pFactors[i].specularStrength);
+                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].shininess", pFactors[i].shininess);
+                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].constant", pFactors[i].constant);
+                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].linear", pFactors[i].linear);
+                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].quadratic", pFactors[i].quadratic);
+            }
+
+            shader[PHONG]->setUniformVec4("objColor", color);
+            shader[PHONG]->setUniformInt("pointLightNumber", pFactors.size());
             shader[PHONG]->setUniformVec3("viewPos", viewPos);
-            shader[PHONG]->setUniformFloat("ambientStrength", 0.01f);
-            shader[PHONG]->setUniformFloat("specularStrength", 0.5f);
-            shader[PHONG]->setUniformFloat("shininess", 32.0f);
+
+            // shader[PHONG]->setUniformFloat("ambientStrength", 0.01f);
+            // shader[PHONG]->setUniformFloat("specularStrength", 0.5f);
+            // shader[PHONG]->setUniformFloat("shininess", 32.0f);
 
             for (Mesh mesh : meshes)
                 mesh.draw();
             shader[PHONG]->unbind();
         }
         for (Object* child : children)
-            child->display(viewProjectionMat, ctm, lightColor, lightPos, viewPos);
+            child->display(viewProjectionMat, ctm, dFactors, pFactors, viewPos);
     }
 
 public: // Scene graph

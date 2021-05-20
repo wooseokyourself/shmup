@@ -20,6 +20,11 @@ public:
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
     }
+    bool setUniformInt(const std::string& name, const int data) {
+        unsigned int uni = glGetUniformLocation(ID, name.c_str());
+        glUniform1i(uni, data);
+        return uni;
+    }
     bool setUniformFloat(const std::string& name, const float data) {
         unsigned int uni = glGetUniformLocation(ID, name.c_str());
         glUniform1f(uni, data);
