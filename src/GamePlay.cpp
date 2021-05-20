@@ -7,7 +7,7 @@ GamePlay::GamePlay() : viewMode(0) {
     renderingMode = true;
 
     perspectiveSceneRoot = new World(WORLD_GROUND_COLOR);
-    sun = new Sun(AXIS_LIMIT_ABS, 0.3f, glm::vec4(1.0f), 0.01f, 0.5f, 32.0f);
+    sun = new Sun(AXIS_LIMIT_ABS, 0.3f);
     player = new Aircraft;
     enemy = new Aircraft;
     playerBulletManager = new StraightMovingObjectManager(50);
@@ -17,6 +17,7 @@ GamePlay::GamePlay() : viewMode(0) {
     planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
     hud = new Hud(PLAYER_LIVES);
     
+    // Set shaders for each objects.
     perspectiveSceneRoot->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
     player->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
     enemy->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
@@ -27,12 +28,22 @@ GamePlay::GamePlay() : viewMode(0) {
     planetaryB->loadShader(PHONG, "shader/phong_vertex.vert", "shader/phong_fragment.frag");
     hud->loadShader(NONLIGHT, "shader/nonlight_vertex.vert", "shader/nonlight_fragment.frag");
 
+    // Load models of objects.
     player->loadModel("assets/models/player.obj");
     enemy->loadModel("assets/models/ebm314.obj");
     playerBulletManager->loadModel("assets/models/sphere.obj");
     enemyBulletManager->loadModel("assets/models/sphere.obj");
     itemManager->loadModel("assets/models/ammo_crate.obj");
 
+    // Configure lighting objects.
+    sun->setLightFactors(glm::vec4(1.0f), 0.01f, 0.5f, 32.0f);
+    planetaryA->setLightFactors(glm::vec4(1.0f), 0.01f, 0.5f, 32.0f, 1.0f, 0.7f, 1.8f);
+    planetaryB->setLightFactors(glm::vec4(1.0f), 0.01f, 0.5f, 32.0f, 1.0f, 0.7f, 1.8f);
+    dFactorsPtr = sun->getLightFactors();
+    pFactorsPtrs.push_back(planetaryA->getLightFactors());
+    pFactorsPtrs.push_back(planetaryB->getLightFactors());
+
+    // Construct scene graph
     perspectiveSceneRoot->pushChild(sun);
     perspectiveSceneRoot->pushChild(planetaryA);
     perspectiveSceneRoot->pushChild(planetaryB);
@@ -88,7 +99,7 @@ void GamePlay::renderPerspectiveScene() {
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     perspectiveSceneRoot->display(perspectiveProjection * perspectiveLookAt, glm::mat4(1.0f), 
-                                  sun->getFactors(), directionalLight->getLightPos(), camPos);
+                                  sun->getLightFactors(glm::vec3(0.0f)), , camPos);
 }
 
 void GamePlay::renderOrthoScene() {
