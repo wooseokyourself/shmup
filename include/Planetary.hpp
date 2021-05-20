@@ -13,11 +13,15 @@ public:
     virtual void setShader(unsigned int type, Shader* loadedShader) override;
     virtual void setDraw(bool flag) override;
     void init(const glm::vec3 pos, const float maxSize);
+    void setLightFactors(const glm::vec4 lightColor, const float ambientStrength, const float specularStrength, const float shininess, 
+                         const float constant, const float linear, const float quadratic);
+    PointLightFactors* getLightFactors();
 
 private:
     Object* a;
     Object* b;
     Object* c;
+    PointLightFactors* lightFactors;
     float aAngle;
     float bAngle;
     glm::vec3 aRotateAxis;

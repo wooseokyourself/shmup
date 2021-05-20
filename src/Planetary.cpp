@@ -4,7 +4,8 @@ Planetary::Planetary(const std::string aModelPath, const std::string bModelPath,
     a = new Object;
     b = new Object;
     c = new Object;
-    
+    lightFactors = new PointLightFactors;
+
     a->loadModel(aModelPath);
     b->loadModel(bModelPath);
     c->loadModel(cModelPath);
@@ -23,11 +24,13 @@ Planetary::~Planetary() {
     delete a;
     delete b;
     delete c;
+    delete lightFactors;
 }
 
 void Planetary::update() {
     a->setRotate(a->getAngleStack().back() += aAngle, aRotateAxis);
     b->setRotate(b->getAngleStack().back() += bAngle, bRotateAxis);
+    lightFactors->lightPosition = c->getWorldPos();
     Object::update();
 }
 
@@ -73,4 +76,19 @@ void Planetary::init(const glm::vec3 pos, const float maxSize) {
     a->setDraw(true);
     b->setDraw(true);
     c->setDraw(true);
+}
+
+void Planetary::setLightFactors(const glm::vec4 lightColor, const float ambientStrength, const float specularStrength, const float shininess, 
+                                const float constant, const float linear, const float quadratic) {
+    lightFactors->color = lightColor;
+    lightFactors->ambientStrength = ambientStrength;
+    lightFactors->specularStrength = specularStrength;
+    lightFactors->shininess = shininess;
+    lightFactors->constant = constant;
+    lightFactors->linear = linear;
+    lightFactors->quadratic = quadratic;
+}
+
+PointLightFactors* Planetary::getLightFactors() {
+    return lightFactors;
 }
