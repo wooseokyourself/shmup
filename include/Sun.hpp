@@ -6,20 +6,17 @@
 
 class Sun : public Object {
 public:
-    Sun(const float distanceFromCenter, const float anglePerFrame,
-        const glm::vec4 lightColor, const float ambientStrength, const float specularStrength, const float shininess)
+    Sun(const float distanceFromCenter, const float anglePerFrame)
     : radius(distanceFromCenter), angle(anglePerFrame), clockwise(true) {
-        lightFactors.color = lightColor;
-        lightFactors.ambientStrength = ambientStrength; // 0.01f;
-        lightFactors.specularStrength = specularStrength; // 0.5f;
-        lightFactors.shininess = shininess; // 32.0f 
         lightSource = new Object;
+        lightFactors = new DirectionalLightFactors;
         lightSource->setTranslate(glm::vec3(radius, 0.0f, 0.0f));
         pushChild(lightSource);
         setRotate(randomRealNumber(0.0f, 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     }
     ~Sun() {
         delete lightSource;
+        delete lightFactors;
     }
     virtual void update() override {
         const float currentAngle = getAngleStack().back();
@@ -34,20 +31,23 @@ public:
         else
             nextAngle = nextAngle + angle > 180.0f ? 180.0f : nextAngle + angle;
         setRotate(nextAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+        const glm::vec3 lightPos = lightSource->getWorldPos();
+        lightFactors->lightDirection = lightPos - orbitCenter;
         Object::update();
     }
-    DirectionalLightFactors getFactors(const glm::vec3& orbitCenter) {
-        const glm::vec3 lightPos = getModelViewMat() * lightSource->getModelViewMat() * glm::vec3(0.0f, 0.0f, 0.0f);
-        lightFactors.lightDirection = lightPos - orbitCenter;
-        return lightFactors;
+    void setLightFactors(const glm::vec4 lightColor, const float ambientStrength, const float specularStrength, const float shininess) {
+        lightFactors->color = lightColor;
+        lightFactors->ambientStrength = ambientStrength; // 0.01f;
+        lightFactors->specularStrength = specularStrength; // 0.5f;
+        lightFactors->shininess = shininess; // 32.0f 
     }
-    glm::vec4 getColor() const {
-        return lightFactors.color;
+    DirectionalLightFactors* getLightFactors(const glm::vec3& orbitCenter) {
+        return lightFactors;
     }
 
 private:
-    DirectionalLightFactors lightFactors;
     Object* lightSource;
+    DirectionalLightFactors* lightFactors;
     float radius;
     float angle;
     bool clockwise;
