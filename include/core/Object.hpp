@@ -71,7 +71,7 @@ public:
                         shader[shadingType]->setUniformFloat("dFactors.shininess", dFactors->shininess);
 
                         // Point Light
-                        for (int i = 0; i < pFactors.size(); i++) {
+                        for (int i = 0; i < pFactorsArr.size(); i++) {
                             shader[shadingType]->setUniformVec4("pFactors[" + std::to_string(i) + "].color", pFactorsArr[i]->color);
                             shader[shadingType]->setUniformVec3("pFactors[" + std::to_string(i) + "].lightPosition", pFactorsArr[i]->lightPosition);
                             shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].ambientStrength", pFactorsArr[i]->ambientStrength);
