@@ -18,6 +18,8 @@ Hud::Hud(const int playerLives) {
     wireOff->loadModel("assets/models/text3d_wire_off.obj");
     allPass->loadModel("assets/models/text3d_all_pass.obj");
     allFail->loadModel("assets/models/text3d_all_fail.obj");
+    phongShading->loadModel("assets/models/text3d_phong_shading.obj");
+    gouraudShading->loadModel("assets/models/text3d_gouraud_shading.obj");
 
     heart->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
     viewModeTPS->setColor(glm::vec4(0.972f, 0.666f, 0.972f, 1.0f));
@@ -27,6 +29,8 @@ Hud::Hud(const int playerLives) {
     wireOff->setColor(glm::vec4(0.478f, 0.482f, 0.960f, 1.0f));
     allPass->setColor(glm::vec4(0.478f, 0.960f, 0.6f, 1.0f));
     allFail->setColor(glm::vec4(0.478f, 0.960f, 0.6f, 1.0f));
+    phongShading->setColor(glm::vec4(0.172f, 0.709f, 0.795f, 1.0f));
+    gouraudShading->setColor(glm::vec4(0.172f, 0.709f, 0.795f, 1.0f));
 
     heart->setLongestSideTo(0.1f);
     viewModeTPS->setLongestSideTo(0.5f);
@@ -36,6 +40,8 @@ Hud::Hud(const int playerLives) {
     wireOff->setLongestSideTo(0.5f);
     allPass->setLongestSideTo(0.5f);
     allFail->setLongestSideTo(0.5f);
+    phongShading->setLongestSideTo(0.5f);
+    gouraudShading->setLongestSideTo(0.5f);
 
     for (int i = 0; i < playerLives; i++) {
         ModelViewMat mat;
@@ -46,6 +52,7 @@ Hud::Hud(const int playerLives) {
     glm::vec3 viewModePos(UI_MIN_X, UI_Y + (UI_Y_HALF_ABS * 0.8f), UI_Z);
     glm::vec3 renderingModePos(UI_MIN_X, UI_Y + (UI_Y_HALF_ABS * 0.75f), UI_Z);
     glm::vec3 gameModePos(UI_MIN_X, UI_Y + (UI_Y_HALF_ABS * 0.65f), UI_Z);
+    glm::vec3 shadingTypePos(UI_MIN_X, UI_Y + (UI_Y_HALF_ABS * 0.55f), UI_Z)
     viewModeTPS->setTranslate(viewModePos);
     viewModeFPS->setTranslate(viewModePos);
     viewMode2D->setTranslate(viewModePos);
@@ -53,6 +60,8 @@ Hud::Hud(const int playerLives) {
     wireOff->setTranslate(renderingModePos);
     allPass->setTranslate(gameModePos);
     allFail->setTranslate(gameModePos);
+    phongShading->setTranslate(shadingTypePos);
+    gouraudShading->setTranslate(shadingTypePos);
     viewModeTPS->update();
     viewModeFPS->update();
     viewMode2D->update();
@@ -60,6 +69,8 @@ Hud::Hud(const int playerLives) {
     wireOff->update();
     allPass->update();
     allFail->update();
+    phongShading->update();
+    gouraudShading->update();
 
     pushChild(viewModeTPS);
     pushChild(viewModeFPS);
@@ -68,6 +79,8 @@ Hud::Hud(const int playerLives) {
     pushChild(wireOff);
     pushChild(allPass);
     pushChild(allFail);
+    pushChild(phongShading);
+    pushChild(gouraudShading);
 
     heart->setDraw(true);
 }
@@ -83,15 +96,16 @@ Hud::~Hud() {
     delete allFail;
 }
 
-void Hud::display(const glm::mat4& viewProjectionMat) {
+void Hud::display(const int shadingType, const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat,
+                  const DirectionalLightFactors* dFactors, const std::vector<PointLightFactors*>& pFactorsArr, const glm::vec3& viewPos) {
     for (ModelViewMat mat : heartMats) {
         // heart->setModelViewMat(mat);
         heart->setTranslate(mat.getTranslate());
         heart->setRotateStack(mat.getAngleStack(), mat.getRotateAxisStack());
         heart->update();
-        heart->display(viewProjectionMat, glm::mat4(1.0f));
+        heart->display(shadingType, viewProjectionMat, glm::mat4(1.0f), dFactors, pFactorsArr, viewPos);
     }
-    Object::display(viewProjectionMat, glm::mat4(1.0f));
+    Object::display(shadingType, viewProjectionMat, glm::mat4(1.0f), dFactors, pFactorsArr, viewPos);
 }
 
 void Hud::loadShader(unsigned int type, const std::string& vertPath, const std::string& fragPath) {
@@ -104,6 +118,8 @@ void Hud::loadShader(unsigned int type, const std::string& vertPath, const std::
     wireOff->setShader(type, shader[type]);
     allPass->setShader(type, shader[type]);
     allFail->setShader(type, shader[type]);
+    phongShading->setShader(type, shader[type]);
+    gouraudShading->setShader(type, shader[type]);
 }
 
 void Hud::setShader(unsigned int type, Shader* loadedShader) {
@@ -116,9 +132,11 @@ void Hud::setShader(unsigned int type, Shader* loadedShader) {
     wireOff->setShader(type, shader[type]);
     allPass->setShader(type, shader[type]);
     allFail->setShader(type, shader[type]);
+    phongShading->setShader(type, shader[type]);
+    gouraudShading->setShader(type, shader[type]);
 }
 
-void Hud::setValue(const uint8_t stage, const int viewMode, bool renderingMode, const int gameMode, const int playerLives) {
+void Hud::setValue(const uint8_t stage, const int viewMode, bool renderingMode, const int gameMode, const int shadingType, const int playerLives) {
     stageText = "Stage " + std::to_string(stage);
     switch (viewMode) {
         case VIEWMODE_TPS:
@@ -158,6 +176,14 @@ void Hud::setValue(const uint8_t stage, const int viewMode, bool renderingMode, 
             allPass->setDraw(false);
             allFail->setDraw(true);
             break;
+    }
+    if (shadingType == PHONG) {
+        phongShading->setDraw(true);
+        gouraudShading->setDraw(false);
+    }
+    else {
+        phongShading->setDraw(false);
+        gouraudShading->setDraw(true);
     }
     while (heartMats.size() > playerLives)
         heartMats.pop_back();

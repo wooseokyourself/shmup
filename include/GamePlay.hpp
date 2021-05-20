@@ -69,6 +69,7 @@ private: // Ortho
     glm::mat4 orthoProjection;
 
 private: // Lighting utility
+    int shadingType;
     DirectionalLightFactors* dFactorsPtr;
     std::vector<PointLightFactors*> pFactorsPtrs;
 

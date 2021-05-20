@@ -8,10 +8,11 @@ class Hud : public Object {
 public:
     Hud(const int playerLives);
     ~Hud();
-    void display(const glm::mat4& viewProjectionMat);
+    virtual void display(const int shadingType, const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat,
+                         const DirectionalLightFactors* dFactors, const std::vector<PointLightFactors*>& pFactorsArr, const glm::vec3& viewPos) override;
     virtual void loadShader(unsigned int type, const std::string& vertPath, const std::string& fragPath) override;
     virtual void setShader(unsigned int type, Shader* loadedShader) override;
-    void setValue(const uint8_t stage, const int viewMode, bool renderingMode, const int gameMode, const int playerLives);
+    void setValue(const uint8_t stage, const int viewMode, bool renderingMode, const int gameMode, const int shadingType, const int playerLives);
 
 private:
     Object* heart;
@@ -23,6 +24,8 @@ private:
     Object* wireOff;
     Object* allPass;
     Object* allFail;
+    Object* phongShading;
+    Object* gouraudShading;
 
 private:
     std::string stageText;

@@ -1,6 +1,6 @@
 #include "GamePlay.hpp"
 
-GamePlay::GamePlay() : viewMode(0) {
+GamePlay::GamePlay() : viewMode(0), shadingType(PHONG) {
     stage = 1;
     gameMode = GAMEMODE_NONE;
     viewMode = VIEWMODE_TPS;
@@ -98,8 +98,7 @@ void GamePlay::renderPerspectiveScene() {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    perspectiveSceneRoot->display(perspectiveProjection * perspectiveLookAt, glm::mat4(1.0f), 
-                                  sun->getLightFactors(glm::vec3(0.0f)), , camPos);
+    perspectiveSceneRoot->display(shadingType, perspectiveProjection * perspectiveLookAt, glm::mat4(1.0f), dFactorsPtr, pFactorsPtrs, camPos);
 }
 
 void GamePlay::renderOrthoScene() {
@@ -107,7 +106,7 @@ void GamePlay::renderOrthoScene() {
     glDepthMask(GL_FALSE);
     glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    hud->display(orthoProjection * orthoLookAt);
+    hud->display(NONLIGHT, orthoProjection * orthoLookAt, glm::mat4(1.0f), dFactorsPtr, pFactorsPtrs, camPos);
 }
 
 void GamePlay::update(const bool* asyncKeyBuf, std::queue<unsigned char>& discreteKeyBuf) {
@@ -212,6 +211,12 @@ void GamePlay::handleDiscreteKeyInput(std::queue<unsigned char>& discreteKeyBuf)
                     viewMode = VIEWMODE_FPS;
                 else
                     viewMode = VIEWMODE_2D;
+                break;
+            case 's':
+                if (shadingType == PHONG)
+                    shadingType = GOURAUD;
+                else
+                    shadingType = PHONG;
                 break;
         }
     }
