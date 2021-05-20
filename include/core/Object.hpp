@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stack>
 #include <list>
 
 #include <core/assimp/cimport.h>
@@ -63,7 +64,7 @@ public:
             child->display(viewProjectionMat, ctm);
     }
     virtual void display(const glm::mat4& viewProjectionMat, const glm::mat4& parentModelViewMat,
-                        const DirectionalLightFactors& dFactors, const std::vector<PointLightFactors>& pFactors, const glm::vec3& viewPos) {
+                        const DirectionalLightFactors* dFactors, const std::vector<PointLightFactors*>& pFactorsArr, const glm::vec3& viewPos) {
         const glm::mat4 ctm = parentModelViewMat * this->modelViewMat.get();
         if (shader[PHONG] && drawFlag) {
             shader[PHONG]->bind();
@@ -75,26 +76,26 @@ public:
 
             // fragment shader uniforms
             // Directional Light
-            shader[PHONG]->setUniformVec4("dFactors.color", dFactors.color);
-            shader[PHONG]->setUniformVec3("dFactors.lightDirection", dFactors.lightDirection);
-            shader[PHONG]->setUniformFloat("dFactors.ambientStrength", dFactors.ambientStrength);
-            shader[PHONG]->setUniformFloat("dFactors.specularStrength", dFactors.specularStrength);
-            shader[PHONG]->setUniformFloat("dFactors.shininess", dFactors.shininess);
+            shader[PHONG]->setUniformVec4("dFactors.color", dFactors->color);
+            shader[PHONG]->setUniformVec3("dFactors.lightDirection", dFactors->lightDirection);
+            shader[PHONG]->setUniformFloat("dFactors.ambientStrength", dFactors->ambientStrength);
+            shader[PHONG]->setUniformFloat("dFactors.specularStrength", dFactors->specularStrength);
+            shader[PHONG]->setUniformFloat("dFactors.shininess", dFactors->shininess);
 
             // Point Light
             for (int i = 0; i < pFactors.size(); i++) {
-                shader[PHONG]->setUniformVec4("pFactors[" + std::to_string(i) + "].color", pFactors[i].color);
-                shader[PHONG]->setUniformVec3("pFactors[" + std::to_string(i) + "].lightPosition", pFactors[i].lightPosition);
-                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].ambientStrength", pFactors[i].ambientStrength);
-                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].specularStrength", pFactors[i].specularStrength);
-                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].shininess", pFactors[i].shininess);
-                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].constant", pFactors[i].constant);
-                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].linear", pFactors[i].linear);
-                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].quadratic", pFactors[i].quadratic);
+                shader[PHONG]->setUniformVec4("pFactors[" + std::to_string(i) + "].color", pFactorsArr[i]->color);
+                shader[PHONG]->setUniformVec3("pFactors[" + std::to_string(i) + "].lightPosition", pFactorsArr[i]->lightPosition);
+                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].ambientStrength", pFactorsArr[i]->ambientStrength);
+                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].specularStrength", pFactorsArr[i]->specularStrength);
+                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].shininess", pFactorsArr[i]->shininess);
+                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].constant", pFactorsArr[i]->constant);
+                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].linear", pFactorsArr[i]->linear);
+                shader[PHONG]->setUniformFloat("pFactors[" + std::to_string(i) + "].quadratic", pFactorsArr[i]->quadratic);
             }
 
             shader[PHONG]->setUniformVec4("objColor", color);
-            shader[PHONG]->setUniformInt("pointLightNumber", pFactors.size());
+            shader[PHONG]->setUniformInt("pointLightNumber", pFactorsArr.size());
             shader[PHONG]->setUniformVec3("viewPos", viewPos);
 
             for (Mesh mesh : meshes)
@@ -102,7 +103,7 @@ public:
             shader[PHONG]->unbind();
         }
         for (Object* child : children)
-            child->display(viewProjectionMat, ctm, dFactors, pFactors, viewPos);
+            child->display(viewProjectionMat, ctm, dFactors, pFactorsArr, viewPos);
     }
 
 public: // Scene graph
@@ -195,6 +196,21 @@ void loadModel(const std::string& path) {
     }
     glm::vec3 getTranslateVec() {
         return modelViewMat.get()[3];
+    }
+    glm::vec3 getWorldPos() { // return root.mat * ... * curr.mat * pos
+        Object* par = parent;
+        std::stack<glm::mat4> parentMatStack;
+        glm::mat4 ctm(1.0f);
+        while (par != nullptr) {
+            parentMatStack.push(par->getModelViewMat());
+            par = par->parent;
+        }
+        while (!stack.empty()) {
+            ctm *= parentMatStack.top();
+            parentMatStack.pop();
+        }
+        ctm *= getModelViewMat();
+        return glm::vec3(0.0f) * ctm;
     }
     void setSpeed(const float _speed) {
         speed = _speed;
