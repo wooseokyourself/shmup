@@ -15,6 +15,12 @@
 struct Vertex {
     glm::vec3 pos;
     glm::vec3 norm;
+    glm::vec3 textureCoord;
+};
+
+struct Texture {
+    unsigned int ID;
+    std::string type; // diffuse or specular
 };
 
 class Mesh {
