@@ -12,6 +12,7 @@
 #include <core/assimp/Importer.hpp>
 #include <core/assimp/scene.h>
 #include <core/assimp/postprocess.h>
+#include <core/stb/stb_image.h>
 
 #include "core/Utility.hpp"
 #include "core/Mesh.hpp"
@@ -98,7 +99,7 @@ public:
 
                 }
                 for (Mesh mesh : meshes)
-                    mesh.draw();
+                    mesh.draw(shader);
                 shader[shadingType]->unbind();
             }
         }
@@ -275,18 +276,22 @@ private:
          * 신경써줄 필요가 없다. (모두 GL_TRIANGLES 로 통일)
          */
         const unsigned int* meshIdx = node->mMeshes;
-        for (int i = 0 ; i < node->mNumMeshes ; i ++) { 
-            const aiMesh* mesh = scene->mMeshes[meshIdx[i]];
+        for (int i = 0; i < node->mNumMeshes; i ++) { 
             std::vector<Vertex> vertices;
             std::vector<unsigned int> indices;
-            for (int j = 0 ; j < mesh->mNumVertices ; j ++) { // Vertices
+            std::vector<Texture> textures;
+
+            const aiMesh* mesh = scene->mMeshes[meshIdx[i]];
+            for (int j = 0; j < mesh->mNumVertices; j ++) { // Vertices
                 Vertex v;
                 v.pos = glm::vec3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z);
                 if (mesh->HasNormals())
                     v.norm = glm::vec3(mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z);
                 vertices.push_back(v);
+                if (mesh->mTextureCoords[0])
+                    v.textureCoord = glm::vec2(mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y);
             }
-            for (int j = 0 ; j < mesh->mNumFaces ; j ++) {
+            for (int j = 0; j < mesh->mNumFaces; j ++) {
                 if (mesh->mFaces->mNumIndices == 3) {
                     indices.push_back(mesh->mFaces[j].mIndices[0]);
                     indices.push_back(mesh->mFaces[j].mIndices[1]);
@@ -296,10 +301,82 @@ private:
                     std::cout << "WARNING::ASSIMP::NON_TRIANGLE_FACE: " << mesh->mFaces->mNumIndices << std::endl;
                 }
             }
-            meshes.push_back(Mesh(vertices, indices));
+
+            const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+            processTexture(textures, material, aiTextureType_DIFFUSE, TextureType::diffuse);
+            processTexture(textures, material, aiTextureType_SPECULAR, TextureType::specular);
+            processTexture(textures, material, aiTextureType_AMBIENT, TextureType::ambient);
+
+            meshes.push_back(Mesh(vertices, indices, textures));
         }
         for (int i = 0 ; i < node->mNumChildren ; i ++)
             assimpToMesh(node->mChildren[i], scene);
+    }
+    void processTexture(std::vector<Texture> stowArray, const aiMaterial* material, const aiTextureType aiType, const std::string typeName) {
+        /* // multi texturing
+        for (unsigned int i = 0; i < aiMaterial->GetTextureCount(aiType)) {
+            Texture t;
+            std::string filePath;
+            aiMaterial->GetTexture(aiType, i, &filePath);
+            glGenTextures(1, &t.ID);
+            t.type = typeName;
+
+            int w, h, ch;
+            unsigned char* pixelData = stbi_load(filePath, &w, &h, &ch, 0);
+            if (pixelData) {
+                GLenum channel;
+                switch (ch) {
+                    case 3: channel = GL_RGB; break;
+                    case 4: channel = GL_RGBA; break;
+                }
+                glBindTexture(GL_TEXTURE_2D, t.ID);
+                glTexImage2D(GL_TEXTURE_2D, 0, channel, w, h, 0, channel, GL_UNSIGNED_BYTE, pixelData);
+                glGenerateMipmap(GL_TEXTURE_2D);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            }
+            else {
+                std::cout << "WARNING::TEXTURE::FAILED_TO_LOAD_AT_PATH: " << filePath << std::endl;
+            }
+            stbi_image_free(pixelData);
+            
+            stowArray.push_back(t);
+        }
+        */
+
+        // single texturing
+        if (aiMaterial->GetTextureCount(aiType) == 0)
+            return;
+        Texture t;
+        std::string filePath;
+        aiMaterial->GetTexture(aiType, 0, &filePath);
+        glGenTextures(1, &t.ID);
+        t.type = typeName;
+
+        int w, h, ch;
+        unsigned char* pixelData = stbi_load(filePath, &w, &h, &ch, 0);
+        if (pixelData) {
+            GLenum channel;
+            switch (ch) {
+                case 3: channel = GL_RGB; break;
+                case 4: channel = GL_RGBA; break;
+            }
+            glBindTexture(GL_TEXTURE_2D, t.ID);
+            glTexImage2D(GL_TEXTURE_2D, 0, channel, w, h, 0, channel, GL_UNSIGNED_BYTE, pixelData);
+            glGenerateMipmap(GL_TEXTURE_2D);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        }
+        else {
+            std::cout << "WARNING::TEXTURE::FAILED_TO_LOAD_AT_PATH: " << filePath << std::endl;
+        }
+        stbi_image_free(pixelData);
+        
+        stowArray.push_back(t);
     }
     void calcBoundingBox(const aiScene* scene) {
         aiMatrix4x4 mat;
