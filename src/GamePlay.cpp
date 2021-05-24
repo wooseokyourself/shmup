@@ -149,7 +149,6 @@ void GamePlay::update(const bool* asyncKeyBuf, std::queue<unsigned char>& discre
         win();
     if (!enemy->isAlive() &&
         (glutGet(GLUT_ELAPSED_TIME) - enemy->getLastDeactivatedTime() >= ENEMY_REGEN_INTERVAL_SECE * 1000)) {
-        std::cout << "ENEMY_INIT_POS=" << glm::to_string(ENEMY_INIT_POS) << std::endl;
         enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, stage);
         for (int i = 1 ; i < enemy->getLives() ; i ++)
             enemy->addShotgunBullet();
