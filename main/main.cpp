@@ -23,7 +23,12 @@ void display() {
 }
 
 void reshape(int width, int height) {
-
+    glViewport(0, 0, width, height);
+    float widthFactor = (float)width / (float)100;
+    float heightFactor = (float)height / (float)100;
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-1.0 * widthFactor, 1.0 * widthFactor, -1.0 * heightFactor, 1.0 * heightFactor, -1.0, 1.0);
 }
 
 void keyboardDown(unsigned char key, int x, int y) {
