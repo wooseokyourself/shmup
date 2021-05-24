@@ -179,12 +179,15 @@ void loadModel(const std::string& path) {
     void pushMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const unsigned int diffuseMap, const unsigned int normalMap) {
         meshes.push_back(Mesh(vertices, indices, diffuseMap, normalMap));
     }
+    std::vector<Mesh>& getMeshesRef() {
+        return meshes;
+    }
     virtual void setDraw(bool flag) {
         drawFlag = flag;
         for (Object* child : children)
             child->setDraw(flag);
     }
-    ModelViewMat cloneModelViewObj() const {
+    ModelViewMat cloneModelViewMat() const {
         return modelViewMat;
     }
     void setModelViewMat(const ModelViewMat& _mat) {
@@ -259,6 +262,34 @@ void loadModel(const std::string& path) {
         for (Object* child : children)
             child->setShaderLightingMode(lightingFlag);
     }
+    void setShaderUseDiffuseMap(const bool usage) const {
+        if (shader[PHONG]) {
+            shader[PHONG]->bind();
+            shader[PHONG]->setUniformInt("diffuseMapOn", usage);
+            shader[PHONG]->unbind();
+        }
+        if (shader[GOURAUD]) {
+            shader[GOURAUD]->bind();
+            shader[GOURAUD]->setUniformInt("diffuseMapOn", usage);
+            shader[GOURAUD]->unbind();
+        }
+        for (Object* child : children)
+            child->setShaderUseDiffuseMap(usage);
+    }
+    void setShaderUseNormalMap(const bool usage) const {
+        if (shader[PHONG]) {
+            shader[PHONG]->bind();
+            shader[PHONG]->setUniformInt("normalMapOn", usage);
+            shader[PHONG]->unbind();
+        }
+        if (shader[GOURAUD]) {
+            shader[GOURAUD]->bind();
+            shader[GOURAUD]->setUniformInt("normalMapOn", usage);
+            shader[GOURAUD]->unbind();
+        }
+        for (Object* child : children)
+            child->setShaderUseNormalMap(usage);
+    }
 
 public: // Colors
     void setColor(const glm::vec4 _color) {
@@ -328,13 +359,13 @@ private:
         // std::cout << "Texture.ID: " << texture << ", TextureCount: " << material->GetTextureCount(aiTextureType_DIFFUSE) <<  ", Texture: " << filePath.C_Str() << std::endl;
 
         int w, h, ch;
-        unsigned char* pixelData = stbi_load(filePath.C_Str(), &w, &h, &ch, 0);
+        unsigned char* pixelData = stbi_load(filePath.C_Str(), &w, &h, &ch, STBI_rgb);
         if (pixelData) {
             GLenum channel;
             switch (ch) {
-                case 1: channel = GL_RED; break;
+                case 1: channel = GL_RGB; break;
                 case 3: channel = GL_RGB; break;
-                case 4: channel = GL_RGBA; break;
+                case 4: channel = GL_RGB; break;
             }
             glBindTexture(GL_TEXTURE_2D, texture);
             glTexImage2D(GL_TEXTURE_2D, 0, channel, w, h, 0, channel, GL_UNSIGNED_BYTE, pixelData);

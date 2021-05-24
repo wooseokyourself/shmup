@@ -55,22 +55,28 @@ public:
     }
     void draw(Shader* shader) {
         if (hasTexture) {
-            shader->setUniformInt("textureFlag", true);
+            shader->setUniformInt("hasTexture", true);
 
             glActiveTexture(GL_TEXTURE0);
             shader->setUniformInt("textureDiffuse", 0);
             glBindTexture(GL_TEXTURE_2D, diffuseMap);
 
-            // glActiveTexture(GL_TEXTURE1);
-            // shader->setUniformInt("textureNormal", 1);
-            // glBindTexture(GL_TEXTURE_2D, normalMap);
+            glActiveTexture(GL_TEXTURE1);
+            shader->setUniformInt("textureNormal", 1);
+            glBindTexture(GL_TEXTURE_2D, normalMap);
         }
         else
-            shader->setUniformInt("textureFlag", false);
+            shader->setUniformInt("hasTexture", false);
 
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+    }
+    void setTextureDiffuseMap(const unsigned int diffuseMap) {
+        this->diffuseMap = diffuseMap;
+    }
+    std::vector<Vertex>& getVerticesRef() {
+        return vertices;
     }
 
 private:

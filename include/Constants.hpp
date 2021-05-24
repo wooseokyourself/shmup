@@ -27,7 +27,7 @@ const float WINDOW_WIDTH = 1280.0f;
 const float WINDOW_HEIGHT = 720.0f;
 const float WINDOW_FACTOR = 1000.0f;
 
-const float AXIS_LIMIT_ABS = 9.0f;
+const float AXIS_LIMIT_ABS = 15.0f;
 const float WORLD_LIMIT_ABS = 3.0f;
 const int TILE_N = 90; // 전체 타일의 수는 TILE_N ^ 2
 const float TILE_LEN =(AXIS_LIMIT_ABS * 2.0f) /(float)TILE_N;
@@ -51,8 +51,8 @@ namespace PLAYER_FRAME {
 
 const glm::vec3 PLAYER_INIT_POS(0.0f, WORLD_LIMIT_ABS * 0.1f, WORLD_LIMIT_ABS);
 const glm::vec3 ENEMY_INIT_POS(0.0f, WORLD_LIMIT_ABS * 0.1f, -WORLD_LIMIT_ABS);
-// const glm::vec3 PLANETARY_A_POS(-WORLD_LIMIT_ABS * 1.3f, WORLD_LIMIT_ABS * 0.7f, -WORLD_LIMIT_ABS * 2.0f);
-const glm::vec3 PLANETARY_A_POS(0.0f, WORLD_LIMIT_ABS * 0.1f, 0.0f);
+const glm::vec3 PLANETARY_A_POS(-WORLD_LIMIT_ABS * 1.3f, WORLD_LIMIT_ABS * 0.7f, -WORLD_LIMIT_ABS * 2.0f);
+// PLANETARY_A_POS(0.0f, WORLD_LIMIT_ABS * 0.1f, 0.0f); // for debug
 const glm::vec3 PLANETARY_B_POS(WORLD_LIMIT_ABS * 0.8f, WORLD_LIMIT_ABS * 0.4f, -WORLD_LIMIT_ABS * 0.7f);
 
 const float PLAYER_MAX_SIZE = 0.3;

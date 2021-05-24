@@ -1,8 +1,5 @@
 #version 400
 
-layout (location = 0) in vec3 modelPos;
-layout (location = 1) in vec3 modelNormalVec;
-
 #define MAX_POINT_LIGHT 16
 
 // @lightingFlag
@@ -10,6 +7,12 @@ layout (location = 1) in vec3 modelNormalVec;
 #define DIRECTIONAL_LIGHTING_ONLY 2
 #define POINT_LIGHTING_ONLY 3
 #define NO_LIGHTING 4
+
+layout (location = 0) in vec3 modelPos;
+layout (location = 1) in vec3 modelNormalVec;
+layout (location = 2) in vec2 modelTextureCoord;
+layout (location = 3) in vec3 modelTangent;
+layout (location = 4) in vec3 modelBitangent;
 
 struct DirectionalLightFactors {
     vec4 color;
@@ -21,7 +24,6 @@ struct DirectionalLightFactors {
 
 struct PointLightFactors {
     vec4 color;
-    vec3 lightPosition;
     float ambientStrength;
     float specularStrength;
     float shininess;
@@ -34,83 +36,114 @@ uniform mat4 mvp;
 uniform mat4 modelViewMat;
 uniform mat3 modelViewMatForNormal;
 
-// Lighting
-uniform vec4 objColor;
+uniform vec3 directionalLightDir;
+uniform vec3 pointLightPos[MAX_POINT_LIGHT];
+uniform vec3 viewPos;
+
+uniform sampler2D textureNormal;
+
 uniform DirectionalLightFactors dFactors;
 uniform PointLightFactors pFactors[MAX_POINT_LIGHT];
 uniform int pointLightNumber;
-uniform vec3 viewPos;
-uniform bool directionalLightOn;
+
 uniform int lightingFlag;
+uniform bool hasTexture;
+uniform bool diffuseMapOn;
+uniform bool normalMapOn;
 
-out vec3 fragPos;
-out vec3 fragNormalVec;
-out vec4 resultColor;
+in vec3 fragPos;
 
-vec4 getDirectionalLight(DirectionalLightFactors factors, vec3 normal, vec3 viewPos) {
+vec3 fragNormalVec;
+
+vec3 vertOutDirectionalLightDir;
+vec3 vertOutPointLightPos[MAX_POINT_LIGHT];
+vec3 vertOutViewPos;
+vec3 vertOutFragPos;
+
+out vec2 textureCoord;
+out vec4 vertOutLighting;
+
+vec3 getDirectionalLight(DirectionalLightFactors factors, vec3 normal) {
     vec3 ambient, diffuse, specular;
     
     // Ambient
-    ambient = factors.ambientStrength * vec3(factors.color);
+    ambient = factors.ambientStrength * factors.color.rgb;
 
     // Diffuse
-    vec3 lightDirection = normalize(factors.lightDirection);
+    vec3 lightDirection = normalize(vertOutDirectionalLightDir);
     float angle = max(dot(normal, lightDirection), 0.0f);
-    diffuse = angle * vec3(factors.color);
+    diffuse = angle * factors.color.rgb;
 
     // Specular
-    vec3 viewDirection = normalize(viewPos - fragPos);
+    vec3 viewDirection = normalize(vertOutViewPos - vertOutFragPos);
     vec3 reflectDirection = reflect(-lightDirection, normal);
-    specular = factors.specularStrength * pow(max(dot(viewDirection, reflectDirection), 0.0f), factors.shininess) * vec3(factors.color);
+    specular = factors.color.rgb * pow(max(dot(viewDirection, reflectDirection), 0.0f), factors.shininess);
 
-    return vec4(ambient + diffuse + specular, factors.color.w);
+    return ambient + diffuse + specular;
 }
 
-vec4 getPointLight(PointLightFactors factors, vec3 fragPos, vec3 normal, vec3 viewPos) {
+vec3 getPointLight(PointLightFactors factors, vec3 normal, vec3 lightPos) {
     float attenuation;
     vec3 ambient, diffuse, specular;
 
     // Attenuation
-    float distance = length(factors.lightPosition - fragPos);
+    float distance = length(lightPos - vertOutFragPos);
     attenuation = 1.0 / (factors.constant + factors.linear * distance + factors.quadratic * (distance * distance)); 
 
     // Ambient
-    ambient = factors.ambientStrength * vec3(factors.color) * attenuation;
+    ambient = factors.ambientStrength * factors.color.rgb * attenuation;
 
     // Diffuse
-    vec3 lightDirection = normalize(factors.lightPosition);
+    vec3 lightDirection = normalize(lightPos);
     float angle = max(dot(normal, lightDirection), 0.0f);
-    diffuse = angle * vec3(factors.color) * attenuation;
+    diffuse = angle * factors.color.rgb * attenuation;
 
     // Specular
-    vec3 viewDirection = normalize(viewPos - fragPos);
+    vec3 viewDirection = normalize(vertOutViewPos - vertOutFragPos);
     vec3 reflectDirection = reflect(-lightDirection, normal);
-    specular = factors.specularStrength * pow(max(dot(viewDirection, reflectDirection), 0.0f), factors.shininess) * vec3(factors.color) * attenuation;
+    specular = factors.color.rgb * pow(max(dot(viewDirection, reflectDirection), 0.0f), factors.shininess) * attenuation;
 
-    return vec4(ambient + diffuse + specular, 0.0f);
+    return ambient + diffuse + specular;
 }
-
 
 void main() {
     gl_Position = mvp * vec4(modelPos, 1.0f);
     vec3 fragPos = vec3(modelViewMat * vec4(modelPos, 1.0f));
-    vec3 fragNormalVec = modelViewMatForNormal * modelNormalVec;
+    textureCoord = modelTextureCoord;
+    vec3 N = modelViewMatForNormal * modelNormalVec; // fragNormalVec
+    if (normalMapOn) {
+        vec3 _T = normalize(modelViewMatForNormal * modelTangent);
+        vec3 T = normalize(_T - dot(_T, N) * N);
+        vec3 B = cross(N, T);
+        mat3 TBN = transpose(mat3(T, B, N));
+        vertOutDirectionalLightDir = TBN * directionalLightDir;
+        for (int i = 0; i < pointLightNumber; i++) 
+            vertOutPointLightPos[i] = TBN * pointLightPos[i];
+        vertOutViewPos = TBN * viewPos;
+        vertOutFragPos = TBN * fragPos;
+    }
+    else {
+        fragNormalVec = N;
+        vertOutDirectionalLightDir = directionalLightDir;
+        for (int i = 0; i < pointLightNumber; i++) 
+            vertOutPointLightPos[i] = pointLightPos[i];
+        vertOutViewPos = viewPos;
+        vertOutFragPos = fragPos;
+    }
 
-    vec3 normal = normalize(fragNormalVec);
-    
-    vec4 directionalLighting = getDirectionalLight(dFactors, normal, viewPos);
-    vec4 pointLighting;
+    vec3 normal = normalMapOn ? normalize(texture(textureNormal, textureCoord).rgb * 2.0f - 1.0f) : fragNormalVec;
+
+    vec3 directionalLighting = getDirectionalLight(dFactors, normal);
+
+    vec3 pointLighting;
     pointLighting.x = 0.0f;
     pointLighting.y = 0.0f;
     pointLighting.z = 0.0f;
-    pointLighting.w = 1.0f;
     for (int i = 0; i < pointLightNumber; i++)
-        pointLighting += getPointLight(pFactors[i], fragPos, normal, viewPos);
+        pointLighting += getPointLight(pFactors[i], normal, vertOutPointLightPos[i]);
 
-    vec4 resultLighting;
-    resultLighting.x = 1.0f;
-    resultLighting.y = 1.0f;
-    resultLighting.z = 1.0f;
+    vec3 resultLighting;
+
     switch (lightingFlag) {
         case LIGHTING_ALL:
             resultLighting = directionalLighting + pointLighting;
@@ -121,8 +154,12 @@ void main() {
         case POINT_LIGHTING_ONLY:
             resultLighting = pointLighting;
             break;
-        case NO_LIGHTING: default: 
+        case NO_LIGHTING: default: {
+            resultLighting.x = 1.0f;
+            resultLighting.y = 1.0f;
+            resultLighting.z = 1.0f;
             break;
+        }
     }
-    resultColor = resultLighting * objColor;
+    vertOutLighting = vec4(resultLighting, 1.0f);
 }

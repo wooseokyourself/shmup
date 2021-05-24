@@ -81,19 +81,19 @@ World::World(const std::string backgroundImagePath) {
 
     Vertex front_rt, front_rb, front_lb, front_lt;
 
-    front_rt.pos = glm::vec3(AXIS_LIMIT_ABS, AXIS_LIMIT_ABS, -AXIS_LIMIT_ABS);
+    front_rt.pos = glm::vec3(AXIS_LIMIT_ABS, AXIS_LIMIT_ABS, -WORLD_LIMIT_ABS * 1.5f);
     front_rt.norm = glm::vec3(0.0f, 0.0f, -1.0f);
     front_rt.textureCoord = glm::vec2(1.0f, 1.0f);
 
-    front_rb.pos = glm::vec3(AXIS_LIMIT_ABS, -AXIS_LIMIT_ABS, -AXIS_LIMIT_ABS);
+    front_rb.pos = glm::vec3(AXIS_LIMIT_ABS, 0.0f, -WORLD_LIMIT_ABS * 1.5f);
     front_rb.norm = glm::vec3(0.0f, 0.0f, -1.0f);
     front_rb.textureCoord = glm::vec2(1.0f, 0.0f);
 
-    front_lb.pos = glm::vec3(-AXIS_LIMIT_ABS, -AXIS_LIMIT_ABS, -AXIS_LIMIT_ABS);
+    front_lb.pos = glm::vec3(-AXIS_LIMIT_ABS, 0.0f, -WORLD_LIMIT_ABS * 1.5f);
     front_lb.norm = glm::vec3(0.0f, 0.0f, -1.0f);
     front_lb.textureCoord = glm::vec2(0.0f, 0.0f);
 
-    front_lt.pos = glm::vec3(-AXIS_LIMIT_ABS, AXIS_LIMIT_ABS, -AXIS_LIMIT_ABS);
+    front_lt.pos = glm::vec3(-AXIS_LIMIT_ABS, AXIS_LIMIT_ABS, -WORLD_LIMIT_ABS * 1.5f);
     front_lt.norm = glm::vec3(0.0f, 0.0f, -1.0f);
     front_lt.textureCoord = glm::vec2(0.0f, 1.0f);
 

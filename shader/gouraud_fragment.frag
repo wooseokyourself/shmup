@@ -1,9 +1,16 @@
 #version 400
 
-in vec4 resultColor;
+uniform bool hasTexture;
+uniform bool diffuseMapOn;
+uniform vec4 objColor;
+
+uniform sampler2D textureDiffuse;
+
+in vec2 textureCoord;
+in vec4 vertOutLighting;
 
 out vec4 fragColor;
 
 void main() {
-    fragColor = resultColor;
+    fragColor = vertOutLighting * (diffuseMapOn && hasTexture ? texture(textureDiffuse, textureCoord) : objColor);
 }

@@ -72,6 +72,8 @@ private: // Lighting utility
     int shadingType;
     DirectionalLightFactors* dFactorsPtr;
     std::vector<PointLightFactors*> pFactorsPtrs;
+    bool diffuseMapOn;
+    bool normalMapOn;
     int lightingFlag;
 
 private: // Variables for game play

@@ -6,6 +6,7 @@ Planetary::Planetary(const std::string aModelPath, const std::string bModelPath,
     c = new Object;
     lightFactors = new PointLightFactors;
 
+    
     a->loadModel(aModelPath);
     b->loadModel(bModelPath);
     c->loadModel(cModelPath);

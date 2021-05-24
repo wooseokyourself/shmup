@@ -1,20 +1,20 @@
 #include "GamePlay.hpp"
 
-GamePlay::GamePlay() : viewMode(0), shadingType(PHONG), lightingFlag(1) {
+GamePlay::GamePlay() : viewMode(0), shadingType(PHONG), diffuseMapOn(true), normalMapOn(true), lightingFlag(1) {
     stage = 1;
     gameMode = GAMEMODE_NONE;
     viewMode = VIEWMODE_TPS;
     renderingMode = true;
 
-    perspectiveSceneRoot = new World("assets/images/universe.jpg");
+    perspectiveSceneRoot = new World("assets/images/space.png");
     sun = new Sun(glm::vec3(0.0f), AXIS_LIMIT_ABS, 0.3f);
     player = new Aircraft;
     enemy = new Aircraft;
     playerBulletManager = new StraightMovingObjectManager(50);
     enemyBulletManager = new StraightMovingObjectManager(50);
     itemManager = new StraightMovingObjectManager(5);
-    planetaryA = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
-    planetaryB = new Planetary("assets/models/sphere.obj", "assets/models/sphere.obj", "assets/models/sphere.obj");
+    planetaryA = new Planetary("assets/models/pokeball/pokeball.obj", "assets/models/sphere/sphere.obj", "assets/models/sphere/sphere.obj");
+    planetaryB = new Planetary("assets/models/pokeball/pokeball.obj", "assets/models/sphere/sphere.obj", "assets/models/sphere/sphere.obj");
     hud = new Hud(PLAYER_LIVES);
 
     // Set shaders for each objects.
@@ -41,8 +41,8 @@ GamePlay::GamePlay() : viewMode(0), shadingType(PHONG), lightingFlag(1) {
     // Load models of objects.
     player->loadModel("assets/models/F15/F15.obj");
     enemy->loadModel("assets/models/Airplane/airplane.obj");
-    playerBulletManager->loadModel("assets/models/sphere.obj");
-    enemyBulletManager->loadModel("assets/models/sphere.obj");
+    playerBulletManager->loadModel("assets/models/sphere/sphere.obj");
+    enemyBulletManager->loadModel("assets/models/sphere/sphere.obj");
     itemManager->loadModel("assets/models/ammo_crate.obj");
 
     // Configure lighting objects.
@@ -97,7 +97,7 @@ void GamePlay::start() {
     playerBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), PLAYER_BULLET_COLOR, BulletSpeed::FAST);
     enemyBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
     itemManager->init(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), BulletSpeed::NORMAL);
-    // enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
+    enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
 }
 
 void GamePlay::renderPerspectiveScene() {
@@ -109,6 +109,8 @@ void GamePlay::renderPerspectiveScene() {
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     perspectiveSceneRoot->setShaderLightingMode(lightingFlag);
+    perspectiveSceneRoot->setShaderUseDiffuseMap(diffuseMapOn);
+    perspectiveSceneRoot->setShaderUseNormalMap(normalMapOn);
     perspectiveSceneRoot->display(shadingType, perspectiveProjection * perspectiveLookAt, glm::mat4(1.0f), dFactorsPtr, pFactorsPtrs, camPos);
 }
 
@@ -147,10 +149,11 @@ void GamePlay::update(const bool* asyncKeyBuf, std::queue<unsigned char>& discre
         win();
     if (!enemy->isAlive() &&
         (glutGet(GLUT_ELAPSED_TIME) - enemy->getLastDeactivatedTime() >= ENEMY_REGEN_INTERVAL_SECE * 1000)) {
-        enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, stage);
+        std::cout << "ENEMY_INIT_POS=" << glm::to_string(ENEMY_INIT_POS) << std::endl;
+        enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, stage);
         for (int i = 1 ; i < enemy->getLives() ; i ++)
             enemy->addShotgunBullet();
-        // enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
+        enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
     }
     hud->setValue(stage, viewMode, renderingMode, gameMode, shadingType, player->getLives());
 
@@ -210,10 +213,7 @@ void GamePlay::handleDiscreteKeyInput(std::queue<unsigned char>& discreteKeyBuf)
                     gameMode = GAMEMODE_NONE;
                 break;
             case 'r':
-                if (!renderingMode)
-                    renderingMode = true;
-                else
-                    renderingMode = false;
+                renderingMode = !renderingMode;
                 break;
             case 'v':
                 if (viewMode == VIEWMODE_2D)
@@ -228,6 +228,12 @@ void GamePlay::handleDiscreteKeyInput(std::queue<unsigned char>& discreteKeyBuf)
                     shadingType = GOURAUD;
                 else
                     shadingType = PHONG;
+                break;
+            case 't':
+                diffuseMapOn = !diffuseMapOn;
+                break;
+            case 'n':
+                normalMapOn = !normalMapOn;
                 break;
             case '1':
                 lightingFlag = LIGHTING_ALL;
@@ -328,7 +334,7 @@ void GamePlay::afterEnemyHit() {
     if (!enemy->isAlive()) {
         stage += 1;
         enemyAi.stop();
-        itemManager->activateObject(enemy->cloneModelViewObj(), ITEM_MAX_SIZE);
+        itemManager->activateObject(enemy->cloneModelViewMat(), ITEM_MAX_SIZE);
         enemy->setRandomColor();
     }
 }

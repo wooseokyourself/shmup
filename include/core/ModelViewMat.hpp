@@ -5,6 +5,8 @@
 #include <core/glm/gtc/type_ptr.hpp>
 #include <core/glm/gtx/string_cast.hpp>
 
+#include <iostream>
+
 class ModelViewMat {
 public:
     ModelViewMat() {
