@@ -75,9 +75,6 @@ public:
     void setTextureDiffuseMap(const unsigned int diffuseMap) {
         this->diffuseMap = diffuseMap;
     }
-    std::vector<Vertex>& getVerticesRef() {
-        return vertices;
-    }
 
 private:
     std::vector<Vertex> vertices;
