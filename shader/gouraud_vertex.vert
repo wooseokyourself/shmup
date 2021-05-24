@@ -94,7 +94,7 @@ vec3 getPointLight(PointLightFactors factors, vec3 normal, vec3 lightPos) {
     ambient = factors.ambientStrength * factors.color.rgb * attenuation;
 
     // Diffuse
-    vec3 lightDirection = normalize(lightPos);
+    vec3 lightDirection = normalize(lightPos - vertOutFragPos);
     float angle = max(dot(normal, lightDirection), 0.0f);
     diffuse = angle * factors.color.rgb * attenuation;
 
