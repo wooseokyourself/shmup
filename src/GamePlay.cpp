@@ -13,8 +13,8 @@ GamePlay::GamePlay() : viewMode(0), shadingType(PHONG), diffuseMapOn(true), norm
     playerBulletManager = new StraightMovingObjectManager(50);
     enemyBulletManager = new StraightMovingObjectManager(50);
     itemManager = new StraightMovingObjectManager(5);
-    planetaryA = new Planetary("assets/models/pokeball/pokeball.obj", "assets/models/sphere/sphere.obj", "assets/models/sphere/sphere.obj");
-    planetaryB = new Planetary("assets/models/pokeball/pokeball.obj", "assets/models/sphere/sphere.obj", "assets/models/sphere/sphere.obj");
+    planetaryA = new Planetary("assets/models/planet/planet.obj", "assets/models/soccer_ball/soccer_ball.obj", "assets/models/moon/moon.obj");
+    planetaryB = new Planetary("assets/models/planet/planet.obj", "assets/models/soccer_ball/soccer_ball.obj", "assets/models/moon/moon.obj");
     hud = new Hud(PLAYER_LIVES);
 
     // Set shaders for each objects.
@@ -47,8 +47,8 @@ GamePlay::GamePlay() : viewMode(0), shadingType(PHONG), diffuseMapOn(true), norm
 
     // Configure lighting objects.
     sun->setLightFactors(glm::vec4(1.0f), 0.001f, 0.5f, 8.0f);
-    planetaryA->setLightFactors(glm::vec4(1.0f), 0.1f, 0.5f, 8.0f, 1.0f, 0.09f, 0.032f);
-    planetaryB->setLightFactors(glm::vec4(1.0f), 0.1f, 0.5f, 8.0f, 1.0f, 0.09f, 0.032f);
+    planetaryA->setLightFactors(glm::vec4(1.0f), 0.1f, 0.5f, 8.0f, 1.0f, 0.007f, 0.0002f);
+    planetaryB->setLightFactors(glm::vec4(1.0f), 0.1f, 0.5f, 8.0f, 1.0f, 0.007f, 0.0002f);
     dFactorsPtr = sun->getLightFactors();
     pFactorsPtrs.push_back(planetaryA->getLightFactors());
     pFactorsPtrs.push_back(planetaryB->getLightFactors());

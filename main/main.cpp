@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     glutInitWindowPosition( (glutGet(GLUT_SCREEN_WIDTH) / 2) - (WINDOW_WIDTH / 2), (glutGet(GLUT_SCREEN_HEIGHT) / 2) - (WINDOW_HEIGHT / 2));
-    glutCreateWindow("Assn3-2");
+    glutCreateWindow("Assn4");
 
 #ifdef __APPLE__
     glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
