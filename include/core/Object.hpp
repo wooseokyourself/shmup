@@ -174,8 +174,8 @@ void loadModel(const std::string& path) {
     assimpToMesh(scene->mRootNode, scene);
     calcBoundingBox(scene);
 }
-    void pushMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const int texture) {
-        meshes.push_back(Mesh(vertices, indices, texture));
+    void pushMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const unsigned int diffuseMap, const unsigned int normalMap) {
+        meshes.push_back(Mesh(vertices, indices, diffuseMap, normalMap));
     }
     virtual void setDraw(bool flag) {
         drawFlag = flag;
@@ -280,7 +280,7 @@ private:
         for (int i = 0; i < node->mNumMeshes; i ++) { 
             std::vector<Vertex> vertices;
             std::vector<unsigned int> indices;
-            unsigned int texture;
+            unsigned int textureMap, normalMap;
 
             const aiMesh* mesh = scene->mMeshes[meshIdx[i]];
             for (int j = 0; j < mesh->mNumVertices; j ++) { // Vertices
@@ -303,25 +303,24 @@ private:
                 }
             }
             const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-            texture = processTextureDiffuse(material);
+            textureMap = processTextureDiffuse(material, aiTextureType_DIFFUSE);
+            normalMap = processTextureDiffuse(material, aiTextureType_HEIGHT);
 
-            meshes.push_back(Mesh(vertices, indices, texture));
+            meshes.push_back(Mesh(vertices, indices, textureMap, normalMap));
         }
         for (int i = 0 ; i < node->mNumChildren ; i ++)
             assimpToMesh(node->mChildren[i], scene);
     }
-    unsigned int processTextureDiffuse(const aiMaterial* material) {
-        // if (material->GetTextureCount(aiTextureType_DIFFUSE) == 0)
-        //     return;
+    unsigned int processTextureDiffuse(const aiMaterial* material, unsigned int aiTextureType) {
         unsigned int texture;
-        aiString filePath;
-        material->GetTexture(aiTextureType_DIFFUSE, 0, &filePath);
+        material->GetTexture(aiTextureType, 0, &filePath);
         glGenTextures(1, &texture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        std::cout << "Texture.ID: " << texture << ", TextureCount: " << material->GetTextureCount(aiTextureType_DIFFUSE) <<  ", Diffuse Texture: " << filePath.C_Str() << std::endl;
+        if (aiTextureType == aiTextureType_HEIGHT)
+            std::cout << "Texture.ID: " << texture << ", TextureCount: " << material->GetTextureCount(aiTextureType_DIFFUSE) <<  ", Texture: " << filePath.C_Str() << std::endl;
 
         int w, h, ch;
         unsigned char* pixelData = stbi_load(filePath.C_Str(), &w, &h, &ch, 0);
@@ -337,11 +336,11 @@ private:
             glGenerateMipmap(GL_TEXTURE_2D);
         }
         else {
-            std::cout << "WARNING::TEXTURE::FAILED_TO_LOAD_AT_PATH: " << filePath.C_Str() << std::endl;
+            if (aiTextureType == aiTextureType_HEIGHT)
+                std::cout << "WARNING::TEXTURE::FAILED_TO_LOAD_AT_PATH: " << filePath.C_Str() << std::endl;
             texture = -1;
         }
         stbi_image_free(pixelData);
-        
         return texture;
     }
     void calcBoundingBox(const aiScene* scene) {

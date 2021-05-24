@@ -20,11 +20,12 @@ struct Vertex {
 
 class Mesh {
 public:
-    Mesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int texture) {
+    Mesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int diffuseMap, const unsigned int normalMap) {
         this->vertices = vertices;
         this->indices = indices;
-        this->texture = texture;
-        this->hasTexture = texture != UINT_MAX ? true : false;
+        this->diffuseMap = diffuseMap;
+        this->normalMap = normalMap;
+        this->hasTexture = diffuseMap != UINT_MAX ? true : false;
         
         glGenVertexArrays(1, &VAO);
         glBindVertexArray(VAO);
@@ -49,9 +50,14 @@ public:
     void draw(Shader* shader) {
         if (hasTexture) {
             shader->setUniformInt("textureFlag", true);
+
             glActiveTexture(GL_TEXTURE0);
             shader->setUniformInt("textureDiffuse", 0);
-            glBindTexture(GL_TEXTURE_2D, texture);
+            glBindTexture(GL_TEXTURE_2D, diffuseMap);
+
+            // glActiveTexture(GL_TEXTURE1);
+            // shader->setUniformInt("textureNormal", 1);
+            // glBindTexture(GL_TEXTURE_2D, normalMap);
         }
         else
             shader->setUniformInt("textureFlag", false);
@@ -64,7 +70,8 @@ public:
 private:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    unsigned int texture;
+    unsigned int diffuseMap;
+    unsigned int normalMap;
     bool hasTexture;
 
 private:

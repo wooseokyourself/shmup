@@ -54,7 +54,7 @@ World::World(const std::string backgroundImagePath) {
     setColor(glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
     std::vector<Vertex> ground_vertices, front_vertices;
     std::vector<unsigned int> indices;
-    unsigned int texture;
+    unsigned int diffuseMap, normalMap = -1;
 
     Vertex ground_rt, ground_rb, ground_lb, ground_lt;
     
@@ -109,8 +109,8 @@ World::World(const std::string backgroundImagePath) {
     indices.push_back(2);
     indices.push_back(3);
 
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glGenTextures(1, &diffuseMap);
+    glBindTexture(GL_TEXTURE_2D, diffuseMap);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -132,7 +132,7 @@ World::World(const std::string backgroundImagePath) {
     }
     stbi_image_free(pixelData);
 
-    pushMesh(ground_vertices, indices, texture);
-    pushMesh(front_vertices, indices, texture);
+    pushMesh(ground_vertices, indices, diffuseMap, normalMap);
+    pushMesh(front_vertices, indices, diffuseMap, normalMap);
     setDraw(true);
 }
