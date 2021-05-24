@@ -36,6 +36,7 @@
     <ClInclude Include="include\core\Light.hpp" />
     <ClInclude Include="include\core\Object.hpp" />
     <ClInclude Include="include\core\Shader.hpp" />
+    <ClInclude Include="include\core\stb\stb_image.h" />
     <ClInclude Include="include\core\Utility.hpp" />
     <ClInclude Include="include\core\ModelViewMat.hpp" />
     <ClInclude Include="include\DirectionalLight.hpp" />

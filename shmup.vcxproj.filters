@@ -43,6 +43,9 @@
     <Filter Include="shader">
       <UniqueIdentifier>{8742d983-44a0-4f00-81bd-8111edd02630}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\core\stb">
+      <UniqueIdentifier>{4e1afd67-4782-4261-a19d-6708074ab645}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main\main.cpp">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="include\Sun.hpp">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\stb\stb_image.h">
+      <Filter>헤더 파일\core\stb</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

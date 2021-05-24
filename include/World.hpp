@@ -6,7 +6,8 @@
 
 class World : public Object {
 public:
-    World(const glm::vec4 color);
+    // World(const glm::vec4 color);
+    World(const std::string backgroundImagePath);
 
 public:
     void translate(const glm::vec3 factors) = delete;

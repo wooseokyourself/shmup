@@ -15,25 +15,16 @@
 struct Vertex {
     glm::vec3 pos;
     glm::vec3 norm;
-    glm::vec3 textureCoord;
-};
-
-struct Texture {
-    unsigned int ID;
-    std::string type; // diffuse or specular
-};
-
-namespace TextureType {
-    const std::string diffuse = "diffuse";
-    const std::string specular = "specular";
-    const std::string ambient = "ambient";
+    glm::vec2 textureCoord;
 };
 
 class Mesh {
 public:
-    Mesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices) {
+    Mesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int texture) {
         this->vertices = vertices;
         this->indices = indices;
+        this->texture = texture;
+        this->hasTexture = texture != UINT_MAX ? true : false;
         
         glGenVertexArrays(1, &VAO);
         glBindVertexArray(VAO);
@@ -56,46 +47,14 @@ public:
         glBindVertexArray(0);
     }
     void draw(Shader* shader) {
-        /* // multi texturing
-        int diffuseN = 0, specularN = 0, ambientN = 0;
-        for (int unit = 0; unit < textures.size(); unit++) {
-            glActiveTexture(GL_TEXTURE0 + unit); // texture unit
-            
-            std::string samplerName;
-            switch (textures[unit].type) {
-                case TextureType::diffuse:
-                    samplerName = TextureType::diffuse + std::to_string(diffuseN++);
-                    break;
-                case TextureType::specular:
-                    samplerName = TextureType::specular + std::to_string(specularN++);
-                    break;
-                case TextureType::ambient:
-                    samplerName = TextureType::ambient + std::to_string(ambientN++);
-                    break;
-            }
-            shader->setUniformInt("material." + samplerName, unit);
-            glBindTexture(GL_TEXTURE_2D, textures[unit].ID);
+        if (hasTexture) {
+            shader->setUniformInt("textureFlag", true);
+            glActiveTexture(GL_TEXTURE0);
+            shader->setUniformInt("textureDiffuse", 0);
+            glBindTexture(GL_TEXTURE_2D, texture);
         }
-        */
-
-        // single texturing
-        for (int unit = 0; unit < textures.size(); unit++) {
-            glActiveTexture(GL_TEXTURE0 + unit);
-            std::string samplerName;
-            switch (textures[unit].type) {
-                case TextureType::diffuse:
-                    samplerName = TextureType::diffuse;
-                    break;
-                case TextureType::specular:
-                    samplerName = TextureType::specular;
-                    break;
-                case TextureType::ambient:
-                    samplerName = TextureType::ambient;
-                    break;
-            }
-            shader->setUniformInt("material." + samplerName, unit);
-            glBindTexture(GL_TEXTURE_2D, textures[unit].ID);
-        }
+        else
+            shader->setUniformInt("textureFlag", false);
 
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -105,7 +64,8 @@ public:
 private:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    unsigned int texture;
+    bool hasTexture;
 
 private:
     unsigned int VAO, VBO, EBO;

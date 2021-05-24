@@ -6,7 +6,7 @@ GamePlay::GamePlay() : viewMode(0), shadingType(PHONG), lightingFlag(1) {
     viewMode = VIEWMODE_TPS;
     renderingMode = true;
 
-    perspectiveSceneRoot = new World(WORLD_GROUND_COLOR);
+    perspectiveSceneRoot = new World("assets/images/universe.jpg");
     sun = new Sun(glm::vec3(0.0f), AXIS_LIMIT_ABS, 0.3f);
     player = new Aircraft;
     enemy = new Aircraft;
@@ -39,8 +39,8 @@ GamePlay::GamePlay() : viewMode(0), shadingType(PHONG), lightingFlag(1) {
     hud->loadShader(NONLIGHT, "shader/nonlight_vertex.vert", "shader/nonlight_fragment.frag");
 
     // Load models of objects.
-    player->loadModel("assets/models/player.obj");
-    enemy->loadModel("assets/models/ebm314.obj");
+    player->loadModel("assets/models/F15/F15.obj");
+    enemy->loadModel("assets/models/Airplane/airplane.obj");
     playerBulletManager->loadModel("assets/models/sphere.obj");
     enemyBulletManager->loadModel("assets/models/sphere.obj");
     itemManager->loadModel("assets/models/ammo_crate.obj");
@@ -97,7 +97,7 @@ void GamePlay::start() {
     playerBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), PLAYER_BULLET_COLOR, BulletSpeed::FAST);
     enemyBulletManager->init(glm::vec3(0.0f, 0.0f, 1.0f), ENEMY_BULLET_COLOR, BulletSpeed::NORMAL);
     itemManager->init(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f), BulletSpeed::NORMAL);
-    enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
+    // enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
 }
 
 void GamePlay::renderPerspectiveScene() {
@@ -150,7 +150,7 @@ void GamePlay::update(const bool* asyncKeyBuf, std::queue<unsigned char>& discre
         enemy->init(ENEMY_INIT_POS, 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), ENEMY_MAX_SIZE, AircraftSpeed::NORMAL, stage);
         for (int i = 1 ; i < enemy->getLives() ; i ++)
             enemy->addShotgunBullet();
-        enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
+        // enemyAi.start(enemy, enemyBulletManager, ENEMY_BULLET_MAX_SIZE);
     }
     hud->setValue(stage, viewMode, renderingMode, gameMode, shadingType, player->getLives());
 

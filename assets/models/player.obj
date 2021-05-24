@@ -1,6 +1,6 @@
 # Blender v2.79 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib F 15.mtl
+mtllib player.mtl
 o F_15_C
 v 0.930747 0.436524 -3.146702
 v 0.947614 0.300262 -2.632205
