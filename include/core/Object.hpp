@@ -60,43 +60,45 @@ public:
 
                 switch (shadingType) {
 
-                case PHONG: case GOURAUD: {
-                    shader[shadingType]->setUniformMat4("mvp", viewProjectionMat * ctm);
-                    shader[shadingType]->setUniformMat4("modelViewMat", this->modelViewMat.get());
-                    shader[shadingType]->setUniformMat3("modelViewMatForNormal", glm::mat3(glm::transpose(glm::inverse(this->modelViewMat.get()))));
+                    case PHONG: case GOURAUD: {
+                        // Transformation for vertex shader
+                        shader[shadingType]->setUniformMat4("mvp", viewProjectionMat * ctm);
+                        shader[shadingType]->setUniformMat4("modelViewMat", this->modelViewMat.get());
+                        shader[shadingType]->setUniformMat3("modelViewMatForNormal", glm::mat3(glm::transpose(glm::inverse(this->modelViewMat.get()))));
 
-                    // Directional Light
-                    shader[shadingType]->setUniformVec4("dFactors.color", dFactors->color);
-                    shader[shadingType]->setUniformVec3("dFactors.lightDirection", dFactors->lightDirection);
-                    shader[shadingType]->setUniformFloat("dFactors.ambientStrength", dFactors->ambientStrength);
-                    shader[shadingType]->setUniformFloat("dFactors.specularStrength", dFactors->specularStrength);
-                    shader[shadingType]->setUniformFloat("dFactors.shininess", dFactors->shininess);
+                        // Directional Light for fragment shader
+                        shader[shadingType]->setUniformVec4("dFactors.color", dFactors->color);
+                        shader[shadingType]->setUniformVec3("directionalLightDir", dFactors->lightDirection); // vertex shader for normal map
+                        shader[shadingType]->setUniformFloat("dFactors.ambientStrength", dFactors->ambientStrength);
+                        shader[shadingType]->setUniformFloat("dFactors.specularStrength", dFactors->specularStrength);
+                        shader[shadingType]->setUniformFloat("dFactors.shininess", dFactors->shininess);
 
-                    // Point Light
-                    for (int i = 0; i < pFactorsArr.size(); i++) {
-                        shader[shadingType]->setUniformVec4("pFactors[" + std::to_string(i) + "].color", pFactorsArr[i]->color);
-                        shader[shadingType]->setUniformVec3("pFactors[" + std::to_string(i) + "].lightPosition", pFactorsArr[i]->lightPosition);
-                        shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].ambientStrength", pFactorsArr[i]->ambientStrength);
-                        shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].specularStrength", pFactorsArr[i]->specularStrength);
-                        shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].shininess", pFactorsArr[i]->shininess);
-                        shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].constant", pFactorsArr[i]->constant);
-                        shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].linear", pFactorsArr[i]->linear);
-                        shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].quadratic", pFactorsArr[i]->quadratic);
+                        // Point Light for fragment shader
+                        for (int i = 0; i < pFactorsArr.size(); i++) {
+                            shader[shadingType]->setUniformVec4("pFactors[" + std::to_string(i) + "].color", pFactorsArr[i]->color);
+                            shader[shadingType]->setUniformVec3("pointLightPos[" + std::to_string(i) + "]", pFactorsArr[i]->lightPosition); // vertex shader for normal map
+                            shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].ambientStrength", pFactorsArr[i]->ambientStrength);
+                            shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].specularStrength", pFactorsArr[i]->specularStrength);
+                            shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].shininess", pFactorsArr[i]->shininess);
+                            shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].constant", pFactorsArr[i]->constant);
+                            shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].linear", pFactorsArr[i]->linear);
+                            shader[shadingType]->setUniformFloat("pFactors[" + std::to_string(i) + "].quadratic", pFactorsArr[i]->quadratic);
+                        }
+
+                        shader[shadingType]->setUniformVec3("viewPos", viewPos); // vertex shader
+                        shader[shadingType]->setUniformInt("pointLightNumber", pFactorsArr.size()); // both shaders
+                        shader[shadingType]->setUniformVec4("objColor", color); // default color for fragment shader
+                    
+                        break;
                     }
 
-                    shader[shadingType]->setUniformVec4("objColor", color);
-                    shader[shadingType]->setUniformInt("pointLightNumber", pFactorsArr.size());
-                    shader[shadingType]->setUniformVec3("viewPos", viewPos);
-                    break;
-                }
-
-                case NONLIGHT: default: {
-                    if (shadingType != NONLIGHT)
-                        std::cout << "ERROR::OBJECT::INVALID_SHADER_TYPE: " << shadingType << std::endl;
-                    shader[NONLIGHT]->setUniformMat4("mvp", viewProjectionMat * ctm);
-                    shader[NONLIGHT]->setUniformVec4("color", color);
-                    break;
-                }
+                    case NONLIGHT: default: {
+                        if (shadingType != NONLIGHT)
+                            std::cout << "ERROR::OBJECT::INVALID_SHADER_TYPE: " << shadingType << std::endl;
+                        shader[NONLIGHT]->setUniformMat4("mvp", viewProjectionMat * ctm);
+                        shader[NONLIGHT]->setUniformVec4("color", color);
+                        break;
+                    }
 
                 }
                 for (Mesh mesh : meshes)
@@ -166,7 +168,7 @@ public: // Utilities
     }
 void loadModel(const std::string& path) {
     Assimp::Importer import;
-    const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
         return;
@@ -288,9 +290,12 @@ private:
                 v.pos = glm::vec3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z);
                 if (mesh->HasNormals())
                     v.norm = glm::vec3(mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z);
-                vertices.push_back(v);
-                if (mesh->mTextureCoords[0])
+                if (mesh->mTextureCoords[0]) {
                     v.textureCoord = glm::vec2(mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y);
+                    v.tangent = glm::vec3(mesh->mTangents[j].x, mesh->mTangents[j].y, mesh->mTangents[j].z);
+                    v.bitangent = glm::vec3(mesh->mBitangents[j].x, mesh->mBitangents[j].y, mesh->mBitangents[j].z);
+                }
+                vertices.push_back(v);
             }
             for (int j = 0; j < mesh->mNumFaces; j ++) {
                 if (mesh->mFaces->mNumIndices == 3) {
@@ -303,24 +308,24 @@ private:
                 }
             }
             const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-            textureMap = processTextureDiffuse(material, aiTextureType_DIFFUSE);
-            normalMap = processTextureDiffuse(material, aiTextureType_HEIGHT);
+            textureMap = processTextureDiffuse(material, aiTextureType_DIFFUSE); // diffuse map
+            normalMap = processTextureDiffuse(material, aiTextureType_HEIGHT); // normal map
 
             meshes.push_back(Mesh(vertices, indices, textureMap, normalMap));
         }
         for (int i = 0 ; i < node->mNumChildren ; i ++)
             assimpToMesh(node->mChildren[i], scene);
     }
-    unsigned int processTextureDiffuse(const aiMaterial* material, unsigned int aiTextureType) {
+    unsigned int processTextureDiffuse(const aiMaterial* material, aiTextureType type) {
         unsigned int texture;
-        material->GetTexture(aiTextureType, 0, &filePath);
+        aiString filePath;
+        material->GetTexture(type, 0, &filePath);
         glGenTextures(1, &texture);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        if (aiTextureType == aiTextureType_HEIGHT)
-            std::cout << "Texture.ID: " << texture << ", TextureCount: " << material->GetTextureCount(aiTextureType_DIFFUSE) <<  ", Texture: " << filePath.C_Str() << std::endl;
+        // std::cout << "Texture.ID: " << texture << ", TextureCount: " << material->GetTextureCount(aiTextureType_DIFFUSE) <<  ", Texture: " << filePath.C_Str() << std::endl;
 
         int w, h, ch;
         unsigned char* pixelData = stbi_load(filePath.C_Str(), &w, &h, &ch, 0);
@@ -336,8 +341,7 @@ private:
             glGenerateMipmap(GL_TEXTURE_2D);
         }
         else {
-            if (aiTextureType == aiTextureType_HEIGHT)
-                std::cout << "WARNING::TEXTURE::FAILED_TO_LOAD_AT_PATH: " << filePath.C_Str() << std::endl;
+            // std::cout << "WARNING::TEXTURE::FAILED_TO_LOAD_AT_PATH: " << filePath.C_Str() << std::endl;
             texture = -1;
         }
         stbi_image_free(pixelData);

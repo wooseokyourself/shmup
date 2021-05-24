@@ -10,7 +10,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd assets/models/F15/F15C.jpg
+map_Ka assets/models/F15/diffuse.jpg
+map_Kd assets/models/F15/diffuse.jpg
+map_bump assets/models/F15/normal.jpg
+bump assets/models/F15/normal.jpg
 
 newmtl Glass
 Ns 94.117647

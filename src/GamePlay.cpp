@@ -46,7 +46,7 @@ GamePlay::GamePlay() : viewMode(0), shadingType(PHONG), lightingFlag(1) {
     itemManager->loadModel("assets/models/ammo_crate.obj");
 
     // Configure lighting objects.
-    sun->setLightFactors(glm::vec4(1.0f), 0.1f, 0.5f, 8.0f);
+    sun->setLightFactors(glm::vec4(1.0f), 0.001f, 0.5f, 8.0f);
     planetaryA->setLightFactors(glm::vec4(1.0f), 0.1f, 0.5f, 8.0f, 1.0f, 0.09f, 0.032f);
     planetaryB->setLightFactors(glm::vec4(1.0f), 0.1f, 0.5f, 8.0f, 1.0f, 0.09f, 0.032f);
     dFactorsPtr = sun->getLightFactors();
