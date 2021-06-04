@@ -4,15 +4,14 @@
 #include <random>
 #include <map>
 
+#include <core/GL/glew.h>
+
 #ifdef __APPLE__
-#   define GL_SILENCE_DEPRECATION
-#   include <OpenGL/glext.h>
 #   include <OpenGL/gl3.h>
-// #   include <GL/freeglut.h>
 #   include <GLUT/glut.h>
-#else
-#   include <core/GL/glew.h>
-#   include <core/GL/glut.h>
+#   define GL_SILENCE_DEPRECATION
+#elif _WIN32
+#   include <GL/freeglut.h>
 #endif
 
 inline float getRadian(const float degree) {
