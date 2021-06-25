@@ -59,12 +59,12 @@ int main(int argc, char** argv) {
     glutCreateWindow("Assn4");
 
 #ifdef __APPLE__
-    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_3_2_CORE_PROFILE);
-    glewExperimental = GL_TRUE;
-#elif _WIN32
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_3_2_CORE_PROFILE | GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
+#else
+    GLenum err = glewInit();
+    std::cout << err << std::endl;
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
 #endif
-
     printf("%s\n", glGetString(GL_VERSION));
     printf("%s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
@@ -77,7 +77,14 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
 
+    
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+    /*
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glShadeModel(GL_SMOOTH);
+    */
 
     gameplay = new GamePlay;
     gameplay->start();
