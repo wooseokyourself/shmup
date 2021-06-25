@@ -8,7 +8,7 @@ Sun::Sun(const glm::vec3 orbitCenter, const float distanceFromCenter, const floa
     pushChild(lightSource);
     setRotate(randomRealNumber(0.0f, 180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 }
-~Sun::Sun() {
+Sun::~Sun() {
     delete lightSource;
     delete lightFactors;
 }

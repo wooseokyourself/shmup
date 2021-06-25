@@ -27,6 +27,7 @@
     <ClCompile Include="src\Hud.cpp" />
     <ClCompile Include="src\Planetary.cpp" />
     <ClCompile Include="src\StraightMovingObjectManager.cpp" />
+    <ClCompile Include="src\Sun.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -75,6 +75,9 @@
     <ClCompile Include="include\core\Mesh.hpp">
       <Filter>헤더 파일\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Sun.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Ai.hpp">
